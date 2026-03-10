@@ -1,0 +1,26 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+	  <TargetFramework>net8.0-windows</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Folder Include="DIOBoard\" />
+    <Folder Include="Logger\" />
+    <Folder Include="DamperMotor\" />
+    <Folder Include="MainTemp\" />
+    <Folder Include="TempLimit\" />
+    <Folder Include="O2\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="System.Management" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\VsFoundation.Base\VsFoundation.Base.csproj" />
+  </ItemGroup>
+
+</Project>

@@ -1,0 +1,1060 @@
+{
+  "format": 1,
+  "restore": {
+    "D:\\LCFZB_APM\\20_PROG\\LCFZB_APM_CS\\100. Library\\VsFoundation\\VsFoundation.Sequence\\VsFoundation.Sequence.csproj": {}
+  },
+  "projects": {
+    "D:\\LCFZB_APM\\20_PROG\\LCFZB_APM_CS\\100. Library\\VsFoundation\\VsAlarmConfig\\VsAlarmConfig.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "D:\\LCFZB_APM\\20_PROG\\LCFZB_APM_CS\\100. Library\\VsFoundation\\VsAlarmConfig\\VsAlarmConfig.csproj",
+        "projectName": "VsAlarmConfig",
+        "projectPath": "D:\\LCFZB_APM\\20_PROG\\LCFZB_APM_CS\\100. Library\\VsFoundation\\VsAlarmConfig\\VsAlarmConfig.csproj",
+        "packagesPath": "C:\\Users\\Acer\\.nuget\\packages\\",
+        "outputPath": "D:\\LCFZB_APM\\20_PROG\\LCFZB_APM_CS\\100. Library\\VsFoundation\\VsAlarmConfig\\obj\\",
+        "projectStyle": "PackageReference",
+        "centralPackageVersionsManagementEnabled": true,
+        "fallbackFolders": [
+          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+        ],
+        "configFilePaths": [
+          "C:\\Users\\Acer\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "net8.0-windows"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "C:\\Program Files\\dotnet\\library-packs": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net8.0-windows7.0": {
+            "targetAlias": "net8.0-windows",
+            "projectReferences": {
+              "D:\\LCFZB_APM\\20_PROG\\LCFZB_APM_CS\\100. Library\\VsFoundation\\VSLibrary\\VSLibrary.csproj": {
+                "projectPath": "D:\\LCFZB_APM\\20_PROG\\LCFZB_APM_CS\\100. Library\\VsFoundation\\VSLibrary\\VSLibrary.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "all"
+        },
+        "SdkAnalysisLevel": "9.0.100"
+      },
+      "frameworks": {
+        "net8.0-windows7.0": {
+          "targetAlias": "net8.0-windows",
+          "dependencies": {
+            "Microsoft.Xaml.Behaviors.Wpf": {
+              "target": "Package",
+              "version": "[1.1.135, )",
+              "versionCentrallyManaged": true
+            },
+            "Newtonsoft.Json": {
+              "target": "Package",
+              "version": "[13.0.3, )",
+              "versionCentrallyManaged": true
+            }
+          },
+          "centralPackageVersions": {
+            "ClosedXML": "0.104.0-rc1",
+            "CommunityToolkit.Mvvm": "8.4.0",
+            "CsvHelper": "33.1.0",
+            "Dapper": "2.1.66",
+            "ini-parser": "2.5.2",
+            "LiveCharts.Wpf": "0.9.7",
+            "LiveChartsCore.SkiaSharpView.WPF": "2.0.0-rc5.4",
+            "MaterialDesignThemes": "5.2.1",
+            "Microsoft-WindowsAPICodePack-Shell": "1.1.5",
+            "Microsoft.AspNetCore.Components": "8.0.13",
+            "Microsoft.AspNetCore.Http": "2.3.0",
+            "Microsoft.Data.Sqlite": "9.0.6",
+            "Microsoft.Extensions.DependencyInjection": "9.0.0",
+            "Microsoft.Xaml.Behaviors.Wpf": "1.1.135",
+            "MySql.Data": "9.3.0",
+            "Newtonsoft.Json": "13.0.3",
+            "NLog": "5.5.0",
+            "NModbus4.NetCore": "3.0.0",
+            "Oracle.ManagedDataAccess.Core": "23.8.0",
+            "PdfiumViewer.Native.x86.v8-xfa": "2018.4.8.256",
+            "PdfiumViewer.Native.x86_64.v8-xfa": "2018.4.8.256",
+            "PropertyChanged.Fody": "4.1.0",
+            "Serilog": "4.2.0",
+            "Serilog.Sinks.Console": "6.0.0",
+            "Serilog.Sinks.File": "6.0.0",
+            "SharpHook": "7.0.1",
+            "SkiaSharp": "2.88.9",
+            "SkiaSharp.HarfBuzz": "2.88.9",
+            "SkiaSharp.Views.WPF": "3.119.0",
+            "System.Collections": "4.3.0",
+            "System.Drawing.Common": "8.0.19",
+            "System.IO.Ports": "9.0.6",
+            "System.Management": "9.0.4",
+            "System.ServiceProcess.ServiceController": "8.0.1"
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "downloadDependencies": [
+            {
+              "name": "Microsoft.AspNetCore.App.Runtime.win-x64",
+              "version": "[8.0.11, 8.0.11]"
+            },
+            {
+              "name": "Microsoft.AspNetCore.App.Runtime.win-x86",
+              "version": "[8.0.11, 8.0.11]"
+            },
+            {
+              "name": "Microsoft.NETCore.App.Crossgen2.win-x64",
+              "version": "[8.0.11, 8.0.11]"
+            },
+            {
+              "name": "Microsoft.NETCore.App.Runtime.win-x64",
+              "version": "[8.0.11, 8.0.11]"
+            },
+            {
+              "name": "Microsoft.NETCore.App.Runtime.win-x86",
+              "version": "[8.0.11, 8.0.11]"
+            },
+            {
+              "name": "Microsoft.WindowsDesktop.App.Runtime.win-x64",
+              "version": "[8.0.11, 8.0.11]"
+            },
+            {
+              "name": "Microsoft.WindowsDesktop.App.Runtime.win-x86",
+              "version": "[8.0.11, 8.0.11]"
+            }
+          ],
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            },
+            "Microsoft.WindowsDesktop.App.WPF": {
+              "privateAssets": "none"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.100/PortableRuntimeIdentifierGraph.json"
+        }
+      },
+      "runtimes": {
+        "win-x64": {
+          "#import": []
+        },
+        "win-x86": {
+          "#import": []
+        }
+      }
+    },
+    "D:\\LCFZB_APM\\20_PROG\\LCFZB_APM_CS\\100. Library\\VsFoundation\\VsFoundation.Base\\VsFoundation.Base.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "D:\\LCFZB_APM\\20_PROG\\LCFZB_APM_CS\\100. Library\\VsFoundation\\VsFoundation.Base\\VsFoundation.Base.csproj",
+        "projectName": "VsFoundation.Base",
+        "projectPath": "D:\\LCFZB_APM\\20_PROG\\LCFZB_APM_CS\\100. Library\\VsFoundation\\VsFoundation.Base\\VsFoundation.Base.csproj",
+        "packagesPath": "C:\\Users\\Acer\\.nuget\\packages\\",
+        "outputPath": "D:\\LCFZB_APM\\20_PROG\\LCFZB_APM_CS\\100. Library\\VsFoundation\\VsFoundation.Base\\obj\\",
+        "projectStyle": "PackageReference",
+        "centralPackageVersionsManagementEnabled": true,
+        "fallbackFolders": [
+          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+        ],
+        "configFilePaths": [
+          "C:\\Users\\Acer\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "net8.0-windows"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "C:\\Program Files\\dotnet\\library-packs": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net8.0-windows7.0": {
+            "targetAlias": "net8.0-windows",
+            "projectReferences": {
+              "D:\\LCFZB_APM\\20_PROG\\LCFZB_APM_CS\\100. Library\\VsFoundation\\VsAlarmConfig\\VsAlarmConfig.csproj": {
+                "projectPath": "D:\\LCFZB_APM\\20_PROG\\LCFZB_APM_CS\\100. Library\\VsFoundation\\VsAlarmConfig\\VsAlarmConfig.csproj"
+              },
+              "D:\\LCFZB_APM\\20_PROG\\LCFZB_APM_CS\\100. Library\\VsFoundation\\VSLibrary\\VSLibrary.csproj": {
+                "projectPath": "D:\\LCFZB_APM\\20_PROG\\LCFZB_APM_CS\\100. Library\\VsFoundation\\VSLibrary\\VSLibrary.csproj"
+              },
+              "D:\\LCFZB_APM\\20_PROG\\LCFZB_APM_CS\\100. Library\\VsFoundation\\VsPdfViewer\\VsPdfiumViewer.csproj": {
+                "projectPath": "D:\\LCFZB_APM\\20_PROG\\LCFZB_APM_CS\\100. Library\\VsFoundation\\VsPdfViewer\\VsPdfiumViewer.csproj"
+              },
+              "D:\\LCFZB_APM\\20_PROG\\LCFZB_APM_CS\\100. Library\\VsFoundation\\VsVirtualKeyboard\\VsVirtualKeyboard.csproj": {
+                "projectPath": "D:\\LCFZB_APM\\20_PROG\\LCFZB_APM_CS\\100. Library\\VsFoundation\\VsVirtualKeyboard\\VsVirtualKeyboard.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "all"
+        },
+        "SdkAnalysisLevel": "9.0.100"
+      },
+      "frameworks": {
+        "net8.0-windows7.0": {
+          "targetAlias": "net8.0-windows",
+          "dependencies": {
+            "ClosedXML": {
+              "target": "Package",
+              "version": "[0.104.0-rc1, )",
+              "versionCentrallyManaged": true
+            },
+            "Dapper": {
+              "target": "Package",
+              "version": "[2.1.66, )",
+              "versionCentrallyManaged": true
+            },
+            "NLog": {
+              "target": "Package",
+              "version": "[5.5.0, )",
+              "versionCentrallyManaged": true
+            },
+            "Newtonsoft.Json": {
+              "target": "Package",
+              "version": "[13.0.3, )",
+              "versionCentrallyManaged": true
+            },
+            "Serilog": {
+              "target": "Package",
+              "version": "[4.2.0, )",
+              "versionCentrallyManaged": true
+            },
+            "Serilog.Sinks.Console": {
+              "target": "Package",
+              "version": "[6.0.0, )",
+              "versionCentrallyManaged": true
+            },
+            "Serilog.Sinks.File": {
+              "target": "Package",
+              "version": "[6.0.0, )",
+              "versionCentrallyManaged": true
+            },
+            "System.ServiceProcess.ServiceController": {
+              "target": "Package",
+              "version": "[8.0.1, )",
+              "versionCentrallyManaged": true
+            }
+          },
+          "centralPackageVersions": {
+            "ClosedXML": "0.104.0-rc1",
+            "CommunityToolkit.Mvvm": "8.4.0",
+            "CsvHelper": "33.1.0",
+            "Dapper": "2.1.66",
+            "ini-parser": "2.5.2",
+            "LiveCharts.Wpf": "0.9.7",
+            "LiveChartsCore.SkiaSharpView.WPF": "2.0.0-rc5.4",
+            "MaterialDesignThemes": "5.2.1",
+            "Microsoft-WindowsAPICodePack-Shell": "1.1.5",
+            "Microsoft.AspNetCore.Components": "8.0.13",
+            "Microsoft.AspNetCore.Http": "2.3.0",
+            "Microsoft.Data.Sqlite": "9.0.6",
+            "Microsoft.Extensions.DependencyInjection": "9.0.0",
+            "Microsoft.Xaml.Behaviors.Wpf": "1.1.135",
+            "MySql.Data": "9.3.0",
+            "Newtonsoft.Json": "13.0.3",
+            "NLog": "5.5.0",
+            "NModbus4.NetCore": "3.0.0",
+            "Oracle.ManagedDataAccess.Core": "23.8.0",
+            "PdfiumViewer.Native.x86.v8-xfa": "2018.4.8.256",
+            "PdfiumViewer.Native.x86_64.v8-xfa": "2018.4.8.256",
+            "PropertyChanged.Fody": "4.1.0",
+            "Serilog": "4.2.0",
+            "Serilog.Sinks.Console": "6.0.0",
+            "Serilog.Sinks.File": "6.0.0",
+            "SharpHook": "7.0.1",
+            "SkiaSharp": "2.88.9",
+            "SkiaSharp.HarfBuzz": "2.88.9",
+            "SkiaSharp.Views.WPF": "3.119.0",
+            "System.Collections": "4.3.0",
+            "System.Drawing.Common": "8.0.19",
+            "System.IO.Ports": "9.0.6",
+            "System.Management": "9.0.4",
+            "System.ServiceProcess.ServiceController": "8.0.1"
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "downloadDependencies": [
+            {
+              "name": "Microsoft.AspNetCore.App.Runtime.win-x64",
+              "version": "[8.0.11, 8.0.11]"
+            },
+            {
+              "name": "Microsoft.AspNetCore.App.Runtime.win-x86",
+              "version": "[8.0.11, 8.0.11]"
+            },
+            {
+              "name": "Microsoft.NETCore.App.Crossgen2.win-x64",
+              "version": "[8.0.11, 8.0.11]"
+            },
+            {
+              "name": "Microsoft.NETCore.App.Runtime.win-x64",
+              "version": "[8.0.11, 8.0.11]"
+            },
+            {
+              "name": "Microsoft.NETCore.App.Runtime.win-x86",
+              "version": "[8.0.11, 8.0.11]"
+            },
+            {
+              "name": "Microsoft.WindowsDesktop.App.Runtime.win-x64",
+              "version": "[8.0.11, 8.0.11]"
+            },
+            {
+              "name": "Microsoft.WindowsDesktop.App.Runtime.win-x86",
+              "version": "[8.0.11, 8.0.11]"
+            }
+          ],
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            },
+            "Microsoft.WindowsDesktop.App.WPF": {
+              "privateAssets": "none"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.100/PortableRuntimeIdentifierGraph.json"
+        }
+      },
+      "runtimes": {
+        "win-x64": {
+          "#import": []
+        },
+        "win-x86": {
+          "#import": []
+        }
+      }
+    },
+    "D:\\LCFZB_APM\\20_PROG\\LCFZB_APM_CS\\100. Library\\VsFoundation\\VsFoundation.Sequence\\VsFoundation.Sequence.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "D:\\LCFZB_APM\\20_PROG\\LCFZB_APM_CS\\100. Library\\VsFoundation\\VsFoundation.Sequence\\VsFoundation.Sequence.csproj",
+        "projectName": "VsFoundation.Sequence",
+        "projectPath": "D:\\LCFZB_APM\\20_PROG\\LCFZB_APM_CS\\100. Library\\VsFoundation\\VsFoundation.Sequence\\VsFoundation.Sequence.csproj",
+        "packagesPath": "C:\\Users\\Acer\\.nuget\\packages\\",
+        "outputPath": "D:\\LCFZB_APM\\20_PROG\\LCFZB_APM_CS\\100. Library\\VsFoundation\\VsFoundation.Sequence\\obj\\",
+        "projectStyle": "PackageReference",
+        "centralPackageVersionsManagementEnabled": true,
+        "fallbackFolders": [
+          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+        ],
+        "configFilePaths": [
+          "C:\\Users\\Acer\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "net8.0-windows"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "C:\\Program Files\\dotnet\\library-packs": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net8.0-windows7.0": {
+            "targetAlias": "net8.0-windows",
+            "projectReferences": {
+              "D:\\LCFZB_APM\\20_PROG\\LCFZB_APM_CS\\100. Library\\VsFoundation\\VsFoundation.Base\\VsFoundation.Base.csproj": {
+                "projectPath": "D:\\LCFZB_APM\\20_PROG\\LCFZB_APM_CS\\100. Library\\VsFoundation\\VsFoundation.Base\\VsFoundation.Base.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "all"
+        },
+        "SdkAnalysisLevel": "9.0.100"
+      },
+      "frameworks": {
+        "net8.0-windows7.0": {
+          "targetAlias": "net8.0-windows",
+          "centralPackageVersions": {
+            "ClosedXML": "0.104.0-rc1",
+            "CommunityToolkit.Mvvm": "8.4.0",
+            "CsvHelper": "33.1.0",
+            "Dapper": "2.1.66",
+            "ini-parser": "2.5.2",
+            "LiveCharts.Wpf": "0.9.7",
+            "LiveChartsCore.SkiaSharpView.WPF": "2.0.0-rc5.4",
+            "MaterialDesignThemes": "5.2.1",
+            "Microsoft-WindowsAPICodePack-Shell": "1.1.5",
+            "Microsoft.AspNetCore.Components": "8.0.13",
+            "Microsoft.AspNetCore.Http": "2.3.0",
+            "Microsoft.Data.Sqlite": "9.0.6",
+            "Microsoft.Extensions.DependencyInjection": "9.0.0",
+            "Microsoft.Xaml.Behaviors.Wpf": "1.1.135",
+            "MySql.Data": "9.3.0",
+            "Newtonsoft.Json": "13.0.3",
+            "NLog": "5.5.0",
+            "NModbus4.NetCore": "3.0.0",
+            "Oracle.ManagedDataAccess.Core": "23.8.0",
+            "PdfiumViewer.Native.x86.v8-xfa": "2018.4.8.256",
+            "PdfiumViewer.Native.x86_64.v8-xfa": "2018.4.8.256",
+            "PropertyChanged.Fody": "4.1.0",
+            "Serilog": "4.2.0",
+            "Serilog.Sinks.Console": "6.0.0",
+            "Serilog.Sinks.File": "6.0.0",
+            "SharpHook": "7.0.1",
+            "SkiaSharp": "2.88.9",
+            "SkiaSharp.HarfBuzz": "2.88.9",
+            "SkiaSharp.Views.WPF": "3.119.0",
+            "System.Collections": "4.3.0",
+            "System.Drawing.Common": "8.0.19",
+            "System.IO.Ports": "9.0.6",
+            "System.Management": "9.0.4",
+            "System.ServiceProcess.ServiceController": "8.0.1"
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "downloadDependencies": [
+            {
+              "name": "Microsoft.AspNetCore.App.Runtime.win-x64",
+              "version": "[8.0.11, 8.0.11]"
+            },
+            {
+              "name": "Microsoft.AspNetCore.App.Runtime.win-x86",
+              "version": "[8.0.11, 8.0.11]"
+            },
+            {
+              "name": "Microsoft.NETCore.App.Crossgen2.win-x64",
+              "version": "[8.0.11, 8.0.11]"
+            },
+            {
+              "name": "Microsoft.NETCore.App.Runtime.win-x64",
+              "version": "[8.0.11, 8.0.11]"
+            },
+            {
+              "name": "Microsoft.NETCore.App.Runtime.win-x86",
+              "version": "[8.0.11, 8.0.11]"
+            },
+            {
+              "name": "Microsoft.WindowsDesktop.App.Runtime.win-x64",
+              "version": "[8.0.11, 8.0.11]"
+            },
+            {
+              "name": "Microsoft.WindowsDesktop.App.Runtime.win-x86",
+              "version": "[8.0.11, 8.0.11]"
+            }
+          ],
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.100/PortableRuntimeIdentifierGraph.json"
+        }
+      },
+      "runtimes": {
+        "win-x64": {
+          "#import": []
+        },
+        "win-x86": {
+          "#import": []
+        }
+      }
+    },
+    "D:\\LCFZB_APM\\20_PROG\\LCFZB_APM_CS\\100. Library\\VsFoundation\\VSLibrary\\VSLibrary.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "D:\\LCFZB_APM\\20_PROG\\LCFZB_APM_CS\\100. Library\\VsFoundation\\VSLibrary\\VSLibrary.csproj",
+        "projectName": "VSLibrary",
+        "projectPath": "D:\\LCFZB_APM\\20_PROG\\LCFZB_APM_CS\\100. Library\\VsFoundation\\VSLibrary\\VSLibrary.csproj",
+        "packagesPath": "C:\\Users\\Acer\\.nuget\\packages\\",
+        "outputPath": "D:\\LCFZB_APM\\20_PROG\\LCFZB_APM_CS\\100. Library\\VsFoundation\\VSLibrary\\obj\\",
+        "projectStyle": "PackageReference",
+        "centralPackageVersionsManagementEnabled": true,
+        "fallbackFolders": [
+          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+        ],
+        "configFilePaths": [
+          "C:\\Users\\Acer\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "net8.0-windows"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "C:\\Program Files\\dotnet\\library-packs": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net8.0-windows7.0": {
+            "targetAlias": "net8.0-windows",
+            "projectReferences": {}
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "all"
+        },
+        "SdkAnalysisLevel": "9.0.100"
+      },
+      "frameworks": {
+        "net8.0-windows7.0": {
+          "targetAlias": "net8.0-windows",
+          "dependencies": {
+            "CommunityToolkit.Mvvm": {
+              "target": "Package",
+              "version": "[8.4.0, )",
+              "versionCentrallyManaged": true
+            },
+            "LiveCharts.Wpf": {
+              "target": "Package",
+              "version": "[0.9.7, )",
+              "versionCentrallyManaged": true
+            },
+            "LiveChartsCore.SkiaSharpView.WPF": {
+              "target": "Package",
+              "version": "[2.0.0-rc5.4, )",
+              "versionCentrallyManaged": true
+            },
+            "MaterialDesignThemes": {
+              "target": "Package",
+              "version": "[5.2.1, )",
+              "versionCentrallyManaged": true
+            },
+            "Microsoft-WindowsAPICodePack-Shell": {
+              "target": "Package",
+              "version": "[1.1.5, )",
+              "versionCentrallyManaged": true
+            },
+            "Microsoft.AspNetCore.Components": {
+              "target": "Package",
+              "version": "[8.0.13, )",
+              "versionCentrallyManaged": true
+            },
+            "Microsoft.AspNetCore.Http": {
+              "target": "Package",
+              "version": "[2.3.0, )",
+              "versionCentrallyManaged": true
+            },
+            "Microsoft.Data.Sqlite": {
+              "target": "Package",
+              "version": "[9.0.6, )",
+              "versionCentrallyManaged": true
+            },
+            "Microsoft.Extensions.DependencyInjection": {
+              "target": "Package",
+              "version": "[9.0.0, )",
+              "versionCentrallyManaged": true
+            },
+            "Microsoft.Xaml.Behaviors.Wpf": {
+              "target": "Package",
+              "version": "[1.1.135, )",
+              "versionCentrallyManaged": true
+            },
+            "MySql.Data": {
+              "target": "Package",
+              "version": "[9.3.0, )",
+              "versionCentrallyManaged": true
+            },
+            "NLog": {
+              "target": "Package",
+              "version": "[5.5.0, )",
+              "versionCentrallyManaged": true
+            },
+            "NModbus4.NetCore": {
+              "target": "Package",
+              "version": "[3.0.0, )",
+              "versionCentrallyManaged": true
+            },
+            "Oracle.ManagedDataAccess.Core": {
+              "target": "Package",
+              "version": "[23.8.0, )",
+              "versionCentrallyManaged": true
+            },
+            "System.IO.Ports": {
+              "target": "Package",
+              "version": "[9.0.6, )",
+              "versionCentrallyManaged": true
+            }
+          },
+          "centralPackageVersions": {
+            "ClosedXML": "0.104.0-rc1",
+            "CommunityToolkit.Mvvm": "8.4.0",
+            "CsvHelper": "33.1.0",
+            "Dapper": "2.1.66",
+            "ini-parser": "2.5.2",
+            "LiveCharts.Wpf": "0.9.7",
+            "LiveChartsCore.SkiaSharpView.WPF": "2.0.0-rc5.4",
+            "MaterialDesignThemes": "5.2.1",
+            "Microsoft-WindowsAPICodePack-Shell": "1.1.5",
+            "Microsoft.AspNetCore.Components": "8.0.13",
+            "Microsoft.AspNetCore.Http": "2.3.0",
+            "Microsoft.Data.Sqlite": "9.0.6",
+            "Microsoft.Extensions.DependencyInjection": "9.0.0",
+            "Microsoft.Xaml.Behaviors.Wpf": "1.1.135",
+            "MySql.Data": "9.3.0",
+            "Newtonsoft.Json": "13.0.3",
+            "NLog": "5.5.0",
+            "NModbus4.NetCore": "3.0.0",
+            "Oracle.ManagedDataAccess.Core": "23.8.0",
+            "PdfiumViewer.Native.x86.v8-xfa": "2018.4.8.256",
+            "PdfiumViewer.Native.x86_64.v8-xfa": "2018.4.8.256",
+            "PropertyChanged.Fody": "4.1.0",
+            "Serilog": "4.2.0",
+            "Serilog.Sinks.Console": "6.0.0",
+            "Serilog.Sinks.File": "6.0.0",
+            "SharpHook": "7.0.1",
+            "SkiaSharp": "2.88.9",
+            "SkiaSharp.HarfBuzz": "2.88.9",
+            "SkiaSharp.Views.WPF": "3.119.0",
+            "System.Collections": "4.3.0",
+            "System.Drawing.Common": "8.0.19",
+            "System.IO.Ports": "9.0.6",
+            "System.Management": "9.0.4",
+            "System.ServiceProcess.ServiceController": "8.0.1"
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "downloadDependencies": [
+            {
+              "name": "Microsoft.AspNetCore.App.Runtime.win-x64",
+              "version": "[8.0.11, 8.0.11]"
+            },
+            {
+              "name": "Microsoft.AspNetCore.App.Runtime.win-x86",
+              "version": "[8.0.11, 8.0.11]"
+            },
+            {
+              "name": "Microsoft.NETCore.App.Crossgen2.win-x64",
+              "version": "[8.0.11, 8.0.11]"
+            },
+            {
+              "name": "Microsoft.NETCore.App.Runtime.win-x64",
+              "version": "[8.0.11, 8.0.11]"
+            },
+            {
+              "name": "Microsoft.NETCore.App.Runtime.win-x86",
+              "version": "[8.0.11, 8.0.11]"
+            },
+            {
+              "name": "Microsoft.WindowsDesktop.App.Runtime.win-x64",
+              "version": "[8.0.11, 8.0.11]"
+            },
+            {
+              "name": "Microsoft.WindowsDesktop.App.Runtime.win-x86",
+              "version": "[8.0.11, 8.0.11]"
+            }
+          ],
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            },
+            "Microsoft.WindowsDesktop.App.WPF": {
+              "privateAssets": "none"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.100/PortableRuntimeIdentifierGraph.json"
+        }
+      },
+      "runtimes": {
+        "win-x64": {
+          "#import": []
+        },
+        "win-x86": {
+          "#import": []
+        }
+      }
+    },
+    "D:\\LCFZB_APM\\20_PROG\\LCFZB_APM_CS\\100. Library\\VsFoundation\\VsPdfViewer\\VsPdfiumViewer.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "D:\\LCFZB_APM\\20_PROG\\LCFZB_APM_CS\\100. Library\\VsFoundation\\VsPdfViewer\\VsPdfiumViewer.csproj",
+        "projectName": "VsPdfiumViewer",
+        "projectPath": "D:\\LCFZB_APM\\20_PROG\\LCFZB_APM_CS\\100. Library\\VsFoundation\\VsPdfViewer\\VsPdfiumViewer.csproj",
+        "packagesPath": "C:\\Users\\Acer\\.nuget\\packages\\",
+        "outputPath": "D:\\LCFZB_APM\\20_PROG\\LCFZB_APM_CS\\100. Library\\VsFoundation\\VsPdfViewer\\obj\\",
+        "projectStyle": "PackageReference",
+        "centralPackageVersionsManagementEnabled": true,
+        "fallbackFolders": [
+          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+        ],
+        "configFilePaths": [
+          "C:\\Users\\Acer\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "net8.0-windows"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "C:\\Program Files\\dotnet\\library-packs": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net8.0-windows7.0": {
+            "targetAlias": "net8.0-windows",
+            "projectReferences": {}
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "all"
+        },
+        "SdkAnalysisLevel": "9.0.100"
+      },
+      "frameworks": {
+        "net8.0-windows7.0": {
+          "targetAlias": "net8.0-windows",
+          "dependencies": {
+            "MaterialDesignThemes": {
+              "target": "Package",
+              "version": "[5.2.1, )",
+              "versionCentrallyManaged": true
+            },
+            "Microsoft.Xaml.Behaviors.Wpf": {
+              "target": "Package",
+              "version": "[1.1.135, )",
+              "versionCentrallyManaged": true
+            },
+            "PdfiumViewer.Native.x86.v8-xfa": {
+              "target": "Package",
+              "version": "[2018.4.8.256, )",
+              "versionCentrallyManaged": true
+            },
+            "PdfiumViewer.Native.x86_64.v8-xfa": {
+              "target": "Package",
+              "version": "[2018.4.8.256, )",
+              "versionCentrallyManaged": true
+            },
+            "PropertyChanged.Fody": {
+              "target": "Package",
+              "version": "[4.1.0, )",
+              "versionCentrallyManaged": true
+            },
+            "System.Drawing.Common": {
+              "target": "Package",
+              "version": "[8.0.19, )",
+              "versionCentrallyManaged": true
+            }
+          },
+          "centralPackageVersions": {
+            "ClosedXML": "0.104.0-rc1",
+            "CommunityToolkit.Mvvm": "8.4.0",
+            "CsvHelper": "33.1.0",
+            "Dapper": "2.1.66",
+            "ini-parser": "2.5.2",
+            "LiveCharts.Wpf": "0.9.7",
+            "LiveChartsCore.SkiaSharpView.WPF": "2.0.0-rc5.4",
+            "MaterialDesignThemes": "5.2.1",
+            "Microsoft-WindowsAPICodePack-Shell": "1.1.5",
+            "Microsoft.AspNetCore.Components": "8.0.13",
+            "Microsoft.AspNetCore.Http": "2.3.0",
+            "Microsoft.Data.Sqlite": "9.0.6",
+            "Microsoft.Extensions.DependencyInjection": "9.0.0",
+            "Microsoft.Xaml.Behaviors.Wpf": "1.1.135",
+            "MySql.Data": "9.3.0",
+            "Newtonsoft.Json": "13.0.3",
+            "NLog": "5.5.0",
+            "NModbus4.NetCore": "3.0.0",
+            "Oracle.ManagedDataAccess.Core": "23.8.0",
+            "PdfiumViewer.Native.x86.v8-xfa": "2018.4.8.256",
+            "PdfiumViewer.Native.x86_64.v8-xfa": "2018.4.8.256",
+            "PropertyChanged.Fody": "4.1.0",
+            "Serilog": "4.2.0",
+            "Serilog.Sinks.Console": "6.0.0",
+            "Serilog.Sinks.File": "6.0.0",
+            "SharpHook": "7.0.1",
+            "SkiaSharp": "2.88.9",
+            "SkiaSharp.HarfBuzz": "2.88.9",
+            "SkiaSharp.Views.WPF": "3.119.0",
+            "System.Collections": "4.3.0",
+            "System.Drawing.Common": "8.0.19",
+            "System.IO.Ports": "9.0.6",
+            "System.Management": "9.0.4",
+            "System.ServiceProcess.ServiceController": "8.0.1"
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "downloadDependencies": [
+            {
+              "name": "Microsoft.AspNetCore.App.Runtime.win-x64",
+              "version": "[8.0.11, 8.0.11]"
+            },
+            {
+              "name": "Microsoft.AspNetCore.App.Runtime.win-x86",
+              "version": "[8.0.11, 8.0.11]"
+            },
+            {
+              "name": "Microsoft.NETCore.App.Crossgen2.win-x64",
+              "version": "[8.0.11, 8.0.11]"
+            },
+            {
+              "name": "Microsoft.NETCore.App.Runtime.win-x64",
+              "version": "[8.0.11, 8.0.11]"
+            },
+            {
+              "name": "Microsoft.NETCore.App.Runtime.win-x86",
+              "version": "[8.0.11, 8.0.11]"
+            },
+            {
+              "name": "Microsoft.WindowsDesktop.App.Runtime.win-x64",
+              "version": "[8.0.11, 8.0.11]"
+            },
+            {
+              "name": "Microsoft.WindowsDesktop.App.Runtime.win-x86",
+              "version": "[8.0.11, 8.0.11]"
+            }
+          ],
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            },
+            "Microsoft.WindowsDesktop.App.WPF": {
+              "privateAssets": "none"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.100/PortableRuntimeIdentifierGraph.json"
+        }
+      },
+      "runtimes": {
+        "win-x64": {
+          "#import": []
+        },
+        "win-x86": {
+          "#import": []
+        }
+      }
+    },
+    "D:\\LCFZB_APM\\20_PROG\\LCFZB_APM_CS\\100. Library\\VsFoundation\\VsVirtualKeyboard\\VsVirtualKeyboard.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "D:\\LCFZB_APM\\20_PROG\\LCFZB_APM_CS\\100. Library\\VsFoundation\\VsVirtualKeyboard\\VsVirtualKeyboard.csproj",
+        "projectName": "VsVirtualKeyboard",
+        "projectPath": "D:\\LCFZB_APM\\20_PROG\\LCFZB_APM_CS\\100. Library\\VsFoundation\\VsVirtualKeyboard\\VsVirtualKeyboard.csproj",
+        "packagesPath": "C:\\Users\\Acer\\.nuget\\packages\\",
+        "outputPath": "D:\\LCFZB_APM\\20_PROG\\LCFZB_APM_CS\\100. Library\\VsFoundation\\VsVirtualKeyboard\\obj\\",
+        "projectStyle": "PackageReference",
+        "centralPackageVersionsManagementEnabled": true,
+        "fallbackFolders": [
+          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+        ],
+        "configFilePaths": [
+          "C:\\Users\\Acer\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "net8.0-windows"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "C:\\Program Files\\dotnet\\library-packs": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net8.0-windows7.0": {
+            "targetAlias": "net8.0-windows",
+            "projectReferences": {}
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "all"
+        },
+        "SdkAnalysisLevel": "9.0.100"
+      },
+      "frameworks": {
+        "net8.0-windows7.0": {
+          "targetAlias": "net8.0-windows",
+          "dependencies": {
+            "SharpHook": {
+              "target": "Package",
+              "version": "[7.0.1, )",
+              "versionCentrallyManaged": true
+            }
+          },
+          "centralPackageVersions": {
+            "ClosedXML": "0.104.0-rc1",
+            "CommunityToolkit.Mvvm": "8.4.0",
+            "CsvHelper": "33.1.0",
+            "Dapper": "2.1.66",
+            "ini-parser": "2.5.2",
+            "LiveCharts.Wpf": "0.9.7",
+            "LiveChartsCore.SkiaSharpView.WPF": "2.0.0-rc5.4",
+            "MaterialDesignThemes": "5.2.1",
+            "Microsoft-WindowsAPICodePack-Shell": "1.1.5",
+            "Microsoft.AspNetCore.Components": "8.0.13",
+            "Microsoft.AspNetCore.Http": "2.3.0",
+            "Microsoft.Data.Sqlite": "9.0.6",
+            "Microsoft.Extensions.DependencyInjection": "9.0.0",
+            "Microsoft.Xaml.Behaviors.Wpf": "1.1.135",
+            "MySql.Data": "9.3.0",
+            "Newtonsoft.Json": "13.0.3",
+            "NLog": "5.5.0",
+            "NModbus4.NetCore": "3.0.0",
+            "Oracle.ManagedDataAccess.Core": "23.8.0",
+            "PdfiumViewer.Native.x86.v8-xfa": "2018.4.8.256",
+            "PdfiumViewer.Native.x86_64.v8-xfa": "2018.4.8.256",
+            "PropertyChanged.Fody": "4.1.0",
+            "Serilog": "4.2.0",
+            "Serilog.Sinks.Console": "6.0.0",
+            "Serilog.Sinks.File": "6.0.0",
+            "SharpHook": "7.0.1",
+            "SkiaSharp": "2.88.9",
+            "SkiaSharp.HarfBuzz": "2.88.9",
+            "SkiaSharp.Views.WPF": "3.119.0",
+            "System.Collections": "4.3.0",
+            "System.Drawing.Common": "8.0.19",
+            "System.IO.Ports": "9.0.6",
+            "System.Management": "9.0.4",
+            "System.ServiceProcess.ServiceController": "8.0.1"
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "downloadDependencies": [
+            {
+              "name": "Microsoft.AspNetCore.App.Runtime.win-x64",
+              "version": "[8.0.11, 8.0.11]"
+            },
+            {
+              "name": "Microsoft.AspNetCore.App.Runtime.win-x86",
+              "version": "[8.0.11, 8.0.11]"
+            },
+            {
+              "name": "Microsoft.NETCore.App.Crossgen2.win-x64",
+              "version": "[8.0.11, 8.0.11]"
+            },
+            {
+              "name": "Microsoft.NETCore.App.Runtime.win-x64",
+              "version": "[8.0.11, 8.0.11]"
+            },
+            {
+              "name": "Microsoft.NETCore.App.Runtime.win-x86",
+              "version": "[8.0.11, 8.0.11]"
+            },
+            {
+              "name": "Microsoft.WindowsDesktop.App.Runtime.win-x64",
+              "version": "[8.0.11, 8.0.11]"
+            },
+            {
+              "name": "Microsoft.WindowsDesktop.App.Runtime.win-x86",
+              "version": "[8.0.11, 8.0.11]"
+            }
+          ],
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            },
+            "Microsoft.WindowsDesktop.App.WPF": {
+              "privateAssets": "none"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.100/PortableRuntimeIdentifierGraph.json"
+        }
+      },
+      "runtimes": {
+        "win-x64": {
+          "#import": []
+        },
+        "win-x86": {
+          "#import": []
+        }
+      }
+    }
+  }
+}

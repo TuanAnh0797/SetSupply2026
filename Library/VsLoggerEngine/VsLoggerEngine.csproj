@@ -1,0 +1,60 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<OutputType>WinExe</OutputType>
+		<TargetFramework>net8.0-windows</TargetFramework>
+		<Nullable>enable</Nullable>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<UseWPF>true</UseWPF>
+		<UseWindowsForms>true</UseWindowsForms>
+		<AssemblyVersion>1.0.0.0</AssemblyVersion>
+		<FileVersion>1.0.0.0</FileVersion>
+		<ApplicationIcon>Resources\Icons\vslogger_icon.ico</ApplicationIcon>
+		<Platforms>x64;x86</Platforms>
+		<Configurations>Debug;Release</Configurations>
+	</PropertyGroup>
+
+	<ItemGroup>
+	  <None Remove="Resources\Icons\vslogger_icon.ico" />
+	  <None Remove="Resources\Icons\vslogger_icon.png" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Content Include="Resources\Icons\vslogger_icon.ico">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </Content>
+	  <Content Include="Resources\Icons\vslogger_icon.png">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </Content>
+	</ItemGroup>
+
+	<ItemGroup>
+		<PackageReference Include="MaterialDesignThemes" />
+		<PackageReference Include="CommunityToolkit.Mvvm" />
+		<PackageReference Include="System.Management" />
+		<PackageReference Include="Newtonsoft.Json" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<Compile Update="Properties\Settings.Designer.cs">
+			<DesignTimeSharedInput>True</DesignTimeSharedInput>
+			<AutoGen>True</AutoGen>
+			<DependentUpon>Settings.settings</DependentUpon>
+		</Compile>
+	</ItemGroup>
+
+	<ItemGroup>
+		<None Update="Properties\Settings.settings">
+			<Generator>SettingsSingleFileGenerator</Generator>
+			<LastGenOutput>Settings.Designer.cs</LastGenOutput>
+		</None>
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\VSLibrary\VSLibrary.csproj" />
+	</ItemGroup>
+
+	<Target Name="KillRunningApp" BeforeTargets="BeforeBuild">
+		<Exec Command="powershell -Command &quot;try { Get-Process $(AssemblyName) -ErrorAction SilentlyContinue | Stop-Process -Force } catch {} ; exit 0&quot;" />
+	</Target>
+</Project>

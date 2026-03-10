@@ -1,0 +1,20 @@
+﻿VsVirtualKeyboard
+1.0.0.0
+
+library
+C#
+.cs
+D:\LCFZB_APM\20_PROG\LCFZB_APM_CS\100. Library\VsFoundation\VsVirtualKeyboard\obj\x64\Debug\net8.0-windows\win-x64\
+VsVirtualKeyboard
+none
+false
+TRACE;DEBUG;NET;NET8_0;NETCOREAPP
+
+4800210534
+
+251469704700
+19922612480
+UI\FullKeyboardLayout.xaml;UI\NumericKeyboardLayout.xaml;UI\VirtualKeyboardWindow.xaml;UI\VsVirtualKeyboardUI.xaml;
+
+False
+

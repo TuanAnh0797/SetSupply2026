@@ -1,0 +1,12 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="VsLoggerEngine.Properties" GeneratedClassName="Settings">
+  <Profiles />
+  <Settings>
+    <Setting Name="LogFolderPath" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="LogLineRegex" Type="System.String" Scope="User">
+      <Value Profile="(Default)">^(\d{2}:\d{2}:\d{2}\.\d{2})-\[(\w+)\]\[.*?\]:\s*(.+)$</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>

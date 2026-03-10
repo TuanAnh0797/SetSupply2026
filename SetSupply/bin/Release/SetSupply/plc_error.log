@@ -1,0 +1,567 @@
+﻿[2026-03-11 01:07:07] System.ArgumentNullException: Value cannot be null. (Parameter 'ipString')
+   at System.Net.IPAddress.Parse(String ipString)
+   at APP.Service.PLCService.RunLoop(CancellationToken token) in D:\TuanAnh\APPWPF\SetSupply\Service\PLCService.cs:line 118
+[2026-03-11 01:07:12] System.ArgumentNullException: Value cannot be null. (Parameter 'ipString')
+   at System.Net.IPAddress.Parse(String ipString)
+   at APP.Service.PLCService.RunLoop(CancellationToken token) in D:\TuanAnh\APPWPF\SetSupply\Service\PLCService.cs:line 118
+[2026-03-11 01:07:17] System.ArgumentNullException: Value cannot be null. (Parameter 'ipString')
+   at System.Net.IPAddress.Parse(String ipString)
+   at APP.Service.PLCService.RunLoop(CancellationToken token) in D:\TuanAnh\APPWPF\SetSupply\Service\PLCService.cs:line 118
+[2026-03-11 01:07:22] System.ArgumentNullException: Value cannot be null. (Parameter 'ipString')
+   at System.Net.IPAddress.Parse(String ipString)
+   at APP.Service.PLCService.RunLoop(CancellationToken token) in D:\TuanAnh\APPWPF\SetSupply\Service\PLCService.cs:line 118
+[2026-03-11 01:07:27] System.ArgumentNullException: Value cannot be null. (Parameter 'ipString')
+   at System.Net.IPAddress.Parse(String ipString)
+   at APP.Service.PLCService.RunLoop(CancellationToken token) in D:\TuanAnh\APPWPF\SetSupply\Service\PLCService.cs:line 118
+[2026-03-11 01:07:32] System.ArgumentNullException: Value cannot be null. (Parameter 'ipString')
+   at System.Net.IPAddress.Parse(String ipString)
+   at APP.Service.PLCService.RunLoop(CancellationToken token) in D:\TuanAnh\APPWPF\SetSupply\Service\PLCService.cs:line 118
+[2026-03-11 01:07:37] System.ArgumentNullException: Value cannot be null. (Parameter 'ipString')
+   at System.Net.IPAddress.Parse(String ipString)
+   at APP.Service.PLCService.RunLoop(CancellationToken token) in D:\TuanAnh\APPWPF\SetSupply\Service\PLCService.cs:line 118
+[2026-03-11 01:08:05] System.ArgumentNullException: Value cannot be null. (Parameter 'ipString')
+   at System.Net.IPAddress.Parse(String ipString)
+   at APP.Service.PLCService.RunLoop(CancellationToken token) in D:\TuanAnh\APPWPF\SetSupply\Service\PLCService.cs:line 118
+[2026-03-11 01:08:11] System.ArgumentNullException: Value cannot be null. (Parameter 'ipString')
+   at System.Net.IPAddress.Parse(String ipString)
+   at APP.Service.PLCService.RunLoop(CancellationToken token) in D:\TuanAnh\APPWPF\SetSupply\Service\PLCService.cs:line 118
+[2026-03-11 01:08:16] System.ArgumentNullException: Value cannot be null. (Parameter 'ipString')
+   at System.Net.IPAddress.Parse(String ipString)
+   at APP.Service.PLCService.RunLoop(CancellationToken token) in D:\TuanAnh\APPWPF\SetSupply\Service\PLCService.cs:line 118
+[2026-03-11 01:08:21] System.ArgumentNullException: Value cannot be null. (Parameter 'ipString')
+   at System.Net.IPAddress.Parse(String ipString)
+   at APP.Service.PLCService.RunLoop(CancellationToken token) in D:\TuanAnh\APPWPF\SetSupply\Service\PLCService.cs:line 118
+[2026-03-11 01:08:26] System.ArgumentNullException: Value cannot be null. (Parameter 'ipString')
+   at System.Net.IPAddress.Parse(String ipString)
+   at APP.Service.PLCService.RunLoop(CancellationToken token) in D:\TuanAnh\APPWPF\SetSupply\Service\PLCService.cs:line 118
+[2026-03-11 01:08:31] System.ArgumentNullException: Value cannot be null. (Parameter 'ipString')
+   at System.Net.IPAddress.Parse(String ipString)
+   at APP.Service.PLCService.RunLoop(CancellationToken token) in D:\TuanAnh\APPWPF\SetSupply\Service\PLCService.cs:line 118
+[2026-03-11 01:08:36] System.ArgumentNullException: Value cannot be null. (Parameter 'ipString')
+   at System.Net.IPAddress.Parse(String ipString)
+   at APP.Service.PLCService.RunLoop(CancellationToken token) in D:\TuanAnh\APPWPF\SetSupply\Service\PLCService.cs:line 118
+[2026-03-11 01:08:41] System.ArgumentNullException: Value cannot be null. (Parameter 'ipString')
+   at System.Net.IPAddress.Parse(String ipString)
+   at APP.Service.PLCService.RunLoop(CancellationToken token) in D:\TuanAnh\APPWPF\SetSupply\Service\PLCService.cs:line 118
+[2026-03-11 01:09:04] System.ArgumentNullException: Value cannot be null. (Parameter 'ipString')
+   at System.Net.IPAddress.Parse(String ipString)
+   at APP.Service.PLCService.RunLoop(CancellationToken token) in D:\TuanAnh\APPWPF\SetSupply\Service\PLCService.cs:line 118
+[2026-03-11 01:09:09] System.ArgumentNullException: Value cannot be null. (Parameter 'ipString')
+   at System.Net.IPAddress.Parse(String ipString)
+   at APP.Service.PLCService.RunLoop(CancellationToken token) in D:\TuanAnh\APPWPF\SetSupply\Service\PLCService.cs:line 118
+[2026-03-11 01:09:14] System.ArgumentNullException: Value cannot be null. (Parameter 'ipString')
+   at System.Net.IPAddress.Parse(String ipString)
+   at APP.Service.PLCService.RunLoop(CancellationToken token) in D:\TuanAnh\APPWPF\SetSupply\Service\PLCService.cs:line 118
+[2026-03-11 01:09:19] System.ArgumentNullException: Value cannot be null. (Parameter 'ipString')
+   at System.Net.IPAddress.Parse(String ipString)
+   at APP.Service.PLCService.RunLoop(CancellationToken token) in D:\TuanAnh\APPWPF\SetSupply\Service\PLCService.cs:line 118
+[2026-03-11 01:11:22] System.ArgumentNullException: Value cannot be null. (Parameter 'ipString')
+   at System.Net.IPAddress.Parse(String ipString)
+   at APP.Service.PLCService.RunLoop(CancellationToken token) in D:\TuanAnh\APPWPF\SetSupply\Service\PLCService.cs:line 118
+[2026-03-11 01:11:27] System.ArgumentNullException: Value cannot be null. (Parameter 'ipString')
+   at System.Net.IPAddress.Parse(String ipString)
+   at APP.Service.PLCService.RunLoop(CancellationToken token) in D:\TuanAnh\APPWPF\SetSupply\Service\PLCService.cs:line 118
+[2026-03-11 01:11:31] System.Net.Sockets.SocketException (10051): A socket operation was attempted to an unreachable network.
+   at System.Net.Sockets.Socket.AwaitableSocketAsyncEventArgs.ThrowException(SocketError error, CancellationToken cancellationToken)
+   at System.Net.Sockets.Socket.AwaitableSocketAsyncEventArgs.System.Threading.Tasks.Sources.IValueTaskSource.GetResult(Int16 token)
+   at System.Threading.Tasks.ValueTask.ValueTaskSourceAsTask.<>c.<.cctor>b__4_0(Object state)
+--- End of stack trace from previous location ---
+   at System.Net.Sockets.TcpClient.CompleteConnectAsync(Task task)
+   at APP.Service.PLCService.RunLoop(CancellationToken token) in D:\TuanAnh\APPWPF\SetSupply\Service\PLCService.cs:line 124
+[2026-03-11 01:11:36] System.Net.Sockets.SocketException (10051): A socket operation was attempted to an unreachable network.
+   at System.Net.Sockets.Socket.AwaitableSocketAsyncEventArgs.ThrowException(SocketError error, CancellationToken cancellationToken)
+   at System.Net.Sockets.Socket.AwaitableSocketAsyncEventArgs.System.Threading.Tasks.Sources.IValueTaskSource.GetResult(Int16 token)
+   at System.Threading.Tasks.ValueTask.ValueTaskSourceAsTask.<>c.<.cctor>b__4_0(Object state)
+--- End of stack trace from previous location ---
+   at System.Net.Sockets.TcpClient.CompleteConnectAsync(Task task)
+   at APP.Service.PLCService.RunLoop(CancellationToken token) in D:\TuanAnh\APPWPF\SetSupply\Service\PLCService.cs:line 124
+[2026-03-11 01:11:41] System.Net.Sockets.SocketException (10051): A socket operation was attempted to an unreachable network.
+   at System.Net.Sockets.Socket.AwaitableSocketAsyncEventArgs.ThrowException(SocketError error, CancellationToken cancellationToken)
+   at System.Net.Sockets.Socket.AwaitableSocketAsyncEventArgs.System.Threading.Tasks.Sources.IValueTaskSource.GetResult(Int16 token)
+   at System.Threading.Tasks.ValueTask.ValueTaskSourceAsTask.<>c.<.cctor>b__4_0(Object state)
+--- End of stack trace from previous location ---
+   at System.Net.Sockets.TcpClient.CompleteConnectAsync(Task task)
+   at APP.Service.PLCService.RunLoop(CancellationToken token) in D:\TuanAnh\APPWPF\SetSupply\Service\PLCService.cs:line 124
+[2026-03-11 01:11:46] System.Net.Sockets.SocketException (10051): A socket operation was attempted to an unreachable network.
+   at System.Net.Sockets.Socket.AwaitableSocketAsyncEventArgs.ThrowException(SocketError error, CancellationToken cancellationToken)
+   at System.Net.Sockets.Socket.AwaitableSocketAsyncEventArgs.System.Threading.Tasks.Sources.IValueTaskSource.GetResult(Int16 token)
+   at System.Threading.Tasks.ValueTask.ValueTaskSourceAsTask.<>c.<.cctor>b__4_0(Object state)
+--- End of stack trace from previous location ---
+   at System.Net.Sockets.TcpClient.CompleteConnectAsync(Task task)
+   at APP.Service.PLCService.RunLoop(CancellationToken token) in D:\TuanAnh\APPWPF\SetSupply\Service\PLCService.cs:line 124
+[2026-03-11 01:11:51] System.Net.Sockets.SocketException (10051): A socket operation was attempted to an unreachable network.
+   at System.Net.Sockets.Socket.AwaitableSocketAsyncEventArgs.ThrowException(SocketError error, CancellationToken cancellationToken)
+   at System.Net.Sockets.Socket.AwaitableSocketAsyncEventArgs.System.Threading.Tasks.Sources.IValueTaskSource.GetResult(Int16 token)
+   at System.Threading.Tasks.ValueTask.ValueTaskSourceAsTask.<>c.<.cctor>b__4_0(Object state)
+--- End of stack trace from previous location ---
+   at System.Net.Sockets.TcpClient.CompleteConnectAsync(Task task)
+   at APP.Service.PLCService.RunLoop(CancellationToken token) in D:\TuanAnh\APPWPF\SetSupply\Service\PLCService.cs:line 124
+[2026-03-11 01:11:56] System.Net.Sockets.SocketException (10051): A socket operation was attempted to an unreachable network.
+   at System.Net.Sockets.Socket.AwaitableSocketAsyncEventArgs.ThrowException(SocketError error, CancellationToken cancellationToken)
+   at System.Net.Sockets.Socket.AwaitableSocketAsyncEventArgs.System.Threading.Tasks.Sources.IValueTaskSource.GetResult(Int16 token)
+   at System.Threading.Tasks.ValueTask.ValueTaskSourceAsTask.<>c.<.cctor>b__4_0(Object state)
+--- End of stack trace from previous location ---
+   at System.Net.Sockets.TcpClient.CompleteConnectAsync(Task task)
+   at APP.Service.PLCService.RunLoop(CancellationToken token) in D:\TuanAnh\APPWPF\SetSupply\Service\PLCService.cs:line 124
+[2026-03-11 01:12:01] System.Net.Sockets.SocketException (10051): A socket operation was attempted to an unreachable network.
+   at System.Net.Sockets.Socket.AwaitableSocketAsyncEventArgs.ThrowException(SocketError error, CancellationToken cancellationToken)
+   at System.Net.Sockets.Socket.AwaitableSocketAsyncEventArgs.System.Threading.Tasks.Sources.IValueTaskSource.GetResult(Int16 token)
+   at System.Threading.Tasks.ValueTask.ValueTaskSourceAsTask.<>c.<.cctor>b__4_0(Object state)
+--- End of stack trace from previous location ---
+   at System.Net.Sockets.TcpClient.CompleteConnectAsync(Task task)
+   at APP.Service.PLCService.RunLoop(CancellationToken token) in D:\TuanAnh\APPWPF\SetSupply\Service\PLCService.cs:line 124
+[2026-03-11 01:12:38] System.Net.Sockets.SocketException (10051): A socket operation was attempted to an unreachable network.
+   at System.Net.Sockets.Socket.AwaitableSocketAsyncEventArgs.ThrowException(SocketError error, CancellationToken cancellationToken)
+   at System.Net.Sockets.Socket.AwaitableSocketAsyncEventArgs.System.Threading.Tasks.Sources.IValueTaskSource.GetResult(Int16 token)
+   at System.Threading.Tasks.ValueTask.ValueTaskSourceAsTask.<>c.<.cctor>b__4_0(Object state)
+--- End of stack trace from previous location ---
+   at System.Net.Sockets.TcpClient.CompleteConnectAsync(Task task)
+   at APP.Service.PLCService.RunLoop(CancellationToken token) in D:\TuanAnh\APPWPF\SetSupply\Service\PLCService.cs:line 124
+[2026-03-11 01:12:43] System.Net.Sockets.SocketException (10051): A socket operation was attempted to an unreachable network.
+   at System.Net.Sockets.Socket.AwaitableSocketAsyncEventArgs.ThrowException(SocketError error, CancellationToken cancellationToken)
+   at System.Net.Sockets.Socket.AwaitableSocketAsyncEventArgs.System.Threading.Tasks.Sources.IValueTaskSource.GetResult(Int16 token)
+   at System.Threading.Tasks.ValueTask.ValueTaskSourceAsTask.<>c.<.cctor>b__4_0(Object state)
+--- End of stack trace from previous location ---
+   at System.Net.Sockets.TcpClient.CompleteConnectAsync(Task task)
+   at APP.Service.PLCService.RunLoop(CancellationToken token) in D:\TuanAnh\APPWPF\SetSupply\Service\PLCService.cs:line 124
+[2026-03-11 01:12:48] System.Net.Sockets.SocketException (10051): A socket operation was attempted to an unreachable network.
+   at System.Net.Sockets.Socket.AwaitableSocketAsyncEventArgs.ThrowException(SocketError error, CancellationToken cancellationToken)
+   at System.Net.Sockets.Socket.AwaitableSocketAsyncEventArgs.System.Threading.Tasks.Sources.IValueTaskSource.GetResult(Int16 token)
+   at System.Threading.Tasks.ValueTask.ValueTaskSourceAsTask.<>c.<.cctor>b__4_0(Object state)
+--- End of stack trace from previous location ---
+   at System.Net.Sockets.TcpClient.CompleteConnectAsync(Task task)
+   at APP.Service.PLCService.RunLoop(CancellationToken token) in D:\TuanAnh\APPWPF\SetSupply\Service\PLCService.cs:line 124
+[2026-03-11 01:12:53] System.Net.Sockets.SocketException (10051): A socket operation was attempted to an unreachable network.
+   at System.Net.Sockets.Socket.AwaitableSocketAsyncEventArgs.ThrowException(SocketError error, CancellationToken cancellationToken)
+   at System.Net.Sockets.Socket.AwaitableSocketAsyncEventArgs.System.Threading.Tasks.Sources.IValueTaskSource.GetResult(Int16 token)
+   at System.Threading.Tasks.ValueTask.ValueTaskSourceAsTask.<>c.<.cctor>b__4_0(Object state)
+--- End of stack trace from previous location ---
+   at System.Net.Sockets.TcpClient.CompleteConnectAsync(Task task)
+   at APP.Service.PLCService.RunLoop(CancellationToken token) in D:\TuanAnh\APPWPF\SetSupply\Service\PLCService.cs:line 124
+[2026-03-11 01:12:58] System.Net.Sockets.SocketException (10051): A socket operation was attempted to an unreachable network.
+   at System.Net.Sockets.Socket.AwaitableSocketAsyncEventArgs.ThrowException(SocketError error, CancellationToken cancellationToken)
+   at System.Net.Sockets.Socket.AwaitableSocketAsyncEventArgs.System.Threading.Tasks.Sources.IValueTaskSource.GetResult(Int16 token)
+   at System.Threading.Tasks.ValueTask.ValueTaskSourceAsTask.<>c.<.cctor>b__4_0(Object state)
+--- End of stack trace from previous location ---
+   at System.Net.Sockets.TcpClient.CompleteConnectAsync(Task task)
+   at APP.Service.PLCService.RunLoop(CancellationToken token) in D:\TuanAnh\APPWPF\SetSupply\Service\PLCService.cs:line 124
+[2026-03-11 01:13:03] System.Net.Sockets.SocketException (10051): A socket operation was attempted to an unreachable network.
+   at System.Net.Sockets.Socket.AwaitableSocketAsyncEventArgs.ThrowException(SocketError error, CancellationToken cancellationToken)
+   at System.Net.Sockets.Socket.AwaitableSocketAsyncEventArgs.System.Threading.Tasks.Sources.IValueTaskSource.GetResult(Int16 token)
+   at System.Threading.Tasks.ValueTask.ValueTaskSourceAsTask.<>c.<.cctor>b__4_0(Object state)
+--- End of stack trace from previous location ---
+   at System.Net.Sockets.TcpClient.CompleteConnectAsync(Task task)
+   at APP.Service.PLCService.RunLoop(CancellationToken token) in D:\TuanAnh\APPWPF\SetSupply\Service\PLCService.cs:line 124
+[2026-03-11 01:13:08] System.Net.Sockets.SocketException (10051): A socket operation was attempted to an unreachable network.
+   at System.Net.Sockets.Socket.AwaitableSocketAsyncEventArgs.ThrowException(SocketError error, CancellationToken cancellationToken)
+   at System.Net.Sockets.Socket.AwaitableSocketAsyncEventArgs.System.Threading.Tasks.Sources.IValueTaskSource.GetResult(Int16 token)
+   at System.Threading.Tasks.ValueTask.ValueTaskSourceAsTask.<>c.<.cctor>b__4_0(Object state)
+--- End of stack trace from previous location ---
+   at System.Net.Sockets.TcpClient.CompleteConnectAsync(Task task)
+   at APP.Service.PLCService.RunLoop(CancellationToken token) in D:\TuanAnh\APPWPF\SetSupply\Service\PLCService.cs:line 124
+[2026-03-11 01:13:13] System.Net.Sockets.SocketException (10051): A socket operation was attempted to an unreachable network.
+   at System.Net.Sockets.Socket.AwaitableSocketAsyncEventArgs.ThrowException(SocketError error, CancellationToken cancellationToken)
+   at System.Net.Sockets.Socket.AwaitableSocketAsyncEventArgs.System.Threading.Tasks.Sources.IValueTaskSource.GetResult(Int16 token)
+   at System.Threading.Tasks.ValueTask.ValueTaskSourceAsTask.<>c.<.cctor>b__4_0(Object state)
+--- End of stack trace from previous location ---
+   at System.Net.Sockets.TcpClient.CompleteConnectAsync(Task task)
+   at APP.Service.PLCService.RunLoop(CancellationToken token) in D:\TuanAnh\APPWPF\SetSupply\Service\PLCService.cs:line 124
+[2026-03-11 01:13:18] System.Net.Sockets.SocketException (10051): A socket operation was attempted to an unreachable network.
+   at System.Net.Sockets.Socket.AwaitableSocketAsyncEventArgs.ThrowException(SocketError error, CancellationToken cancellationToken)
+   at System.Net.Sockets.Socket.AwaitableSocketAsyncEventArgs.System.Threading.Tasks.Sources.IValueTaskSource.GetResult(Int16 token)
+   at System.Threading.Tasks.ValueTask.ValueTaskSourceAsTask.<>c.<.cctor>b__4_0(Object state)
+--- End of stack trace from previous location ---
+   at System.Net.Sockets.TcpClient.CompleteConnectAsync(Task task)
+   at APP.Service.PLCService.RunLoop(CancellationToken token) in D:\TuanAnh\APPWPF\SetSupply\Service\PLCService.cs:line 124
+[2026-03-11 01:13:23] System.Net.Sockets.SocketException (10051): A socket operation was attempted to an unreachable network.
+   at System.Net.Sockets.Socket.AwaitableSocketAsyncEventArgs.ThrowException(SocketError error, CancellationToken cancellationToken)
+   at System.Net.Sockets.Socket.AwaitableSocketAsyncEventArgs.System.Threading.Tasks.Sources.IValueTaskSource.GetResult(Int16 token)
+   at System.Threading.Tasks.ValueTask.ValueTaskSourceAsTask.<>c.<.cctor>b__4_0(Object state)
+--- End of stack trace from previous location ---
+   at System.Net.Sockets.TcpClient.CompleteConnectAsync(Task task)
+   at APP.Service.PLCService.RunLoop(CancellationToken token) in D:\TuanAnh\APPWPF\SetSupply\Service\PLCService.cs:line 124
+[2026-03-11 01:13:28] System.Net.Sockets.SocketException (10051): A socket operation was attempted to an unreachable network.
+   at System.Net.Sockets.Socket.AwaitableSocketAsyncEventArgs.ThrowException(SocketError error, CancellationToken cancellationToken)
+   at System.Net.Sockets.Socket.AwaitableSocketAsyncEventArgs.System.Threading.Tasks.Sources.IValueTaskSource.GetResult(Int16 token)
+   at System.Threading.Tasks.ValueTask.ValueTaskSourceAsTask.<>c.<.cctor>b__4_0(Object state)
+--- End of stack trace from previous location ---
+   at System.Net.Sockets.TcpClient.CompleteConnectAsync(Task task)
+   at APP.Service.PLCService.RunLoop(CancellationToken token) in D:\TuanAnh\APPWPF\SetSupply\Service\PLCService.cs:line 124
+[2026-03-11 01:13:33] System.Net.Sockets.SocketException (10051): A socket operation was attempted to an unreachable network.
+   at System.Net.Sockets.Socket.AwaitableSocketAsyncEventArgs.ThrowException(SocketError error, CancellationToken cancellationToken)
+   at System.Net.Sockets.Socket.AwaitableSocketAsyncEventArgs.System.Threading.Tasks.Sources.IValueTaskSource.GetResult(Int16 token)
+   at System.Threading.Tasks.ValueTask.ValueTaskSourceAsTask.<>c.<.cctor>b__4_0(Object state)
+--- End of stack trace from previous location ---
+   at System.Net.Sockets.TcpClient.CompleteConnectAsync(Task task)
+   at APP.Service.PLCService.RunLoop(CancellationToken token) in D:\TuanAnh\APPWPF\SetSupply\Service\PLCService.cs:line 124
+[2026-03-11 01:13:38] System.Net.Sockets.SocketException (10051): A socket operation was attempted to an unreachable network.
+   at System.Net.Sockets.Socket.AwaitableSocketAsyncEventArgs.ThrowException(SocketError error, CancellationToken cancellationToken)
+   at System.Net.Sockets.Socket.AwaitableSocketAsyncEventArgs.System.Threading.Tasks.Sources.IValueTaskSource.GetResult(Int16 token)
+   at System.Threading.Tasks.ValueTask.ValueTaskSourceAsTask.<>c.<.cctor>b__4_0(Object state)
+--- End of stack trace from previous location ---
+   at System.Net.Sockets.TcpClient.CompleteConnectAsync(Task task)
+   at APP.Service.PLCService.RunLoop(CancellationToken token) in D:\TuanAnh\APPWPF\SetSupply\Service\PLCService.cs:line 124
+[2026-03-11 01:13:43] System.Net.Sockets.SocketException (10051): A socket operation was attempted to an unreachable network.
+   at System.Net.Sockets.Socket.AwaitableSocketAsyncEventArgs.ThrowException(SocketError error, CancellationToken cancellationToken)
+   at System.Net.Sockets.Socket.AwaitableSocketAsyncEventArgs.System.Threading.Tasks.Sources.IValueTaskSource.GetResult(Int16 token)
+   at System.Threading.Tasks.ValueTask.ValueTaskSourceAsTask.<>c.<.cctor>b__4_0(Object state)
+--- End of stack trace from previous location ---
+   at System.Net.Sockets.TcpClient.CompleteConnectAsync(Task task)
+   at APP.Service.PLCService.RunLoop(CancellationToken token) in D:\TuanAnh\APPWPF\SetSupply\Service\PLCService.cs:line 124
+[2026-03-11 01:13:48] System.Net.Sockets.SocketException (10051): A socket operation was attempted to an unreachable network.
+   at System.Net.Sockets.Socket.AwaitableSocketAsyncEventArgs.ThrowException(SocketError error, CancellationToken cancellationToken)
+   at System.Net.Sockets.Socket.AwaitableSocketAsyncEventArgs.System.Threading.Tasks.Sources.IValueTaskSource.GetResult(Int16 token)
+   at System.Threading.Tasks.ValueTask.ValueTaskSourceAsTask.<>c.<.cctor>b__4_0(Object state)
+--- End of stack trace from previous location ---
+   at System.Net.Sockets.TcpClient.CompleteConnectAsync(Task task)
+   at APP.Service.PLCService.RunLoop(CancellationToken token) in D:\TuanAnh\APPWPF\SetSupply\Service\PLCService.cs:line 124
+[2026-03-11 01:13:53] System.Net.Sockets.SocketException (10051): A socket operation was attempted to an unreachable network.
+   at System.Net.Sockets.Socket.AwaitableSocketAsyncEventArgs.ThrowException(SocketError error, CancellationToken cancellationToken)
+   at System.Net.Sockets.Socket.AwaitableSocketAsyncEventArgs.System.Threading.Tasks.Sources.IValueTaskSource.GetResult(Int16 token)
+   at System.Threading.Tasks.ValueTask.ValueTaskSourceAsTask.<>c.<.cctor>b__4_0(Object state)
+--- End of stack trace from previous location ---
+   at System.Net.Sockets.TcpClient.CompleteConnectAsync(Task task)
+   at APP.Service.PLCService.RunLoop(CancellationToken token) in D:\TuanAnh\APPWPF\SetSupply\Service\PLCService.cs:line 124
+[2026-03-11 01:13:58] System.Net.Sockets.SocketException (10051): A socket operation was attempted to an unreachable network.
+   at System.Net.Sockets.Socket.AwaitableSocketAsyncEventArgs.ThrowException(SocketError error, CancellationToken cancellationToken)
+   at System.Net.Sockets.Socket.AwaitableSocketAsyncEventArgs.System.Threading.Tasks.Sources.IValueTaskSource.GetResult(Int16 token)
+   at System.Threading.Tasks.ValueTask.ValueTaskSourceAsTask.<>c.<.cctor>b__4_0(Object state)
+--- End of stack trace from previous location ---
+   at System.Net.Sockets.TcpClient.CompleteConnectAsync(Task task)
+   at APP.Service.PLCService.RunLoop(CancellationToken token) in D:\TuanAnh\APPWPF\SetSupply\Service\PLCService.cs:line 124
+[2026-03-11 01:14:03] System.Net.Sockets.SocketException (10051): A socket operation was attempted to an unreachable network.
+   at System.Net.Sockets.Socket.AwaitableSocketAsyncEventArgs.ThrowException(SocketError error, CancellationToken cancellationToken)
+   at System.Net.Sockets.Socket.AwaitableSocketAsyncEventArgs.System.Threading.Tasks.Sources.IValueTaskSource.GetResult(Int16 token)
+   at System.Threading.Tasks.ValueTask.ValueTaskSourceAsTask.<>c.<.cctor>b__4_0(Object state)
+--- End of stack trace from previous location ---
+   at System.Net.Sockets.TcpClient.CompleteConnectAsync(Task task)
+   at APP.Service.PLCService.RunLoop(CancellationToken token) in D:\TuanAnh\APPWPF\SetSupply\Service\PLCService.cs:line 124
+[2026-03-11 01:14:08] System.Net.Sockets.SocketException (10051): A socket operation was attempted to an unreachable network.
+   at System.Net.Sockets.Socket.AwaitableSocketAsyncEventArgs.ThrowException(SocketError error, CancellationToken cancellationToken)
+   at System.Net.Sockets.Socket.AwaitableSocketAsyncEventArgs.System.Threading.Tasks.Sources.IValueTaskSource.GetResult(Int16 token)
+   at System.Threading.Tasks.ValueTask.ValueTaskSourceAsTask.<>c.<.cctor>b__4_0(Object state)
+--- End of stack trace from previous location ---
+   at System.Net.Sockets.TcpClient.CompleteConnectAsync(Task task)
+   at APP.Service.PLCService.RunLoop(CancellationToken token) in D:\TuanAnh\APPWPF\SetSupply\Service\PLCService.cs:line 124
+[2026-03-11 01:14:13] System.Net.Sockets.SocketException (10051): A socket operation was attempted to an unreachable network.
+   at System.Net.Sockets.Socket.AwaitableSocketAsyncEventArgs.ThrowException(SocketError error, CancellationToken cancellationToken)
+   at System.Net.Sockets.Socket.AwaitableSocketAsyncEventArgs.System.Threading.Tasks.Sources.IValueTaskSource.GetResult(Int16 token)
+   at System.Threading.Tasks.ValueTask.ValueTaskSourceAsTask.<>c.<.cctor>b__4_0(Object state)
+--- End of stack trace from previous location ---
+   at System.Net.Sockets.TcpClient.CompleteConnectAsync(Task task)
+   at APP.Service.PLCService.RunLoop(CancellationToken token) in D:\TuanAnh\APPWPF\SetSupply\Service\PLCService.cs:line 124
+[2026-03-11 01:14:18] System.Net.Sockets.SocketException (10051): A socket operation was attempted to an unreachable network.
+   at System.Net.Sockets.Socket.AwaitableSocketAsyncEventArgs.ThrowException(SocketError error, CancellationToken cancellationToken)
+   at System.Net.Sockets.Socket.AwaitableSocketAsyncEventArgs.System.Threading.Tasks.Sources.IValueTaskSource.GetResult(Int16 token)
+   at System.Threading.Tasks.ValueTask.ValueTaskSourceAsTask.<>c.<.cctor>b__4_0(Object state)
+--- End of stack trace from previous location ---
+   at System.Net.Sockets.TcpClient.CompleteConnectAsync(Task task)
+   at APP.Service.PLCService.RunLoop(CancellationToken token) in D:\TuanAnh\APPWPF\SetSupply\Service\PLCService.cs:line 124
+[2026-03-11 01:14:23] System.Net.Sockets.SocketException (10051): A socket operation was attempted to an unreachable network.
+   at System.Net.Sockets.Socket.AwaitableSocketAsyncEventArgs.ThrowException(SocketError error, CancellationToken cancellationToken)
+   at System.Net.Sockets.Socket.AwaitableSocketAsyncEventArgs.System.Threading.Tasks.Sources.IValueTaskSource.GetResult(Int16 token)
+   at System.Threading.Tasks.ValueTask.ValueTaskSourceAsTask.<>c.<.cctor>b__4_0(Object state)
+--- End of stack trace from previous location ---
+   at System.Net.Sockets.TcpClient.CompleteConnectAsync(Task task)
+   at APP.Service.PLCService.RunLoop(CancellationToken token) in D:\TuanAnh\APPWPF\SetSupply\Service\PLCService.cs:line 124
+[2026-03-11 01:14:28] System.Net.Sockets.SocketException (10051): A socket operation was attempted to an unreachable network.
+   at System.Net.Sockets.Socket.AwaitableSocketAsyncEventArgs.ThrowException(SocketError error, CancellationToken cancellationToken)
+   at System.Net.Sockets.Socket.AwaitableSocketAsyncEventArgs.System.Threading.Tasks.Sources.IValueTaskSource.GetResult(Int16 token)
+   at System.Threading.Tasks.ValueTask.ValueTaskSourceAsTask.<>c.<.cctor>b__4_0(Object state)
+--- End of stack trace from previous location ---
+   at System.Net.Sockets.TcpClient.CompleteConnectAsync(Task task)
+   at APP.Service.PLCService.RunLoop(CancellationToken token) in D:\TuanAnh\APPWPF\SetSupply\Service\PLCService.cs:line 124
+[2026-03-11 01:14:33] System.Net.Sockets.SocketException (10051): A socket operation was attempted to an unreachable network.
+   at System.Net.Sockets.Socket.AwaitableSocketAsyncEventArgs.ThrowException(SocketError error, CancellationToken cancellationToken)
+   at System.Net.Sockets.Socket.AwaitableSocketAsyncEventArgs.System.Threading.Tasks.Sources.IValueTaskSource.GetResult(Int16 token)
+   at System.Threading.Tasks.ValueTask.ValueTaskSourceAsTask.<>c.<.cctor>b__4_0(Object state)
+--- End of stack trace from previous location ---
+   at System.Net.Sockets.TcpClient.CompleteConnectAsync(Task task)
+   at APP.Service.PLCService.RunLoop(CancellationToken token) in D:\TuanAnh\APPWPF\SetSupply\Service\PLCService.cs:line 124
+[2026-03-11 01:14:38] System.Net.Sockets.SocketException (10051): A socket operation was attempted to an unreachable network.
+   at System.Net.Sockets.Socket.AwaitableSocketAsyncEventArgs.ThrowException(SocketError error, CancellationToken cancellationToken)
+   at System.Net.Sockets.Socket.AwaitableSocketAsyncEventArgs.System.Threading.Tasks.Sources.IValueTaskSource.GetResult(Int16 token)
+   at System.Threading.Tasks.ValueTask.ValueTaskSourceAsTask.<>c.<.cctor>b__4_0(Object state)
+--- End of stack trace from previous location ---
+   at System.Net.Sockets.TcpClient.CompleteConnectAsync(Task task)
+   at APP.Service.PLCService.RunLoop(CancellationToken token) in D:\TuanAnh\APPWPF\SetSupply\Service\PLCService.cs:line 124
+[2026-03-11 01:14:43] System.Net.Sockets.SocketException (10051): A socket operation was attempted to an unreachable network.
+   at System.Net.Sockets.Socket.AwaitableSocketAsyncEventArgs.ThrowException(SocketError error, CancellationToken cancellationToken)
+   at System.Net.Sockets.Socket.AwaitableSocketAsyncEventArgs.System.Threading.Tasks.Sources.IValueTaskSource.GetResult(Int16 token)
+   at System.Threading.Tasks.ValueTask.ValueTaskSourceAsTask.<>c.<.cctor>b__4_0(Object state)
+--- End of stack trace from previous location ---
+   at System.Net.Sockets.TcpClient.CompleteConnectAsync(Task task)
+   at APP.Service.PLCService.RunLoop(CancellationToken token) in D:\TuanAnh\APPWPF\SetSupply\Service\PLCService.cs:line 124
+[2026-03-11 01:14:48] System.Net.Sockets.SocketException (10051): A socket operation was attempted to an unreachable network.
+   at System.Net.Sockets.Socket.AwaitableSocketAsyncEventArgs.ThrowException(SocketError error, CancellationToken cancellationToken)
+   at System.Net.Sockets.Socket.AwaitableSocketAsyncEventArgs.System.Threading.Tasks.Sources.IValueTaskSource.GetResult(Int16 token)
+   at System.Threading.Tasks.ValueTask.ValueTaskSourceAsTask.<>c.<.cctor>b__4_0(Object state)
+--- End of stack trace from previous location ---
+   at System.Net.Sockets.TcpClient.CompleteConnectAsync(Task task)
+   at APP.Service.PLCService.RunLoop(CancellationToken token) in D:\TuanAnh\APPWPF\SetSupply\Service\PLCService.cs:line 124
+[2026-03-11 01:14:53] System.Net.Sockets.SocketException (10051): A socket operation was attempted to an unreachable network.
+   at System.Net.Sockets.Socket.AwaitableSocketAsyncEventArgs.ThrowException(SocketError error, CancellationToken cancellationToken)
+   at System.Net.Sockets.Socket.AwaitableSocketAsyncEventArgs.System.Threading.Tasks.Sources.IValueTaskSource.GetResult(Int16 token)
+   at System.Threading.Tasks.ValueTask.ValueTaskSourceAsTask.<>c.<.cctor>b__4_0(Object state)
+--- End of stack trace from previous location ---
+   at System.Net.Sockets.TcpClient.CompleteConnectAsync(Task task)
+   at APP.Service.PLCService.RunLoop(CancellationToken token) in D:\TuanAnh\APPWPF\SetSupply\Service\PLCService.cs:line 124
+[2026-03-11 01:14:58] System.Net.Sockets.SocketException (10051): A socket operation was attempted to an unreachable network.
+   at System.Net.Sockets.Socket.AwaitableSocketAsyncEventArgs.ThrowException(SocketError error, CancellationToken cancellationToken)
+   at System.Net.Sockets.Socket.AwaitableSocketAsyncEventArgs.System.Threading.Tasks.Sources.IValueTaskSource.GetResult(Int16 token)
+   at System.Threading.Tasks.ValueTask.ValueTaskSourceAsTask.<>c.<.cctor>b__4_0(Object state)
+--- End of stack trace from previous location ---
+   at System.Net.Sockets.TcpClient.CompleteConnectAsync(Task task)
+   at APP.Service.PLCService.RunLoop(CancellationToken token) in D:\TuanAnh\APPWPF\SetSupply\Service\PLCService.cs:line 124
+[2026-03-11 01:15:03] System.Net.Sockets.SocketException (10051): A socket operation was attempted to an unreachable network.
+   at System.Net.Sockets.Socket.AwaitableSocketAsyncEventArgs.ThrowException(SocketError error, CancellationToken cancellationToken)
+   at System.Net.Sockets.Socket.AwaitableSocketAsyncEventArgs.System.Threading.Tasks.Sources.IValueTaskSource.GetResult(Int16 token)
+   at System.Threading.Tasks.ValueTask.ValueTaskSourceAsTask.<>c.<.cctor>b__4_0(Object state)
+--- End of stack trace from previous location ---
+   at System.Net.Sockets.TcpClient.CompleteConnectAsync(Task task)
+   at APP.Service.PLCService.RunLoop(CancellationToken token) in D:\TuanAnh\APPWPF\SetSupply\Service\PLCService.cs:line 124
+[2026-03-11 01:15:08] System.Net.Sockets.SocketException (10051): A socket operation was attempted to an unreachable network.
+   at System.Net.Sockets.Socket.AwaitableSocketAsyncEventArgs.ThrowException(SocketError error, CancellationToken cancellationToken)
+   at System.Net.Sockets.Socket.AwaitableSocketAsyncEventArgs.System.Threading.Tasks.Sources.IValueTaskSource.GetResult(Int16 token)
+   at System.Threading.Tasks.ValueTask.ValueTaskSourceAsTask.<>c.<.cctor>b__4_0(Object state)
+--- End of stack trace from previous location ---
+   at System.Net.Sockets.TcpClient.CompleteConnectAsync(Task task)
+   at APP.Service.PLCService.RunLoop(CancellationToken token) in D:\TuanAnh\APPWPF\SetSupply\Service\PLCService.cs:line 124
+[2026-03-11 01:15:13] System.Net.Sockets.SocketException (10051): A socket operation was attempted to an unreachable network.
+   at System.Net.Sockets.Socket.AwaitableSocketAsyncEventArgs.ThrowException(SocketError error, CancellationToken cancellationToken)
+   at System.Net.Sockets.Socket.AwaitableSocketAsyncEventArgs.System.Threading.Tasks.Sources.IValueTaskSource.GetResult(Int16 token)
+   at System.Threading.Tasks.ValueTask.ValueTaskSourceAsTask.<>c.<.cctor>b__4_0(Object state)
+--- End of stack trace from previous location ---
+   at System.Net.Sockets.TcpClient.CompleteConnectAsync(Task task)
+   at APP.Service.PLCService.RunLoop(CancellationToken token) in D:\TuanAnh\APPWPF\SetSupply\Service\PLCService.cs:line 124
+[2026-03-11 01:15:18] System.Net.Sockets.SocketException (10051): A socket operation was attempted to an unreachable network.
+   at System.Net.Sockets.Socket.AwaitableSocketAsyncEventArgs.ThrowException(SocketError error, CancellationToken cancellationToken)
+   at System.Net.Sockets.Socket.AwaitableSocketAsyncEventArgs.System.Threading.Tasks.Sources.IValueTaskSource.GetResult(Int16 token)
+   at System.Threading.Tasks.ValueTask.ValueTaskSourceAsTask.<>c.<.cctor>b__4_0(Object state)
+--- End of stack trace from previous location ---
+   at System.Net.Sockets.TcpClient.CompleteConnectAsync(Task task)
+   at APP.Service.PLCService.RunLoop(CancellationToken token) in D:\TuanAnh\APPWPF\SetSupply\Service\PLCService.cs:line 124
+[2026-03-11 01:15:23] System.Net.Sockets.SocketException (10051): A socket operation was attempted to an unreachable network.
+   at System.Net.Sockets.Socket.AwaitableSocketAsyncEventArgs.ThrowException(SocketError error, CancellationToken cancellationToken)
+   at System.Net.Sockets.Socket.AwaitableSocketAsyncEventArgs.System.Threading.Tasks.Sources.IValueTaskSource.GetResult(Int16 token)
+   at System.Threading.Tasks.ValueTask.ValueTaskSourceAsTask.<>c.<.cctor>b__4_0(Object state)
+--- End of stack trace from previous location ---
+   at System.Net.Sockets.TcpClient.CompleteConnectAsync(Task task)
+   at APP.Service.PLCService.RunLoop(CancellationToken token) in D:\TuanAnh\APPWPF\SetSupply\Service\PLCService.cs:line 124
+[2026-03-11 01:15:28] System.Net.Sockets.SocketException (10051): A socket operation was attempted to an unreachable network.
+   at System.Net.Sockets.Socket.AwaitableSocketAsyncEventArgs.ThrowException(SocketError error, CancellationToken cancellationToken)
+   at System.Net.Sockets.Socket.AwaitableSocketAsyncEventArgs.System.Threading.Tasks.Sources.IValueTaskSource.GetResult(Int16 token)
+   at System.Threading.Tasks.ValueTask.ValueTaskSourceAsTask.<>c.<.cctor>b__4_0(Object state)
+--- End of stack trace from previous location ---
+   at System.Net.Sockets.TcpClient.CompleteConnectAsync(Task task)
+   at APP.Service.PLCService.RunLoop(CancellationToken token) in D:\TuanAnh\APPWPF\SetSupply\Service\PLCService.cs:line 124
+[2026-03-11 01:15:33] System.Net.Sockets.SocketException (10051): A socket operation was attempted to an unreachable network.
+   at System.Net.Sockets.Socket.AwaitableSocketAsyncEventArgs.ThrowException(SocketError error, CancellationToken cancellationToken)
+   at System.Net.Sockets.Socket.AwaitableSocketAsyncEventArgs.System.Threading.Tasks.Sources.IValueTaskSource.GetResult(Int16 token)
+   at System.Threading.Tasks.ValueTask.ValueTaskSourceAsTask.<>c.<.cctor>b__4_0(Object state)
+--- End of stack trace from previous location ---
+   at System.Net.Sockets.TcpClient.CompleteConnectAsync(Task task)
+   at APP.Service.PLCService.RunLoop(CancellationToken token) in D:\TuanAnh\APPWPF\SetSupply\Service\PLCService.cs:line 124
+[2026-03-11 01:15:38] System.Net.Sockets.SocketException (10051): A socket operation was attempted to an unreachable network.
+   at System.Net.Sockets.Socket.AwaitableSocketAsyncEventArgs.ThrowException(SocketError error, CancellationToken cancellationToken)
+   at System.Net.Sockets.Socket.AwaitableSocketAsyncEventArgs.System.Threading.Tasks.Sources.IValueTaskSource.GetResult(Int16 token)
+   at System.Threading.Tasks.ValueTask.ValueTaskSourceAsTask.<>c.<.cctor>b__4_0(Object state)
+--- End of stack trace from previous location ---
+   at System.Net.Sockets.TcpClient.CompleteConnectAsync(Task task)
+   at APP.Service.PLCService.RunLoop(CancellationToken token) in D:\TuanAnh\APPWPF\SetSupply\Service\PLCService.cs:line 124
+[2026-03-11 01:15:43] System.Net.Sockets.SocketException (10051): A socket operation was attempted to an unreachable network.
+   at System.Net.Sockets.Socket.AwaitableSocketAsyncEventArgs.ThrowException(SocketError error, CancellationToken cancellationToken)
+   at System.Net.Sockets.Socket.AwaitableSocketAsyncEventArgs.System.Threading.Tasks.Sources.IValueTaskSource.GetResult(Int16 token)
+   at System.Threading.Tasks.ValueTask.ValueTaskSourceAsTask.<>c.<.cctor>b__4_0(Object state)
+--- End of stack trace from previous location ---
+   at System.Net.Sockets.TcpClient.CompleteConnectAsync(Task task)
+   at APP.Service.PLCService.RunLoop(CancellationToken token) in D:\TuanAnh\APPWPF\SetSupply\Service\PLCService.cs:line 124
+[2026-03-11 01:15:48] System.Net.Sockets.SocketException (10051): A socket operation was attempted to an unreachable network.
+   at System.Net.Sockets.Socket.AwaitableSocketAsyncEventArgs.ThrowException(SocketError error, CancellationToken cancellationToken)
+   at System.Net.Sockets.Socket.AwaitableSocketAsyncEventArgs.System.Threading.Tasks.Sources.IValueTaskSource.GetResult(Int16 token)
+   at System.Threading.Tasks.ValueTask.ValueTaskSourceAsTask.<>c.<.cctor>b__4_0(Object state)
+--- End of stack trace from previous location ---
+   at System.Net.Sockets.TcpClient.CompleteConnectAsync(Task task)
+   at APP.Service.PLCService.RunLoop(CancellationToken token) in D:\TuanAnh\APPWPF\SetSupply\Service\PLCService.cs:line 124
+[2026-03-11 01:15:53] System.Net.Sockets.SocketException (10051): A socket operation was attempted to an unreachable network.
+   at System.Net.Sockets.Socket.AwaitableSocketAsyncEventArgs.ThrowException(SocketError error, CancellationToken cancellationToken)
+   at System.Net.Sockets.Socket.AwaitableSocketAsyncEventArgs.System.Threading.Tasks.Sources.IValueTaskSource.GetResult(Int16 token)
+   at System.Threading.Tasks.ValueTask.ValueTaskSourceAsTask.<>c.<.cctor>b__4_0(Object state)
+--- End of stack trace from previous location ---
+   at System.Net.Sockets.TcpClient.CompleteConnectAsync(Task task)
+   at APP.Service.PLCService.RunLoop(CancellationToken token) in D:\TuanAnh\APPWPF\SetSupply\Service\PLCService.cs:line 124
+[2026-03-11 01:15:58] System.Net.Sockets.SocketException (10051): A socket operation was attempted to an unreachable network.
+   at System.Net.Sockets.Socket.AwaitableSocketAsyncEventArgs.ThrowException(SocketError error, CancellationToken cancellationToken)
+   at System.Net.Sockets.Socket.AwaitableSocketAsyncEventArgs.System.Threading.Tasks.Sources.IValueTaskSource.GetResult(Int16 token)
+   at System.Threading.Tasks.ValueTask.ValueTaskSourceAsTask.<>c.<.cctor>b__4_0(Object state)
+--- End of stack trace from previous location ---
+   at System.Net.Sockets.TcpClient.CompleteConnectAsync(Task task)
+   at APP.Service.PLCService.RunLoop(CancellationToken token) in D:\TuanAnh\APPWPF\SetSupply\Service\PLCService.cs:line 124
+[2026-03-11 01:16:03] System.Net.Sockets.SocketException (10051): A socket operation was attempted to an unreachable network.
+   at System.Net.Sockets.Socket.AwaitableSocketAsyncEventArgs.ThrowException(SocketError error, CancellationToken cancellationToken)
+   at System.Net.Sockets.Socket.AwaitableSocketAsyncEventArgs.System.Threading.Tasks.Sources.IValueTaskSource.GetResult(Int16 token)
+   at System.Threading.Tasks.ValueTask.ValueTaskSourceAsTask.<>c.<.cctor>b__4_0(Object state)
+--- End of stack trace from previous location ---
+   at System.Net.Sockets.TcpClient.CompleteConnectAsync(Task task)
+   at APP.Service.PLCService.RunLoop(CancellationToken token) in D:\TuanAnh\APPWPF\SetSupply\Service\PLCService.cs:line 124
+[2026-03-11 01:16:08] System.Net.Sockets.SocketException (10051): A socket operation was attempted to an unreachable network.
+   at System.Net.Sockets.Socket.AwaitableSocketAsyncEventArgs.ThrowException(SocketError error, CancellationToken cancellationToken)
+   at System.Net.Sockets.Socket.AwaitableSocketAsyncEventArgs.System.Threading.Tasks.Sources.IValueTaskSource.GetResult(Int16 token)
+   at System.Threading.Tasks.ValueTask.ValueTaskSourceAsTask.<>c.<.cctor>b__4_0(Object state)
+--- End of stack trace from previous location ---
+   at System.Net.Sockets.TcpClient.CompleteConnectAsync(Task task)
+   at APP.Service.PLCService.RunLoop(CancellationToken token) in D:\TuanAnh\APPWPF\SetSupply\Service\PLCService.cs:line 124
+[2026-03-11 01:16:13] System.Net.Sockets.SocketException (10051): A socket operation was attempted to an unreachable network.
+   at System.Net.Sockets.Socket.AwaitableSocketAsyncEventArgs.ThrowException(SocketError error, CancellationToken cancellationToken)
+   at System.Net.Sockets.Socket.AwaitableSocketAsyncEventArgs.System.Threading.Tasks.Sources.IValueTaskSource.GetResult(Int16 token)
+   at System.Threading.Tasks.ValueTask.ValueTaskSourceAsTask.<>c.<.cctor>b__4_0(Object state)
+--- End of stack trace from previous location ---
+   at System.Net.Sockets.TcpClient.CompleteConnectAsync(Task task)
+   at APP.Service.PLCService.RunLoop(CancellationToken token) in D:\TuanAnh\APPWPF\SetSupply\Service\PLCService.cs:line 124
+[2026-03-11 01:16:18] System.Net.Sockets.SocketException (10051): A socket operation was attempted to an unreachable network.
+   at System.Net.Sockets.Socket.AwaitableSocketAsyncEventArgs.ThrowException(SocketError error, CancellationToken cancellationToken)
+   at System.Net.Sockets.Socket.AwaitableSocketAsyncEventArgs.System.Threading.Tasks.Sources.IValueTaskSource.GetResult(Int16 token)
+   at System.Threading.Tasks.ValueTask.ValueTaskSourceAsTask.<>c.<.cctor>b__4_0(Object state)
+--- End of stack trace from previous location ---
+   at System.Net.Sockets.TcpClient.CompleteConnectAsync(Task task)
+   at APP.Service.PLCService.RunLoop(CancellationToken token) in D:\TuanAnh\APPWPF\SetSupply\Service\PLCService.cs:line 124
+[2026-03-11 01:16:23] System.Net.Sockets.SocketException (10051): A socket operation was attempted to an unreachable network.
+   at System.Net.Sockets.Socket.AwaitableSocketAsyncEventArgs.ThrowException(SocketError error, CancellationToken cancellationToken)
+   at System.Net.Sockets.Socket.AwaitableSocketAsyncEventArgs.System.Threading.Tasks.Sources.IValueTaskSource.GetResult(Int16 token)
+   at System.Threading.Tasks.ValueTask.ValueTaskSourceAsTask.<>c.<.cctor>b__4_0(Object state)
+--- End of stack trace from previous location ---
+   at System.Net.Sockets.TcpClient.CompleteConnectAsync(Task task)
+   at APP.Service.PLCService.RunLoop(CancellationToken token) in D:\TuanAnh\APPWPF\SetSupply\Service\PLCService.cs:line 124
+[2026-03-11 01:16:28] System.Net.Sockets.SocketException (10051): A socket operation was attempted to an unreachable network.
+   at System.Net.Sockets.Socket.AwaitableSocketAsyncEventArgs.ThrowException(SocketError error, CancellationToken cancellationToken)
+   at System.Net.Sockets.Socket.AwaitableSocketAsyncEventArgs.System.Threading.Tasks.Sources.IValueTaskSource.GetResult(Int16 token)
+   at System.Threading.Tasks.ValueTask.ValueTaskSourceAsTask.<>c.<.cctor>b__4_0(Object state)
+--- End of stack trace from previous location ---
+   at System.Net.Sockets.TcpClient.CompleteConnectAsync(Task task)
+   at APP.Service.PLCService.RunLoop(CancellationToken token) in D:\TuanAnh\APPWPF\SetSupply\Service\PLCService.cs:line 124
+[2026-03-11 01:16:33] System.Net.Sockets.SocketException (10051): A socket operation was attempted to an unreachable network.
+   at System.Net.Sockets.Socket.AwaitableSocketAsyncEventArgs.ThrowException(SocketError error, CancellationToken cancellationToken)
+   at System.Net.Sockets.Socket.AwaitableSocketAsyncEventArgs.System.Threading.Tasks.Sources.IValueTaskSource.GetResult(Int16 token)
+   at System.Threading.Tasks.ValueTask.ValueTaskSourceAsTask.<>c.<.cctor>b__4_0(Object state)
+--- End of stack trace from previous location ---
+   at System.Net.Sockets.TcpClient.CompleteConnectAsync(Task task)
+   at APP.Service.PLCService.RunLoop(CancellationToken token) in D:\TuanAnh\APPWPF\SetSupply\Service\PLCService.cs:line 124
+[2026-03-11 01:16:38] System.Net.Sockets.SocketException (10051): A socket operation was attempted to an unreachable network.
+   at System.Net.Sockets.Socket.AwaitableSocketAsyncEventArgs.ThrowException(SocketError error, CancellationToken cancellationToken)
+   at System.Net.Sockets.Socket.AwaitableSocketAsyncEventArgs.System.Threading.Tasks.Sources.IValueTaskSource.GetResult(Int16 token)
+   at System.Threading.Tasks.ValueTask.ValueTaskSourceAsTask.<>c.<.cctor>b__4_0(Object state)
+--- End of stack trace from previous location ---
+   at System.Net.Sockets.TcpClient.CompleteConnectAsync(Task task)
+   at APP.Service.PLCService.RunLoop(CancellationToken token) in D:\TuanAnh\APPWPF\SetSupply\Service\PLCService.cs:line 124
+[2026-03-11 01:16:43] System.Net.Sockets.SocketException (10051): A socket operation was attempted to an unreachable network.
+   at System.Net.Sockets.Socket.AwaitableSocketAsyncEventArgs.ThrowException(SocketError error, CancellationToken cancellationToken)
+   at System.Net.Sockets.Socket.AwaitableSocketAsyncEventArgs.System.Threading.Tasks.Sources.IValueTaskSource.GetResult(Int16 token)
+   at System.Threading.Tasks.ValueTask.ValueTaskSourceAsTask.<>c.<.cctor>b__4_0(Object state)
+--- End of stack trace from previous location ---
+   at System.Net.Sockets.TcpClient.CompleteConnectAsync(Task task)
+   at APP.Service.PLCService.RunLoop(CancellationToken token) in D:\TuanAnh\APPWPF\SetSupply\Service\PLCService.cs:line 124
+[2026-03-11 01:16:48] System.Net.Sockets.SocketException (10051): A socket operation was attempted to an unreachable network.
+   at System.Net.Sockets.Socket.AwaitableSocketAsyncEventArgs.ThrowException(SocketError error, CancellationToken cancellationToken)
+   at System.Net.Sockets.Socket.AwaitableSocketAsyncEventArgs.System.Threading.Tasks.Sources.IValueTaskSource.GetResult(Int16 token)
+   at System.Threading.Tasks.ValueTask.ValueTaskSourceAsTask.<>c.<.cctor>b__4_0(Object state)
+--- End of stack trace from previous location ---
+   at System.Net.Sockets.TcpClient.CompleteConnectAsync(Task task)
+   at APP.Service.PLCService.RunLoop(CancellationToken token) in D:\TuanAnh\APPWPF\SetSupply\Service\PLCService.cs:line 124
+[2026-03-11 01:16:53] System.Net.Sockets.SocketException (10051): A socket operation was attempted to an unreachable network.
+   at System.Net.Sockets.Socket.AwaitableSocketAsyncEventArgs.ThrowException(SocketError error, CancellationToken cancellationToken)
+   at System.Net.Sockets.Socket.AwaitableSocketAsyncEventArgs.System.Threading.Tasks.Sources.IValueTaskSource.GetResult(Int16 token)
+   at System.Threading.Tasks.ValueTask.ValueTaskSourceAsTask.<>c.<.cctor>b__4_0(Object state)
+--- End of stack trace from previous location ---
+   at System.Net.Sockets.TcpClient.CompleteConnectAsync(Task task)
+   at APP.Service.PLCService.RunLoop(CancellationToken token) in D:\TuanAnh\APPWPF\SetSupply\Service\PLCService.cs:line 124
+[2026-03-11 01:16:58] System.Net.Sockets.SocketException (10051): A socket operation was attempted to an unreachable network.
+   at System.Net.Sockets.Socket.AwaitableSocketAsyncEventArgs.ThrowException(SocketError error, CancellationToken cancellationToken)
+   at System.Net.Sockets.Socket.AwaitableSocketAsyncEventArgs.System.Threading.Tasks.Sources.IValueTaskSource.GetResult(Int16 token)
+   at System.Threading.Tasks.ValueTask.ValueTaskSourceAsTask.<>c.<.cctor>b__4_0(Object state)
+--- End of stack trace from previous location ---
+   at System.Net.Sockets.TcpClient.CompleteConnectAsync(Task task)
+   at APP.Service.PLCService.RunLoop(CancellationToken token) in D:\TuanAnh\APPWPF\SetSupply\Service\PLCService.cs:line 124
+[2026-03-11 01:17:03] System.Net.Sockets.SocketException (10051): A socket operation was attempted to an unreachable network.
+   at System.Net.Sockets.Socket.AwaitableSocketAsyncEventArgs.ThrowException(SocketError error, CancellationToken cancellationToken)
+   at System.Net.Sockets.Socket.AwaitableSocketAsyncEventArgs.System.Threading.Tasks.Sources.IValueTaskSource.GetResult(Int16 token)
+   at System.Threading.Tasks.ValueTask.ValueTaskSourceAsTask.<>c.<.cctor>b__4_0(Object state)
+--- End of stack trace from previous location ---
+   at System.Net.Sockets.TcpClient.CompleteConnectAsync(Task task)
+   at APP.Service.PLCService.RunLoop(CancellationToken token) in D:\TuanAnh\APPWPF\SetSupply\Service\PLCService.cs:line 124
+[2026-03-11 01:17:08] System.Net.Sockets.SocketException (10051): A socket operation was attempted to an unreachable network.
+   at System.Net.Sockets.Socket.AwaitableSocketAsyncEventArgs.ThrowException(SocketError error, CancellationToken cancellationToken)
+   at System.Net.Sockets.Socket.AwaitableSocketAsyncEventArgs.System.Threading.Tasks.Sources.IValueTaskSource.GetResult(Int16 token)
+   at System.Threading.Tasks.ValueTask.ValueTaskSourceAsTask.<>c.<.cctor>b__4_0(Object state)
+--- End of stack trace from previous location ---
+   at System.Net.Sockets.TcpClient.CompleteConnectAsync(Task task)
+   at APP.Service.PLCService.RunLoop(CancellationToken token) in D:\TuanAnh\APPWPF\SetSupply\Service\PLCService.cs:line 124
+[2026-03-11 01:17:13] System.Net.Sockets.SocketException (10051): A socket operation was attempted to an unreachable network.
+   at System.Net.Sockets.Socket.AwaitableSocketAsyncEventArgs.ThrowException(SocketError error, CancellationToken cancellationToken)
+   at System.Net.Sockets.Socket.AwaitableSocketAsyncEventArgs.System.Threading.Tasks.Sources.IValueTaskSource.GetResult(Int16 token)
+   at System.Threading.Tasks.ValueTask.ValueTaskSourceAsTask.<>c.<.cctor>b__4_0(Object state)
+--- End of stack trace from previous location ---
+   at System.Net.Sockets.TcpClient.CompleteConnectAsync(Task task)
+   at APP.Service.PLCService.RunLoop(CancellationToken token) in D:\TuanAnh\APPWPF\SetSupply\Service\PLCService.cs:line 124
+[2026-03-11 01:17:18] System.Net.Sockets.SocketException (10051): A socket operation was attempted to an unreachable network.
+   at System.Net.Sockets.Socket.AwaitableSocketAsyncEventArgs.ThrowException(SocketError error, CancellationToken cancellationToken)
+   at System.Net.Sockets.Socket.AwaitableSocketAsyncEventArgs.System.Threading.Tasks.Sources.IValueTaskSource.GetResult(Int16 token)
+   at System.Threading.Tasks.ValueTask.ValueTaskSourceAsTask.<>c.<.cctor>b__4_0(Object state)
+--- End of stack trace from previous location ---
+   at System.Net.Sockets.TcpClient.CompleteConnectAsync(Task task)
+   at APP.Service.PLCService.RunLoop(CancellationToken token) in D:\TuanAnh\APPWPF\SetSupply\Service\PLCService.cs:line 124
+[2026-03-11 01:17:23] System.Net.Sockets.SocketException (10051): A socket operation was attempted to an unreachable network.
+   at System.Net.Sockets.Socket.AwaitableSocketAsyncEventArgs.ThrowException(SocketError error, CancellationToken cancellationToken)
+   at System.Net.Sockets.Socket.AwaitableSocketAsyncEventArgs.System.Threading.Tasks.Sources.IValueTaskSource.GetResult(Int16 token)
+   at System.Threading.Tasks.ValueTask.ValueTaskSourceAsTask.<>c.<.cctor>b__4_0(Object state)
+--- End of stack trace from previous location ---
+   at System.Net.Sockets.TcpClient.CompleteConnectAsync(Task task)
+   at APP.Service.PLCService.RunLoop(CancellationToken token) in D:\TuanAnh\APPWPF\SetSupply\Service\PLCService.cs:line 124
+[2026-03-11 01:17:28] System.Net.Sockets.SocketException (10051): A socket operation was attempted to an unreachable network.
+   at System.Net.Sockets.Socket.AwaitableSocketAsyncEventArgs.ThrowException(SocketError error, CancellationToken cancellationToken)
+   at System.Net.Sockets.Socket.AwaitableSocketAsyncEventArgs.System.Threading.Tasks.Sources.IValueTaskSource.GetResult(Int16 token)
+   at System.Threading.Tasks.ValueTask.ValueTaskSourceAsTask.<>c.<.cctor>b__4_0(Object state)
+--- End of stack trace from previous location ---
+   at System.Net.Sockets.TcpClient.CompleteConnectAsync(Task task)
+   at APP.Service.PLCService.RunLoop(CancellationToken token) in D:\TuanAnh\APPWPF\SetSupply\Service\PLCService.cs:line 124
+[2026-03-11 01:17:33] System.Net.Sockets.SocketException (10051): A socket operation was attempted to an unreachable network.
+   at System.Net.Sockets.Socket.AwaitableSocketAsyncEventArgs.ThrowException(SocketError error, CancellationToken cancellationToken)
+   at System.Net.Sockets.Socket.AwaitableSocketAsyncEventArgs.System.Threading.Tasks.Sources.IValueTaskSource.GetResult(Int16 token)
+   at System.Threading.Tasks.ValueTask.ValueTaskSourceAsTask.<>c.<.cctor>b__4_0(Object state)
+--- End of stack trace from previous location ---
+   at System.Net.Sockets.TcpClient.CompleteConnectAsync(Task task)
+   at APP.Service.PLCService.RunLoop(CancellationToken token) in D:\TuanAnh\APPWPF\SetSupply\Service\PLCService.cs:line 124
+[2026-03-11 01:17:38] System.Net.Sockets.SocketException (10051): A socket operation was attempted to an unreachable network.
+   at System.Net.Sockets.Socket.AwaitableSocketAsyncEventArgs.ThrowException(SocketError error, CancellationToken cancellationToken)
+   at System.Net.Sockets.Socket.AwaitableSocketAsyncEventArgs.System.Threading.Tasks.Sources.IValueTaskSource.GetResult(Int16 token)
+   at System.Threading.Tasks.ValueTask.ValueTaskSourceAsTask.<>c.<.cctor>b__4_0(Object state)
+--- End of stack trace from previous location ---
+   at System.Net.Sockets.TcpClient.CompleteConnectAsync(Task task)
+   at APP.Service.PLCService.RunLoop(CancellationToken token) in D:\TuanAnh\APPWPF\SetSupply\Service\PLCService.cs:line 124
+[2026-03-11 01:17:43] System.Net.Sockets.SocketException (10051): A socket operation was attempted to an unreachable network.
+   at System.Net.Sockets.Socket.AwaitableSocketAsyncEventArgs.ThrowException(SocketError error, CancellationToken cancellationToken)
+   at System.Net.Sockets.Socket.AwaitableSocketAsyncEventArgs.System.Threading.Tasks.Sources.IValueTaskSource.GetResult(Int16 token)
+   at System.Threading.Tasks.ValueTask.ValueTaskSourceAsTask.<>c.<.cctor>b__4_0(Object state)
+--- End of stack trace from previous location ---
+   at System.Net.Sockets.TcpClient.CompleteConnectAsync(Task task)
+   at APP.Service.PLCService.RunLoop(CancellationToken token) in D:\TuanAnh\APPWPF\SetSupply\Service\PLCService.cs:line 124
+[2026-03-11 01:17:48] System.Net.Sockets.SocketException (10051): A socket operation was attempted to an unreachable network.
+   at System.Net.Sockets.Socket.AwaitableSocketAsyncEventArgs.ThrowException(SocketError error, CancellationToken cancellationToken)
+   at System.Net.Sockets.Socket.AwaitableSocketAsyncEventArgs.System.Threading.Tasks.Sources.IValueTaskSource.GetResult(Int16 token)
+   at System.Threading.Tasks.ValueTask.ValueTaskSourceAsTask.<>c.<.cctor>b__4_0(Object state)
+--- End of stack trace from previous location ---
+   at System.Net.Sockets.TcpClient.CompleteConnectAsync(Task task)
+   at APP.Service.PLCService.RunLoop(CancellationToken token) in D:\TuanAnh\APPWPF\SetSupply\Service\PLCService.cs:line 124
+[2026-03-11 01:17:53] System.Net.Sockets.SocketException (10051): A socket operation was attempted to an unreachable network.
+   at System.Net.Sockets.Socket.AwaitableSocketAsyncEventArgs.ThrowException(SocketError error, CancellationToken cancellationToken)
+   at System.Net.Sockets.Socket.AwaitableSocketAsyncEventArgs.System.Threading.Tasks.Sources.IValueTaskSource.GetResult(Int16 token)
+   at System.Threading.Tasks.ValueTask.ValueTaskSourceAsTask.<>c.<.cctor>b__4_0(Object state)
+--- End of stack trace from previous location ---
+   at System.Net.Sockets.TcpClient.CompleteConnectAsync(Task task)
+   at APP.Service.PLCService.RunLoop(CancellationToken token) in D:\TuanAnh\APPWPF\SetSupply\Service\PLCService.cs:line 124
+[2026-03-11 01:17:58] System.Net.Sockets.SocketException (10051): A socket operation was attempted to an unreachable network.
+   at System.Net.Sockets.Socket.AwaitableSocketAsyncEventArgs.ThrowException(SocketError error, CancellationToken cancellationToken)
+   at System.Net.Sockets.Socket.AwaitableSocketAsyncEventArgs.System.Threading.Tasks.Sources.IValueTaskSource.GetResult(Int16 token)
+   at System.Threading.Tasks.ValueTask.ValueTaskSourceAsTask.<>c.<.cctor>b__4_0(Object state)
+--- End of stack trace from previous location ---
+   at System.Net.Sockets.TcpClient.CompleteConnectAsync(Task task)
+   at APP.Service.PLCService.RunLoop(CancellationToken token) in D:\TuanAnh\APPWPF\SetSupply\Service\PLCService.cs:line 124

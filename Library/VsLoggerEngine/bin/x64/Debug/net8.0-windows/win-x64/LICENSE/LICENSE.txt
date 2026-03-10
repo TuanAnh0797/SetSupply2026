@@ -1,0 +1,160 @@
+﻿MySoftware v1.0
+Copyright (C) 2024 Vision Semicon Co., Ltd.
+http://www.visionsemicon.co.kr/main
+
+This software includes open-source components licensed under various licenses.
+
+---
+
+### CommunityToolkit.Mvvm
+MIT License
+https://github.com/CommunityToolkit/dotnet
+
+MIT License
+
+Copyright (c) .NET Foundation and Contributors
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the “Software”), to deal
+in the Software without restriction...
+
+---
+
+### Microsoft.Data.Sqlite
+MIT License
+https://github.com/CommunityToolkit/dotnet
+
+
+MIT License
+
+Copyright (c) .NET Foundation
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files...
+
+---
+
+### Microsoft.Xaml.Behaviors.Wpf
+MIT License
+https://github.com/Microsoft/XamlBehaviorsWpf
+
+MIT License
+
+Copyright (c) Microsoft Corporation
+
+Permission is hereby granted, free of charge, to any person obtaining a copy...
+
+---
+
+### MySQL Connector/NET (MySql.Data)
+GNU General Public License v2.0 only WITH Universal FOSS Exception  
+https://www.mysql.com/about/legal/licensing/foss-exception/  
+https://www.gnu.org/licenses/old-licenses/gpl-2.0.html
+
+Copyright (c) 1997, 2024, Oracle and/or its affiliates.  
+All rights reserved.
+
+This software uses the MySql.Data ADO.NET library, which is licensed under the GNU General Public License v2.0 **with the Universal FOSS Exception**.  
+Under the terms of this exception, Vision Semicon is permitted to use MySql.Data within a larger work without subjecting the entire work to the GPL license, provided that:
+
+1. Only minimal interface binding code (e.g., `MySQL.cs`) that connects to MySql.Data is considered part of the derivative work.  
+2. The binding interface source file(s) (i.e., `MySQL.cs`) are made available under the same GPL + FOSS Exception license.  
+3. The remainder of the software is not a derivative of the GPL-licensed component and remains proprietary.
+
+**Open Component: `MySQL.cs`**
+
+- This file is provided under the GPL-2.0-only WITH Universal FOSS Exception license.  
+- **Source code for this file is available upon request.**
+
+**Scope Limitation:**
+
+- This license applies **only** to `MySQL.cs`.  
+- All other source code in this software is entirely independent and proprietary.
+
+---
+
+### Oracle.ManagedDataAccess.Core
+Oracle Free Use Terms and Conditions (FUT)
+https://www.oracle.com/downloads/licenses/oracle-free-license.html
+
+Your use of this Program is governed by the Oracle Free Distribution, Hosting, and Use Terms and Conditions set forth below, unless you have received this Program (alone or as part of another Oracle product) under an Oracle license agreement (including but not limited to the Oracle Master Agreement), in which case your use of this Program is governed solely by such license agreement with Oracle.
+
+Oracle Free Distribution, Hosting, and Use Terms and Conditions
+Definitions
+"Oracle" refers to Oracle America, Inc. "You" and "Your" refers to (a) a company or organization (each an "Entity") accessing the Programs, if use of the Programs will be on behalf of such Entity; or (b) an individual accessing the Programs, if use of the Programs will not be on behalf of an Entity. "Program(s)" refers to Oracle software provided by Oracle pursuant to the following terms and any updates, error corrections, and/or Program Documentation provided by Oracle. "Program Documentation" refers to Program user manuals and Program installation manuals, if any. If available, Program Documentation may be delivered with the Programs and/or may be accessed from www.oracle.com/documentation. "Separate Terms" refers to separate license terms that are specified in the Program Documentation, readmes or notice files and that apply to Separately Licensed Technology. "Separately Licensed Technology" refers to Oracle or third party technology that is licensed under Separate Terms and not under the terms of this license.
+
+Separately Licensed Technology
+Oracle may provide certain notices to You in Program Documentation, readmes or notice files in connection with Oracle or third party technology provided as or with the Programs. If specified in the Program Documentation, readmes or notice files, such technology will be licensed to You under Separate Terms. Your rights to use Separately Licensed Technology under Separate Terms are not restricted in any way by the terms herein. For clarity, notwithstanding the existence of a notice, third party technology that is not Separately Licensed Technology shall be deemed part of the Programs licensed to You under the terms of this license.
+
+Source Code for Open Source Software
+For software that You receive from Oracle in binary form that is licensed under an open source license that gives You the right to receive the source code for that binary, You can obtain a copy of the applicable source code from https://oss.oracle.com/sources/ or http://www.oracle.com/goto/opensourcecode. If the source code for such software was not provided to You with the binary, You can also receive a copy of the source code on physical media by submitting a written request pursuant to the instructions in the "Written Offer for Source Code" section of the latter website.
+
+-------------------------------------------------------------------------------
+The following license terms apply to those Programs that are not provided to You under Separate Terms.
+License Rights and Restrictions
+Oracle grants to You, as a recipient of this Program, a nonexclusive, nontransferable, limited license to, subject to the conditions stated herein, use the unmodified Programs, including, without limitation, for the purposes of:
+•	developing, testing, prototyping and demonstrating applications; 
+•	running the unmodified Programs for training, personal use, your business operations, and the business operations of third parties;
+•	making the unmodified Programs available for use by third parties in your hosted environment and in cloud services; 
+•	redistributing unmodified Programs and Programs Documentation under the terms of this License; and
+•	copying the unmodified Programs and Program Documentation to the extent reasonably necessary to exercise the license rights granted herein and for backup purposes.
+For the purposes of this license, compiling, interpreting or configuring an otherwise unmodified Program as necessary to run the Program shall not be considered modification.
+
+Your license is contingent on Your compliance with the following conditions:
+- You include a copy of this license with any distribution by You of the Programs;
+- You do not charge your customers, end users, distributees or other third parties any additional fees for the distribution or use of the Programs; however, for clarity, if you comply with the foregoing condition, distribution or use of the Program as part of your for-fee product or service that adds substantial additional value is permitted; 
+- You do not remove markings or notices of either Oracle's or a licensor's proprietary rights from the Programs or Program Documentation;
+- You comply with all U.S. and applicable export control and economic sanctions laws and regulations that govern Your use of the Programs (including technical data); and
+- You do not cause or permit reverse engineering, disassembly or decompilation of the Programs (except as allowed by law) by You nor allow an associated party to do so.
+Any source code that may be included in the distribution with the Programs may not be modified, unless such source code is under Separate Terms permitting modification.
+Ownership
+Oracle or its licensors retain all ownership and intellectual property rights to the Programs.
+
+Information Collection
+The Programs' installation and/or auto-update processes, if any, may transmit a limited amount of data to Oracle or its service provider about those processes to help Oracle understand and optimize them. Oracle does not associate the data with personally identifiable information. Refer to Oracle's Privacy Policy at www.oracle.com/privacy.
+
+Disclaimer of Warranties; Limitation of Liability
+THE PROGRAMS ARE PROVIDED "AS IS" WITHOUT WARRANTY OF ANY KIND. ORACLE FURTHER DISCLAIMS ALL WARRANTIES, EXPRESS AND IMPLIED, INCLUDING WITHOUT LIMITATION, ANY IMPLIED WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, OR NONINFRINGEMENT.
+IN NO EVENT UNLESS REQUIRED BY APPLICABLE LAW WILL ORACLE BE LIABLE TO YOU FOR DAMAGES, INCLUDING ANY GENERAL, SPECIAL, INCIDENTAL OR CONSEQUENTIAL DAMAGES ARISING OUT OF THE USE OR INABILITY TO USE THE PROGRAM (INCLUDING BUT NOT LIMITED TO LOSS OF DATA OR DATA BEING RENDERED INACCURATE OR LOSSES SUSTAINED BY YOU OR THIRD PARTIES OR A FAILURE OF THE PROGRAM TO OPERATE WITH ANY OTHER PROGRAMS), EVEN IF SUCH HOLDER OR OTHER PARTY HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
+
+Version 1.0 
+Last updated:  28 June 2022
+
+---
+
+### NLog Logging Library
+BSD 3-Clause "New" or "Revised" License  
+https://opensource.org/licenses/BSD-3-Clause  
+
+Copyright (c) 2004-2024, NLog Team.  
+All rights reserved.  
+
+Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:  
+
+1. Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.  
+2. Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.  
+3. Neither the name of the copyright holder nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.  
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  
+
+---
+
+### Additional Notice (추가 법적 고지)
+This software is developed and distributed by **Vision Semicon Co., Ltd.**  
+http://www.visionsemicon.co.kr/main  
+
+#### Legal Notice (English Version)
+1. This software is developed and maintained by Vision Semicon Co., Ltd. and is intended for internal use and distribution.  
+2. Redistribution, commercial use, or modification of this software is not permitted without explicit written approval from Vision Semicon Co., Ltd.  
+3. This software is provided "AS IS" without any warranties or guarantees of any kind.  
+4. Vision Semicon Co., Ltd. shall not be liable for any direct, indirect, special, incidental, or consequential damages arising from the use of this software.  
+5. This software includes open-source libraries (RabbitMQ, NLog), which are licensed under Apache License 2.0 and BSD-3-Clause, as specified above.  
+
+#### 법적 고지
+1. 본 소프트웨어는 Vision Semicon Co., Ltd.에서 개발 및 유지보수하며, 내부 목적으로 사용 및 배포됩니다.  
+2. 본 소프트웨어는 Vision Semicon의 명시적인 서면 승인 없이 재배포, 상업적 사용 또는 수정하여 사용할 수 없습니다.  
+3. 본 소프트웨어는 “있는 그대로” 제공되며, 어떠한 종류의 보증도 포함되지 않습니다.  
+4. Vision Semicon Co., Ltd.는 본 소프트웨어의 사용으로 인해 발생하는 어떠한 직접적, 간접적, 특수적, 결과적 손해에 대해 책임을 지지 않습니다.  
+5. 본 소프트웨어의 일부는 오픈소스 라이브러리(RabbitMQ, NLog)를 포함하며, 해당 라이브러리의 라이선스는 위에 명시된 바와 같이 Apache License 2.0 및 BSD-3-Clause를 따릅니다.  
+
+END OF LICENSE FILE

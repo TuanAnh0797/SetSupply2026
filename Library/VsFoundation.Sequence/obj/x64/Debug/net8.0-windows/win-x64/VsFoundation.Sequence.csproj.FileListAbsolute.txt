@@ -1,0 +1,30 @@
+D:\LCFZB_APM\20_PROG\LCFZB_APM_CS\100. Library\VsFoundation\VsFoundation.Sequence\bin\x64\Debug\net8.0-windows\win-x64\LICENSE\LICENSE.txt
+D:\LCFZB_APM\20_PROG\LCFZB_APM_CS\100. Library\VsFoundation\VsFoundation.Sequence\bin\x64\Debug\net8.0-windows\win-x64\3rd Party Files\Controller\AdlinkLib\Dask\PCI-Dask64.dll
+D:\LCFZB_APM\20_PROG\LCFZB_APM_CS\100. Library\VsFoundation\VsFoundation.Sequence\bin\x64\Debug\net8.0-windows\win-x64\3rd Party Files\Controller\AdlinkLib\Dask\PCI-Dask64.lib
+D:\LCFZB_APM\20_PROG\LCFZB_APM_CS\100. Library\VsFoundation\VsFoundation.Sequence\bin\x64\Debug\net8.0-windows\win-x64\3rd Party Files\Controller\Ajin\AxtLib\AXTLib.dll
+D:\LCFZB_APM\20_PROG\LCFZB_APM_CS\100. Library\VsFoundation\VsFoundation.Sequence\bin\x64\Debug\net8.0-windows\win-x64\3rd Party Files\Controller\Ajin\AxtLib\EzBasicAxl.dll
+D:\LCFZB_APM\20_PROG\LCFZB_APM_CS\100. Library\VsFoundation\VsFoundation.Sequence\bin\x64\Debug\net8.0-windows\win-x64\x64\pdfium.dll
+D:\LCFZB_APM\20_PROG\LCFZB_APM_CS\100. Library\VsFoundation\VsFoundation.Sequence\bin\x64\Debug\net8.0-windows\win-x64\x86\pdfium.dll
+D:\LCFZB_APM\20_PROG\LCFZB_APM_CS\100. Library\VsFoundation\VsFoundation.Sequence\bin\x64\Debug\net8.0-windows\win-x64\VsFoundation.Sequence.deps.json
+D:\LCFZB_APM\20_PROG\LCFZB_APM_CS\100. Library\VsFoundation\VsFoundation.Sequence\bin\x64\Debug\net8.0-windows\win-x64\VsFoundation.Sequence.dll
+D:\LCFZB_APM\20_PROG\LCFZB_APM_CS\100. Library\VsFoundation\VsFoundation.Sequence\bin\x64\Debug\net8.0-windows\win-x64\VsFoundation.Sequence.pdb
+D:\LCFZB_APM\20_PROG\LCFZB_APM_CS\100. Library\VsFoundation\VsFoundation.Sequence\bin\x64\Debug\net8.0-windows\win-x64\VsAlarmConfig.dll
+D:\LCFZB_APM\20_PROG\LCFZB_APM_CS\100. Library\VsFoundation\VsFoundation.Sequence\bin\x64\Debug\net8.0-windows\win-x64\VsFoundation.Base.dll
+D:\LCFZB_APM\20_PROG\LCFZB_APM_CS\100. Library\VsFoundation\VsFoundation.Sequence\bin\x64\Debug\net8.0-windows\win-x64\VSLibrary.dll
+D:\LCFZB_APM\20_PROG\LCFZB_APM_CS\100. Library\VsFoundation\VsFoundation.Sequence\bin\x64\Debug\net8.0-windows\win-x64\VsPdfiumViewer.dll
+D:\LCFZB_APM\20_PROG\LCFZB_APM_CS\100. Library\VsFoundation\VsFoundation.Sequence\bin\x64\Debug\net8.0-windows\win-x64\VsVirtualKeyboard.dll
+D:\LCFZB_APM\20_PROG\LCFZB_APM_CS\100. Library\VsFoundation\VsFoundation.Sequence\bin\x64\Debug\net8.0-windows\win-x64\VsFoundation.Base.pdb
+D:\LCFZB_APM\20_PROG\LCFZB_APM_CS\100. Library\VsFoundation\VsFoundation.Sequence\bin\x64\Debug\net8.0-windows\win-x64\VsAlarmConfig.pdb
+D:\LCFZB_APM\20_PROG\LCFZB_APM_CS\100. Library\VsFoundation\VsFoundation.Sequence\bin\x64\Debug\net8.0-windows\win-x64\VSLibrary.pdb
+D:\LCFZB_APM\20_PROG\LCFZB_APM_CS\100. Library\VsFoundation\VsFoundation.Sequence\bin\x64\Debug\net8.0-windows\win-x64\VsPdfiumViewer.pdb
+D:\LCFZB_APM\20_PROG\LCFZB_APM_CS\100. Library\VsFoundation\VsFoundation.Sequence\bin\x64\Debug\net8.0-windows\win-x64\VsVirtualKeyboard.pdb
+D:\LCFZB_APM\20_PROG\LCFZB_APM_CS\100. Library\VsFoundation\VsFoundation.Sequence\obj\x64\Debug\net8.0-windows\win-x64\VsFoundation.Sequence.csproj.AssemblyReference.cache
+D:\LCFZB_APM\20_PROG\LCFZB_APM_CS\100. Library\VsFoundation\VsFoundation.Sequence\obj\x64\Debug\net8.0-windows\win-x64\VsFoundation.Sequence.GeneratedMSBuildEditorConfig.editorconfig
+D:\LCFZB_APM\20_PROG\LCFZB_APM_CS\100. Library\VsFoundation\VsFoundation.Sequence\obj\x64\Debug\net8.0-windows\win-x64\VsFoundation.Sequence.AssemblyInfoInputs.cache
+D:\LCFZB_APM\20_PROG\LCFZB_APM_CS\100. Library\VsFoundation\VsFoundation.Sequence\obj\x64\Debug\net8.0-windows\win-x64\VsFoundation.Sequence.AssemblyInfo.cs
+D:\LCFZB_APM\20_PROG\LCFZB_APM_CS\100. Library\VsFoundation\VsFoundation.Sequence\obj\x64\Debug\net8.0-windows\win-x64\VsFoundation.Sequence.csproj.CoreCompileInputs.cache
+D:\LCFZB_APM\20_PROG\LCFZB_APM_CS\100. Library\VsFoundation\VsFoundation.Sequence\obj\x64\Debug\net8.0-windows\win-x64\VsFounda.75580051.Up2Date
+D:\LCFZB_APM\20_PROG\LCFZB_APM_CS\100. Library\VsFoundation\VsFoundation.Sequence\obj\x64\Debug\net8.0-windows\win-x64\VsFoundation.Sequence.dll
+D:\LCFZB_APM\20_PROG\LCFZB_APM_CS\100. Library\VsFoundation\VsFoundation.Sequence\obj\x64\Debug\net8.0-windows\win-x64\refint\VsFoundation.Sequence.dll
+D:\LCFZB_APM\20_PROG\LCFZB_APM_CS\100. Library\VsFoundation\VsFoundation.Sequence\obj\x64\Debug\net8.0-windows\win-x64\VsFoundation.Sequence.pdb
+D:\LCFZB_APM\20_PROG\LCFZB_APM_CS\100. Library\VsFoundation\VsFoundation.Sequence\obj\x64\Debug\net8.0-windows\win-x64\ref\VsFoundation.Sequence.dll

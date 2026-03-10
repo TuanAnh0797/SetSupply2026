@@ -1,0 +1,449 @@
+﻿<Window
+    x:Class="VsLoggerEngine.LoggerMainWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:converters="clr-namespace:VsLoggerEngine.Converters"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:helpers="clr-namespace:VsLoggerEngine.Helpers"
+    xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:vm="clr-namespace:VsLoggerEngine.ViewModels"
+    Title="{Binding CallerAppName, StringFormat={}VS Logger - {0}}"
+    Width="600"
+    Height="508"
+    MinWidth="600"
+    MinHeight="508"
+    d:DataContext="{d:DesignInstance {x:Type vm:LoggerViewModel}}"
+    Background="#F1F1F1"
+    WindowStartupLocation="Manual"
+    mc:Ignorable="d">
+    <Window.Resources>
+        <Style
+            x:Key="CompactCellStyleNo"
+            BasedOn="{StaticResource {x:Type DataGridCell}}"
+            TargetType="DataGridCell">
+            <Setter Property="Padding" Value="4" />
+            <Setter Property="Margin" Value="8,0,0,0" />
+            <Setter Property="VerticalContentAlignment" Value="Center" />
+            <Setter Property="HorizontalContentAlignment" Value="Left" />
+        </Style>
+
+        <Style
+            x:Key="CompactHeaderStyleNo"
+            BasedOn="{StaticResource {x:Type DataGridColumnHeader}}"
+            TargetType="DataGridColumnHeader">
+            <Setter Property="Padding" Value="4" />
+            <Setter Property="Margin" Value="8,0,0,0" />
+            <Setter Property="FontWeight" Value="SemiBold" />
+            <Setter Property="HorizontalContentAlignment" Value="Left" />
+            <Setter Property="VerticalContentAlignment" Value="Center" />
+        </Style>
+
+        <Style
+            x:Key="CompactCellStyle"
+            BasedOn="{StaticResource {x:Type DataGridCell}}"
+            TargetType="DataGridCell">
+            <Setter Property="Padding" Value="4" />
+            <Setter Property="VerticalContentAlignment" Value="Center" />
+            <Setter Property="HorizontalContentAlignment" Value="Left" />
+        </Style>
+
+        <Style
+            x:Key="CompactHeaderStyle"
+            BasedOn="{StaticResource {x:Type DataGridColumnHeader}}"
+            TargetType="DataGridColumnHeader">
+            <Setter Property="Padding" Value="4" />
+            <Setter Property="FontWeight" Value="SemiBold" />
+            <Setter Property="HorizontalContentAlignment" Value="Left" />
+            <Setter Property="VerticalContentAlignment" Value="Center" />
+        </Style>
+
+        <Style
+            x:Key="FileNameCellStyle"
+            BasedOn="{StaticResource CompactCellStyle}"
+            TargetType="DataGridCell">
+            <Setter Property="ToolTip" Value="{Binding FilePath}" />
+            <Setter Property="ToolTipService.Placement" Value="Bottom" />
+            <Setter Property="ToolTipService.HorizontalOffset" Value="-8" />
+            <Setter Property="ToolTipService.VerticalOffset" Value="0" />
+        </Style>
+
+        <Style
+            x:Key="CleanToggleButtonStyle"
+            BasedOn="{StaticResource MaterialDesignFlatButton}"
+            TargetType="ToggleButton">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ToggleButton">
+                        <Border
+                            Padding="{TemplateBinding Padding}"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}">
+                            <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}" />
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsChecked" Value="True">
+                                <Setter Property="Background" Value="#D6D6D6" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <converters:InvertedBoolConverter x:Key="InvertedBoolConverter" />
+    </Window.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <Border
+            Background="#E9E9E9"
+            BorderBrush="{StaticResource MaterialDesignDarkSeparatorBackground}"
+            BorderThickness="0,0,0,1">
+            <Menu
+                materialDesign:MenuAssist.MenuItemsPresenterMargin="0"
+                materialDesign:MenuAssist.TopLevelMenuItemHeight="32"
+                IsMainMenu="True">
+                <MenuItem Header="_File" IsEnabled="{Binding IsMonitoring, Converter={StaticResource InvertedBoolConverter}}">
+                    <MenuItem Command="{Binding OpenLogFileCommand}" Header="Open" />
+                </MenuItem>
+                <MenuItem
+                    Command="{Binding OpenLoggerOptionsCommand}"
+                    CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window}}"
+                    Header="Options"
+                    IsEnabled="{Binding IsMonitoring, Converter={StaticResource InvertedBoolConverter}}" />
+            </Menu>
+        </Border>
+
+        <Border
+            Grid.Row="1"
+            Padding="4"
+            BorderBrush="{StaticResource MaterialDesignDarkSeparatorBackground}"
+            BorderThickness="0,0,0,1">
+            <DockPanel LastChildFill="False">
+                <DatePicker
+                    Margin="4,0,0,0"
+                    Padding="4"
+                    VerticalAlignment="Center"
+                    VerticalContentAlignment="Center"
+                    FontSize="16"
+                    FontWeight="SemiBold"
+                    SelectedDate="{Binding LogDate, UpdateSourceTrigger=PropertyChanged}">
+                    <DatePicker.Style>
+                        <Style BasedOn="{StaticResource MaterialDesignOutlinedDatePicker}" TargetType="DatePicker">
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding IsMonitoring}" Value="True">
+                                    <Setter Property="BorderThickness" Value="0" />
+                                    <Setter Property="IsHitTestVisible" Value="False" />
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </DatePicker.Style>
+                </DatePicker>
+
+                <Button
+                    Padding="4"
+                    Command="{Binding StartStopCommand}"
+                    CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window}}"
+                    DockPanel.Dock="Right"
+                    Style="{StaticResource MaterialDesignFlatButton}">
+                    <materialDesign:PackIcon DockPanel.Dock="Right" Foreground="Green">
+                        <materialDesign:PackIcon.Style>
+                            <Style TargetType="materialDesign:PackIcon">
+                                <Setter Property="Width" Value="24" />
+                                <Setter Property="Height" Value="24" />
+                                <Setter Property="Kind" Value="Play" />
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding IsMonitoring}" Value="True">
+                                        <Setter Property="Kind" Value="Pause" />
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </materialDesign:PackIcon.Style>
+                    </materialDesign:PackIcon>
+                </Button>
+            </DockPanel>
+        </Border>
+
+        <DataGrid
+            Grid.Row="2"
+            helpers:DataGridHelper.AutoScrollOnChange="{Binding IsMonitoring, UpdateSourceTrigger=PropertyChanged}"
+            AutoGenerateColumns="False"
+            CanUserAddRows="False"
+            CanUserDeleteRows="False"
+            CanUserReorderColumns="False"
+            CanUserSortColumns="False"
+            EnableColumnVirtualization="True"
+            EnableRowVirtualization="True"
+            FrozenColumnCount="3"
+            IsReadOnly="True"
+            ItemsSource="{Binding FilteredLogs}"
+            VerticalScrollBarVisibility="Auto"
+            VirtualizingPanel.CacheLength="64"
+            VirtualizingPanel.CacheLengthUnit="Item"
+            VirtualizingPanel.IsVirtualizing="True"
+            VirtualizingPanel.VirtualizationMode="Standard">
+            <DataGrid.Columns>
+                <DataGridTextColumn
+                    Width="Auto"
+                    MinWidth="40"
+                    Binding="{Binding Index}"
+                    CanUserResize="False"
+                    CellStyle="{StaticResource CompactCellStyleNo}"
+                    Header="No."
+                    HeaderStyle="{StaticResource CompactHeaderStyleNo}" />
+                <DataGridTextColumn
+                    Width="Auto"
+                    MinWidth="160"
+                    Binding="{Binding LogTime, StringFormat={}{0:yyyy-MM-dd hh\\:mm\\:ss\\.fff}}"
+                    CanUserResize="False"
+                    CellStyle="{StaticResource CompactCellStyle}"
+                    Header="Time"
+                    HeaderStyle="{StaticResource CompactHeaderStyle}" />
+                <DataGridTemplateColumn
+                    Width="Auto"
+                    MinWidth="60"
+                    CanUserResize="False"
+                    CellStyle="{StaticResource CompactCellStyle}"
+                    Header="Level"
+                    HeaderStyle="{StaticResource CompactHeaderStyle}">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding LogLevel}">
+                                <TextBlock.Style>
+                                    <Style TargetType="TextBlock">
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding LogLevel}" Value="INFO">
+                                                <Setter Property="Foreground" Value="DodgerBlue" />
+                                            </DataTrigger>
+                                            <DataTrigger Binding="{Binding LogLevel}" Value="WARN">
+                                                <Setter Property="Foreground" Value="DarkOrange" />
+                                            </DataTrigger>
+                                            <DataTrigger Binding="{Binding LogLevel}" Value="ERROR">
+                                                <Setter Property="Foreground" Value="Red" />
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </TextBlock.Style>
+                            </TextBlock>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+
+                <DataGridTextColumn
+                    Width="Auto"
+                    MinWidth="60"
+                    Binding="{Binding Prefix}"
+                    CanUserResize="False"
+                    CellStyle="{StaticResource CompactCellStyle}"
+                    Header="Prefix"
+                    HeaderStyle="{StaticResource CompactHeaderStyle}" />
+
+                <DataGridTemplateColumn
+                    Width="Auto"
+                    MinWidth="100"
+                    MaxWidth="600"
+                    CellStyle="{StaticResource CompactCellStyle}"
+                    Header="Message"
+                    HeaderStyle="{StaticResource CompactHeaderStyle}">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBlock
+                                VerticalAlignment="Top"
+                                Text="{Binding LogMessage}"
+                                TextWrapping="Wrap" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+
+                <DataGridTextColumn
+                    Width="Auto"
+                    MinWidth="60"
+                    Binding="{Binding FileName}"
+                    CanUserResize="False"
+                    CellStyle="{StaticResource FileNameCellStyle}"
+                    Header="File"
+                    HeaderStyle="{StaticResource CompactHeaderStyle}" />
+
+                <DataGridTextColumn
+                    Width="Auto"
+                    MinWidth="60"
+                    Binding="{Binding FunctionName}"
+                    CanUserResize="False"
+                    CellStyle="{StaticResource CompactCellStyle}"
+                    Header="Function"
+                    HeaderStyle="{StaticResource CompactHeaderStyle}" />
+
+                <DataGridTextColumn
+                    Width="Auto"
+                    MinWidth="60"
+                    Binding="{Binding Line}"
+                    CanUserResize="False"
+                    CellStyle="{StaticResource CompactCellStyle}"
+                    Header="Line"
+                    HeaderStyle="{StaticResource CompactHeaderStyle}" />
+            </DataGrid.Columns>
+        </DataGrid>
+
+        <TextBlock
+            Grid.Row="2"
+            HorizontalAlignment="Center"
+            VerticalAlignment="Center"
+            Text="NO DATA">
+            <TextBlock.Style>
+                <Style BasedOn="{StaticResource MaterialDesignDisplayMediumTextBlock}" TargetType="TextBlock">
+                    <Setter Property="Visibility" Value="Visible" />
+                    <Setter Property="FontWeight" Value="SemiBold" />
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding HasData}" Value="True">
+                            <Setter Property="Visibility" Value="Collapsed" />
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </TextBlock.Style>
+        </TextBlock>
+
+        <Border
+            Grid.Row="3"
+            Padding="4"
+            Background="#E9E9E9"
+            BorderBrush="{StaticResource MaterialDesignDarkSeparatorBackground}"
+            BorderThickness="0,1,0,0">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+
+                <DockPanel LastChildFill="False">
+                    <TextBox
+                        Width="160"
+                        Margin="0,0,4,0"
+                        Padding="4"
+                        materialDesign:HintAssist.Hint="Search"
+                        materialDesign:TextFieldAssist.HasClearButton="True"
+                        Style="{StaticResource MaterialDesignOutlinedTextBox}"
+                        Text="{Binding LogFilter.SearchMessage, UpdateSourceTrigger=PropertyChanged}" />
+
+                    <materialDesign:TimePicker
+                        Width="70"
+                        Margin="0,0,4,0"
+                        Padding="8"
+                        VerticalAlignment="Center"
+                        materialDesign:HintAssist.Hint="From"
+                        Is24Hours="True"
+                        SelectedTime="{Binding LogFilter.FromTime, UpdateSourceTrigger=PropertyChanged}"
+                        Style="{StaticResource MaterialDesignOutlinedTimePicker}" />
+                    <materialDesign:TimePicker
+                        Width="70"
+                        Padding="8"
+                        VerticalAlignment="Center"
+                        materialDesign:HintAssist.Hint="To"
+                        Is24Hours="True"
+                        SelectedTime="{Binding LogFilter.ToTime, UpdateSourceTrigger=PropertyChanged}"
+                        Style="{StaticResource MaterialDesignOutlinedTimePicker}" />
+
+                    <DockPanel DockPanel.Dock="Right">
+                        <ToggleButton
+                            Padding="8"
+                            BorderThickness="0"
+                            IsChecked="{Binding LogFilter.IsInfoVisible, Mode=TwoWay}"
+                            Style="{StaticResource CleanToggleButtonStyle}"
+                            ToolTip="INFO">
+                            <StackPanel VerticalAlignment="Center" Orientation="Horizontal">
+                                <materialDesign:PackIcon
+                                    VerticalAlignment="Center"
+                                    Foreground="DodgerBlue"
+                                    Kind="Information" />
+                                <TextBlock
+                                    Margin="4,0,0,0"
+                                    VerticalAlignment="Center"
+                                    FontWeight="SemiBold"
+                                    Style="{StaticResource MaterialDesignBodyMediumTextBlock}"
+                                    Text="{Binding InfoCount}" />
+                            </StackPanel>
+                        </ToggleButton>
+
+                        <ToggleButton
+                            Padding="8"
+                            BorderThickness="0"
+                            IsChecked="{Binding LogFilter.IsWarnVisible, Mode=TwoWay}"
+                            Style="{StaticResource CleanToggleButtonStyle}"
+                            ToolTip="WARN">
+                            <StackPanel VerticalAlignment="Center" Orientation="Horizontal">
+                                <materialDesign:PackIcon
+                                    VerticalAlignment="Center"
+                                    Foreground="Orange"
+                                    Kind="Alert" />
+                                <TextBlock
+                                    Margin="4,0,0,0"
+                                    VerticalAlignment="Center"
+                                    FontWeight="SemiBold"
+                                    Style="{StaticResource MaterialDesignBodyMediumTextBlock}"
+                                    Text="{Binding WarningCount}" />
+                            </StackPanel>
+                        </ToggleButton>
+
+                        <ToggleButton
+                            Padding="8"
+                            BorderThickness="0"
+                            IsChecked="{Binding LogFilter.IsErrorVisible, Mode=TwoWay}"
+                            Style="{StaticResource CleanToggleButtonStyle}"
+                            ToolTip="ERROR">
+                            <StackPanel VerticalAlignment="Center" Orientation="Horizontal">
+                                <StackPanel VerticalAlignment="Center" Orientation="Horizontal">
+                                    <materialDesign:PackIcon
+                                        VerticalAlignment="Center"
+                                        Foreground="Red"
+                                        Kind="AlertCircle" />
+                                    <TextBlock
+                                        Margin="4,0,0,0"
+                                        VerticalAlignment="Center"
+                                        FontWeight="SemiBold"
+                                        Style="{StaticResource MaterialDesignBodyMediumTextBlock}"
+                                        Text="{Binding ErrorCount}" />
+                                </StackPanel>
+                            </StackPanel>
+                        </ToggleButton>
+
+                        <ToggleButton
+                            Padding="8"
+                            BorderThickness="0"
+                            IsChecked="{Binding LogFilter.IsDebugVisible, Mode=TwoWay}"
+                            Style="{StaticResource CleanToggleButtonStyle}"
+                            ToolTip="DEBUG">
+                            <StackPanel VerticalAlignment="Center" Orientation="Horizontal">
+                                <StackPanel VerticalAlignment="Center" Orientation="Horizontal">
+                                    <materialDesign:PackIcon
+                                        VerticalAlignment="Center"
+                                        Foreground="Black"
+                                        Kind="Information" />
+                                    <TextBlock
+                                        Margin="4,0,0,0"
+                                        VerticalAlignment="Center"
+                                        FontWeight="SemiBold"
+                                        Style="{StaticResource MaterialDesignBodyMediumTextBlock}"
+                                        Text="{Binding DebugCount}" />
+                                </StackPanel>
+                            </StackPanel>
+                        </ToggleButton>
+                    </DockPanel>
+                </DockPanel>
+
+                <TextBlock
+                    Grid.Row="1"
+                    Margin="0,4"
+                    HorizontalAlignment="Left"
+                    VerticalAlignment="Center"
+                    Style="{StaticResource MaterialDesignBodySmallTextBlock}"
+                    Text="{Binding CurrentLogFile, StringFormat={} Log File: {0}}" />
+            </Grid>
+        </Border>
+    </Grid>
+</Window>

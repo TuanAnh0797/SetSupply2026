@@ -1,0 +1,88 @@
+﻿<Window x:Class="APP.Views.LoginWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:APP.Views"
+        mc:Ignorable="d"
+        Title="LoginWindow" Height="240" Width="400"
+        WindowState="Normal"
+        WindowStyle="None"
+        ResizeMode="NoResize"
+        WindowStartupLocation="CenterScreen"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        xmlns:helpers="clr-namespace:APP.Helper"  >
+
+    <GroupBox Style="{StaticResource MaterialDesignCardGroupBox}" Background="WhiteSmoke">
+        <GroupBox.Effect>
+            <DropShadowEffect BlurRadius="15" 
+                          ShadowDepth="5" 
+                          Opacity="0.4" 
+                          Direction="270" 
+                          Color="Black"/>
+        </GroupBox.Effect>
+        <GroupBox.Header>
+            <StackPanel Orientation="Horizontal">
+                <materialDesign:PackIcon Kind="Unlocked" Height="20" Width="20" VerticalAlignment="Center" Foreground="White"></materialDesign:PackIcon>
+                <Label FontWeight="Bold" FontSize="20" Foreground="White">Login</Label>
+            </StackPanel>
+        </GroupBox.Header>
+
+        <Grid Margin="10">
+            <Grid.RowDefinitions>
+                <RowDefinition></RowDefinition>
+                <RowDefinition></RowDefinition>
+                <RowDefinition></RowDefinition>
+                <RowDefinition></RowDefinition>
+            </Grid.RowDefinitions>
+
+            <Grid Grid.Row="0" >
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="auto"></ColumnDefinition>
+                    <ColumnDefinition Width="*"></ColumnDefinition>
+                </Grid.ColumnDefinitions>
+                <materialDesign:PackIcon Grid.Column="0" Kind="User" Height="25" Width="25" VerticalAlignment="Center" Margin="0,0,10,0"></materialDesign:PackIcon>
+                <TextBox Grid.Column="1"  materialDesign:HintAssist.Hint="UserID" materialDesign:TextFieldAssist.HasClearButton="True" Text="{Binding UserID , Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"></TextBox>
+            </Grid>
+            <Grid  Grid.Row="1" >
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="auto"></ColumnDefinition>
+                    <ColumnDefinition Width="*"></ColumnDefinition>
+                </Grid.ColumnDefinitions>
+                <materialDesign:PackIcon Grid.Column="0" Kind="Password" Height="25" Width="25" VerticalAlignment="Center" Margin="0,0,10,0"></materialDesign:PackIcon>
+                <PasswordBox Grid.Column="1" x:Name="PasswordBox" materialDesign:HintAssist.Hint="Password" materialDesign:TextFieldAssist.HasClearButton="True"  helpers:PasswordBoxHelper.BoundPassword="{Binding Password, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"  />
+            </Grid>
+            <Grid Grid.Row="2"  Margin="0,0,20,0">
+
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"></ColumnDefinition>
+                    <ColumnDefinition></ColumnDefinition>
+                </Grid.ColumnDefinitions>
+                <Label Foreground="Red" Content="{Binding Status}" HorizontalContentAlignment="Center"></Label>
+                <CheckBox HorizontalAlignment="Right" Grid.Column="1" IsChecked="{Binding IsRemember, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                    Remember
+                </CheckBox>
+            </Grid>
+
+            <StackPanel Grid.Row="3" Orientation="Horizontal" HorizontalAlignment="Right">
+                <Button Margin="0,0,20,0"  Height="35" Command="{Binding LoginCommand}">
+                    <StackPanel Orientation="Horizontal">
+                        <materialDesign:PackIcon FontWeight="Bold" Kind="Login" Width="20" Height="20" VerticalAlignment="Center"></materialDesign:PackIcon>
+                        <Label FontWeight="Bold" Foreground="White">Login</Label>
+                    </StackPanel>
+                </Button>
+                <Button Background="Red" Height="35" Command="{Binding CloseCommand}">
+                    <StackPanel Orientation="Horizontal">
+                        <materialDesign:PackIcon FontWeight="Bold" Kind="Close" Width="20" Height="20" VerticalAlignment="Center"></materialDesign:PackIcon>
+                        <Label  FontWeight="Bold" Foreground="White">Close</Label>
+                    </StackPanel>
+                </Button>
+            </StackPanel>
+           
+            
+        </Grid>
+        
+    </GroupBox>
+    
+    
+</Window>

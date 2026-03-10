@@ -1,0 +1,23 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFramework>net8.0-windows</TargetFramework>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+		<UseWPF>true</UseWPF>
+		<OutputType>Library</OutputType>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<PackageReference Include="PdfiumViewer.Native.x86.v8-xfa" />
+		<PackageReference Include="PdfiumViewer.Native.x86_64.v8-xfa" />
+		<PackageReference Include="System.Drawing.Common" />
+
+		<PackageReference Include="MaterialDesignThemes" />
+		<PackageReference Include="Microsoft.Xaml.Behaviors.Wpf" />
+		<PackageReference Include="PropertyChanged.Fody" />
+	</ItemGroup>
+	
+	
+
+</Project>

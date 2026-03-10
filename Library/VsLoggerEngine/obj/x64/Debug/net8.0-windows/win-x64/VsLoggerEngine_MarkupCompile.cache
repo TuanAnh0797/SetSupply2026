@@ -1,0 +1,20 @@
+﻿VsLoggerEngine
+1.0.0.0
+
+winexe
+C#
+.cs
+D:\LCFZB_APM\20_PROG\LCFZB_APM_CS\100. Library\VsFoundation\VsLoggerEngine\obj\x64\Debug\net8.0-windows\win-x64\
+VsLoggerEngine
+none
+false
+TRACE;DEBUG;NET;NET8_0;NETCOREAPP
+D:\LCFZB_APM\20_PROG\LCFZB_APM_CS\100. Library\VsFoundation\VsLoggerEngine\App.xaml
+3-1816114193
+2-1185611673
+201000920528
+2591835998111
+Views\LoggerMainWindow.xaml;Views\LoggerOptionsWindow.xaml;Views\MsgBox.xaml;
+
+False
+

@@ -1,0 +1,474 @@
+﻿<UserControl x:Class="APP.UserControls.UCHome"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:SetSupply.UserControls"
+             mc:Ignorable="d" 
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             xmlns:lvc="clr-namespace:LiveChartsCore.SkiaSharpView.WPF;assembly=LiveChartsCore.SkiaSharpView.WPF">
+
+    <UserControl.Resources>
+        <local:BoolToIconConverter x:Key="BoolToIconConverter"/>
+
+        <!-- ========== DATAGRID SHARED STYLES ========== -->
+        <Style x:Key="ShiftColumnHeaderStyle" TargetType="DataGridColumnHeader">
+            <Setter Property="Background" Value="RoyalBlue"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="HorizontalContentAlignment" Value="Center"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="Padding" Value="10"/>
+            <Setter Property="BorderBrush" Value="White"/>
+            <Setter Property="BorderThickness" Value="0,0,1,1"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="DataGridColumnHeader">
+                        <Grid>
+                            <Border Background="{TemplateBinding Background}"
+                                    BorderBrush="{TemplateBinding BorderBrush}"
+                                    BorderThickness="{TemplateBinding BorderThickness}"
+                                    Padding="{TemplateBinding Padding}">
+                                <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                                  VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                                                  SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"/>
+                            </Border>
+                            <Thumb x:Name="PART_LeftHeaderGripper" HorizontalAlignment="Left" Width="2" 
+                                   Opacity="0" Cursor="SizeWE"/>
+                            <Thumb x:Name="PART_RightHeaderGripper" HorizontalAlignment="Right" Width="2" 
+                                   Opacity="0" Cursor="SizeWE"/>
+                        </Grid>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="ShiftCellStyle" TargetType="DataGridCell">
+            <Setter Property="BorderBrush" Value="#E0E0E0"/>
+            <Setter Property="BorderThickness" Value="0,0,1,1"/>
+            <Setter Property="Padding" Value="8"/>
+            <Setter Property="Background" Value="White"/>
+            <Setter Property="Foreground" Value="Black"/>
+            <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="DataGridCell">
+                        <Border Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                Padding="{TemplateBinding Padding}">
+                            <ContentPresenter VerticalAlignment="Center" 
+                                              HorizontalAlignment="Center"
+                                              TextElement.Foreground="Black"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <Trigger Property="IsSelected" Value="True">
+                    <Setter Property="Background" Value="#E3F2FD"/>
+                    <Setter Property="Foreground" Value="Black"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <Style x:Key="ShiftRowStyle" TargetType="DataGridRow">
+            <Setter Property="Background" Value="White"/>
+            <Setter Property="Foreground" Value="Black"/>
+            <Style.Triggers>
+                <!-- Dòng TỔNG - nổi bật với background đậm, border trên, font lớn -->
+                <DataTrigger Binding="{Binding ModelName}" Value="TỔNG">
+                    <Setter Property="Background" Value="#C8E6C9"/>
+                    <Setter Property="Foreground" Value="#1B5E20"/>
+                    <Setter Property="FontWeight" Value="ExtraBold"/>
+                    <Setter Property="FontSize" Value="16"/>
+                    <Setter Property="MinHeight" Value="42"/>
+                    <Setter Property="BorderBrush" Value="#43A047"/>
+                    <Setter Property="BorderThickness" Value="0,3,0,0"/>
+                </DataTrigger>
+                <!-- Zebra striping cho các dòng thường -->
+                <Trigger Property="AlternationIndex" Value="1">
+                    <Setter Property="Background" Value="#FAFAFA"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <Style x:Key="ShiftTabItemStyle" TargetType="TabItem">
+            <Setter Property="Background" Value="#ECEFF1"/>
+            <Setter Property="Foreground" Value="#455A64"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Padding" Value="0"/>
+            <Setter Property="Margin" Value="2,0"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="TabItem">
+                        <Border Name="Border" 
+                                Background="{TemplateBinding Background}"
+                                BorderThickness="0,0,0,3"
+                                BorderBrush="Transparent"
+                                CornerRadius="8,8,0,0"
+                                Padding="0">
+                            <ContentPresenter x:Name="ContentSite"
+                                              VerticalAlignment="Center"
+                                              HorizontalAlignment="Center"
+                                              ContentSource="Header"
+                                              Margin="0"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsSelected" Value="True">
+                                <Setter TargetName="Border" Property="Background" Value="SteelBlue"/>
+                                <Setter TargetName="Border" Property="BorderBrush" Value="SteelBlue"/>
+                                <Setter Property="Foreground" Value="White"/>
+                            </Trigger>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="Border" Property="Background" Value="SteelBlue"/>
+                                <Setter Property="Foreground" Value="White"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- Nút Auto Switch dùng chung -->
+        <Style x:Key="AutoSwitchButtonStyle" TargetType="Button" BasedOn="{StaticResource MaterialDesignOutlinedButton}">
+            <Setter Property="Background" Value="LightGray"/>
+            <Setter Property="BorderBrush" Value="Transparent"/>
+            <Setter Property="Foreground" Value="Black"/>
+            <Setter Property="Height" Value="42"/>
+            <Setter Property="Padding" Value="18,0"/>
+            <Setter Property="Margin" Value="0,0,0,10"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+        </Style>
+    </UserControl.Resources>
+
+    <Border Background="White" Margin="10,0,10,10" CornerRadius="5">
+        <Border.Effect>
+            <DropShadowEffect Color="Gray" Direction="315" ShadowDepth="4" 
+                              BlurRadius="10" Opacity="0.5"/>
+        </Border.Effect>
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+
+            <!-- Header -->
+            <Border Grid.Row="0" Background="White" CornerRadius="5,5,0,0" Padding="10,0"/>
+
+            <!-- Tab Control -->
+            <TabControl Grid.Row="1" 
+                        Margin="0"
+                        Background="Gray"
+                        SelectedIndex="{Binding SelectedTabIndex}"
+                        ItemContainerStyle="{StaticResource ShiftTabItemStyle}">
+
+                <!-- ========== CA 1 ========== -->
+                <TabItem>
+                    <TabItem.Header>
+                        <TextBlock FontSize="18" FontWeight="Bold" Margin="10,10">
+                            <TextBlock.Text>
+                                <MultiBinding StringFormat="{}{0} ({1})">
+                                    <Binding Path="Shift1.ShiftName"/>
+                                    <Binding Path="Shift1.TimeRange"/>
+                                </MultiBinding>
+                            </TextBlock.Text>
+                        </TextBlock>
+                    </TabItem.Header>
+
+                    <Grid Margin="15">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+
+                        <!-- Summary Cards -->
+                        <StackPanel Grid.Column="0" Margin="0,0,15,0" VerticalAlignment="Top">
+                            <Button Command="{Binding ToggleAutoSwitchCommand}"
+                                    Style="{StaticResource AutoSwitchButtonStyle}">
+                                <StackPanel Orientation="Horizontal">
+                                    <materialDesign:PackIcon Kind="{Binding AutoSwitchTab, Converter={StaticResource BoolToIconConverter}}" 
+                                                             Width="15" Height="15" Margin="0,0,8,0" VerticalAlignment="Center"/>
+                                    <TextBlock Text="{Binding AutoSwitchButtonText}" FontSize="14" FontWeight="SemiBold" VerticalAlignment="Center"/>
+                                </StackPanel>
+                            </Button>
+
+                            <!-- Tổng Sản Lượng -->
+                            <materialDesign:Card Margin="0,0,0,12" Background="#00796B" UniformCornerRadius="10" Width="220">
+                                <StackPanel Margin="18,14">
+                                    <StackPanel Orientation="Horizontal" Margin="0,0,0,8">
+                                        <materialDesign:PackIcon Kind="ChartLine" Width="22" Height="22" Foreground="White" Margin="0,0,8,0"/>
+                                        <TextBlock Text="Tổng Sản Lượng" Foreground="White" FontSize="13" VerticalAlignment="Center" Opacity="0.95"/>
+                                    </StackPanel>
+                                    <TextBlock Text="{Binding Shift1.TotalOutput}" Foreground="White" FontSize="36" FontWeight="Bold" HorizontalAlignment="Center"/>
+                                </StackPanel>
+                            </materialDesign:Card>
+
+                            <!-- Trung Bình/Giờ -->
+                            <materialDesign:Card Margin="0,0,0,12" Background="#0288D1" UniformCornerRadius="10" Width="220">
+                                <StackPanel Margin="18,14">
+                                    <StackPanel Orientation="Horizontal" Margin="0,0,0,8">
+                                        <materialDesign:PackIcon Kind="SpeedometerMedium" Width="22" Height="22" Foreground="White" Margin="0,0,8,0"/>
+                                        <TextBlock Text="Trung Bình/Giờ" Foreground="White" FontSize="13" VerticalAlignment="Center" Opacity="0.95"/>
+                                    </StackPanel>
+                                    <TextBlock Text="{Binding Shift1.Average}" Foreground="White" FontSize="36" FontWeight="Bold" HorizontalAlignment="Center"/>
+                                </StackPanel>
+                            </materialDesign:Card>
+
+                            <!-- Giờ Cao Nhất -->
+                            <materialDesign:Card Margin="0,0,0,12" Background="#43A047" UniformCornerRadius="10" Width="220">
+                                <StackPanel Margin="18,14">
+                                    <StackPanel Orientation="Horizontal" Margin="0,0,0,8">
+                                        <materialDesign:PackIcon Kind="TrendingUp" Width="22" Height="22" Foreground="White" Margin="0,0,8,0"/>
+                                        <TextBlock Text="Giờ Cao Nhất" Foreground="White" FontSize="13" VerticalAlignment="Center" Opacity="0.95"/>
+                                    </StackPanel>
+                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                        <TextBlock Text="{Binding Shift1.MaxHour}" Foreground="White" FontSize="18" FontWeight="Bold" VerticalAlignment="Bottom"/>
+                                        <TextBlock Text=" - " Foreground="White" FontSize="16" Margin="5,0" VerticalAlignment="Bottom"/>
+                                        <TextBlock Text="{Binding Shift1.MaxOutput}" Foreground="White" FontSize="28" FontWeight="Bold" VerticalAlignment="Bottom"/>
+                                    </StackPanel>
+                                </StackPanel>
+                            </materialDesign:Card>
+
+                            <!-- Giờ Thấp Nhất -->
+                            <materialDesign:Card Background="#E53935" UniformCornerRadius="10" Width="220">
+                                <StackPanel Margin="18,14">
+                                    <StackPanel Orientation="Horizontal" Margin="0,0,0,8">
+                                        <materialDesign:PackIcon Kind="TrendingDown" Width="22" Height="22" Foreground="White" Margin="0,0,8,0"/>
+                                        <TextBlock Text="Giờ Thấp Nhất" Foreground="White" FontSize="13" VerticalAlignment="Center" Opacity="0.95"/>
+                                    </StackPanel>
+                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                        <TextBlock Text="{Binding Shift1.MinHour}" Foreground="White" FontSize="18" FontWeight="Bold" VerticalAlignment="Bottom"/>
+                                        <TextBlock Text=" - " Foreground="White" FontSize="16" Margin="5,0" VerticalAlignment="Bottom"/>
+                                        <TextBlock Text="{Binding Shift1.MinOutput}" Foreground="White" FontSize="28" FontWeight="Bold" VerticalAlignment="Bottom"/>
+                                    </StackPanel>
+                                </StackPanel>
+                            </materialDesign:Card>
+                        </StackPanel>
+
+                        <!-- DataGrid Ca 1 - KHÔNG bọc ScrollViewer để cột Star fill đúng -->
+                        <DataGrid x:Name="Shift1DataGrid"
+                                  Grid.Column="1"
+                                  ItemsSource="{Binding Shift1.Data}"
+                                  AutoGenerateColumns="False" 
+                                  CanUserAddRows="False" 
+                                  IsReadOnly="True"
+                                  HeadersVisibility="Column" 
+                                  GridLinesVisibility="All"
+                                  AlternationCount="2"
+                                  RowHeight="35" 
+                                  ColumnHeaderHeight="40"
+                                  Background="White" 
+                                  BorderBrush="#E0E0E0" 
+                                  BorderThickness="1"
+                                  HorizontalScrollBarVisibility="Disabled"
+                                  VerticalScrollBarVisibility="Auto"
+                                  ColumnHeaderStyle="{StaticResource ShiftColumnHeaderStyle}"
+                                  CellStyle="{StaticResource ShiftCellStyle}"
+                                  RowStyle="{StaticResource ShiftRowStyle}"/>
+                    </Grid>
+                </TabItem>
+
+                <!-- ========== CA 2 ========== -->
+                <TabItem>
+                    <TabItem.Header>
+                        <TextBlock  FontSize="18" FontWeight="Bold" Margin="10,10">
+                            <TextBlock.Text>
+                                <MultiBinding StringFormat="{}{0} ({1})">
+                                    <Binding Path="Shift2.ShiftName"/>
+                                    <Binding Path="Shift2.TimeRange"/>
+                                </MultiBinding>
+                            </TextBlock.Text>
+                        </TextBlock>
+                    </TabItem.Header>
+
+                    <Grid Margin="15">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+
+                        <StackPanel Grid.Column="0" Margin="0,0,15,0" VerticalAlignment="Top">
+                            <Button Command="{Binding ToggleAutoSwitchCommand}"
+                                    Style="{StaticResource AutoSwitchButtonStyle}">
+                                <StackPanel Orientation="Horizontal">
+                                    <materialDesign:PackIcon Kind="{Binding AutoSwitchTab, Converter={StaticResource BoolToIconConverter}}" 
+                                                             Width="15" Height="15" Margin="0,0,8,0" VerticalAlignment="Center"/>
+                                    <TextBlock Text="{Binding AutoSwitchButtonText}" FontSize="14" FontWeight="SemiBold" VerticalAlignment="Center"/>
+                                </StackPanel>
+                            </Button>
+
+                            <materialDesign:Card Margin="0,0,0,12" Background="#00796B" UniformCornerRadius="10" Width="220">
+                                <StackPanel Margin="18,14">
+                                    <StackPanel Orientation="Horizontal" Margin="0,0,0,8">
+                                        <materialDesign:PackIcon Kind="ChartLine" Width="22" Height="22" Foreground="White" Margin="0,0,8,0"/>
+                                        <TextBlock Text="Tổng Sản Lượng" Foreground="White" FontSize="13" VerticalAlignment="Center" Opacity="0.95"/>
+                                    </StackPanel>
+                                    <TextBlock Text="{Binding Shift2.TotalOutput}" Foreground="White" FontSize="36" FontWeight="Bold" HorizontalAlignment="Center"/>
+                                </StackPanel>
+                            </materialDesign:Card>
+
+                            <materialDesign:Card Margin="0,0,0,12" Background="#0288D1" UniformCornerRadius="10" Width="220">
+                                <StackPanel Margin="18,14">
+                                    <StackPanel Orientation="Horizontal" Margin="0,0,0,8">
+                                        <materialDesign:PackIcon Kind="SpeedometerMedium" Width="22" Height="22" Foreground="White" Margin="0,0,8,0"/>
+                                        <TextBlock Text="Trung Bình/Giờ" Foreground="White" FontSize="13" VerticalAlignment="Center" Opacity="0.95"/>
+                                    </StackPanel>
+                                    <TextBlock Text="{Binding Shift2.Average}" Foreground="White" FontSize="36" FontWeight="Bold" HorizontalAlignment="Center"/>
+                                </StackPanel>
+                            </materialDesign:Card>
+
+                            <materialDesign:Card Margin="0,0,0,12" Background="#43A047" UniformCornerRadius="10" Width="220">
+                                <StackPanel Margin="18,14">
+                                    <StackPanel Orientation="Horizontal" Margin="0,0,0,8">
+                                        <materialDesign:PackIcon Kind="TrendingUp" Width="22" Height="22" Foreground="White" Margin="0,0,8,0"/>
+                                        <TextBlock Text="Giờ Cao Nhất" Foreground="White" FontSize="13" VerticalAlignment="Center" Opacity="0.95"/>
+                                    </StackPanel>
+                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                        <TextBlock Text="{Binding Shift2.MaxHour}" Foreground="White" FontSize="18" FontWeight="Bold" VerticalAlignment="Bottom"/>
+                                        <TextBlock Text=" - " Foreground="White" FontSize="16" Margin="5,0" VerticalAlignment="Bottom"/>
+                                        <TextBlock Text="{Binding Shift2.MaxOutput}" Foreground="White" FontSize="28" FontWeight="Bold" VerticalAlignment="Bottom"/>
+                                    </StackPanel>
+                                </StackPanel>
+                            </materialDesign:Card>
+
+                            <materialDesign:Card Background="#E53935" UniformCornerRadius="10" Width="220">
+                                <StackPanel Margin="18,14">
+                                    <StackPanel Orientation="Horizontal" Margin="0,0,0,8">
+                                        <materialDesign:PackIcon Kind="TrendingDown" Width="22" Height="22" Foreground="White" Margin="0,0,8,0"/>
+                                        <TextBlock Text="Giờ Thấp Nhất" Foreground="White" FontSize="13" VerticalAlignment="Center" Opacity="0.95"/>
+                                    </StackPanel>
+                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                        <TextBlock Text="{Binding Shift2.MinHour}" Foreground="White" FontSize="18" FontWeight="Bold" VerticalAlignment="Bottom"/>
+                                        <TextBlock Text=" - " Foreground="White" FontSize="16" Margin="5,0" VerticalAlignment="Bottom"/>
+                                        <TextBlock Text="{Binding Shift2.MinOutput}" Foreground="White" FontSize="28" FontWeight="Bold" VerticalAlignment="Bottom"/>
+                                    </StackPanel>
+                                </StackPanel>
+                            </materialDesign:Card>
+                        </StackPanel>
+
+                        <DataGrid x:Name="Shift2DataGrid"
+                                  Grid.Column="1"
+                                  ItemsSource="{Binding Shift2.Data}"
+                                  AutoGenerateColumns="False" 
+                                  CanUserAddRows="False" 
+                                  IsReadOnly="True"
+                                  HeadersVisibility="Column" 
+                                  GridLinesVisibility="All"
+                                  AlternationCount="2"
+                                  RowHeight="35" 
+                                  ColumnHeaderHeight="40"
+                                  Background="White" 
+                                  BorderBrush="#E0E0E0" 
+                                  BorderThickness="1"
+                                  HorizontalScrollBarVisibility="Disabled"
+                                  VerticalScrollBarVisibility="Auto"
+                                  ColumnHeaderStyle="{StaticResource ShiftColumnHeaderStyle}"
+                                  CellStyle="{StaticResource ShiftCellStyle}"
+                                  RowStyle="{StaticResource ShiftRowStyle}"/>
+                    </Grid>
+                </TabItem>
+                <!-- ========== CA 3 ========== -->
+                <TabItem>
+                    <TabItem.Header>
+                        <TextBlock  FontSize="18" FontWeight="Bold" Margin="10,10">
+                            <TextBlock.Text>
+                                <MultiBinding StringFormat="{}{0} ({1})">
+                                    <Binding Path="Shift3.ShiftName"/>
+                                    <Binding Path="Shift3.TimeRange"/>
+                                </MultiBinding>
+                            </TextBlock.Text>
+                        </TextBlock>
+                    </TabItem.Header>
+
+                    <Grid Margin="15">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+
+                        <StackPanel Grid.Column="0" Margin="0,0,15,0" VerticalAlignment="Top">
+                            <Button Command="{Binding ToggleAutoSwitchCommand}"
+                                    Style="{StaticResource AutoSwitchButtonStyle}">
+                                <StackPanel Orientation="Horizontal">
+                                    <materialDesign:PackIcon Kind="{Binding AutoSwitchTab, Converter={StaticResource BoolToIconConverter}}" 
+                                                             Width="15" Height="15" Margin="0,0,8,0" VerticalAlignment="Center"/>
+                                    <TextBlock Text="{Binding AutoSwitchButtonText}" FontSize="14" FontWeight="SemiBold" VerticalAlignment="Center"/>
+                                </StackPanel>
+                            </Button>
+
+                            <materialDesign:Card Margin="0,0,0,12" Background="#00796B" UniformCornerRadius="10" Width="220">
+                                <StackPanel Margin="18,14">
+                                    <StackPanel Orientation="Horizontal" Margin="0,0,0,8">
+                                        <materialDesign:PackIcon Kind="ChartLine" Width="22" Height="22" Foreground="White" Margin="0,0,8,0"/>
+                                        <TextBlock Text="Tổng Sản Lượng" Foreground="White" FontSize="13" VerticalAlignment="Center" Opacity="0.95"/>
+                                    </StackPanel>
+                                    <TextBlock Text="{Binding Shift3.TotalOutput}" Foreground="White" FontSize="36" FontWeight="Bold" HorizontalAlignment="Center"/>
+                                </StackPanel>
+                            </materialDesign:Card>
+
+                            <materialDesign:Card Margin="0,0,0,12" Background="#0288D1" UniformCornerRadius="10" Width="220">
+                                <StackPanel Margin="18,14">
+                                    <StackPanel Orientation="Horizontal" Margin="0,0,0,8">
+                                        <materialDesign:PackIcon Kind="SpeedometerMedium" Width="22" Height="22" Foreground="White" Margin="0,0,8,0"/>
+                                        <TextBlock Text="Trung Bình/Giờ" Foreground="White" FontSize="13" VerticalAlignment="Center" Opacity="0.95"/>
+                                    </StackPanel>
+                                    <TextBlock Text="{Binding Shift3.Average}" Foreground="White" FontSize="36" FontWeight="Bold" HorizontalAlignment="Center"/>
+                                </StackPanel>
+                            </materialDesign:Card>
+
+                            <materialDesign:Card Margin="0,0,0,12" Background="#43A047" UniformCornerRadius="10" Width="220">
+                                <StackPanel Margin="18,14">
+                                    <StackPanel Orientation="Horizontal" Margin="0,0,0,8">
+                                        <materialDesign:PackIcon Kind="TrendingUp" Width="22" Height="22" Foreground="White" Margin="0,0,8,0"/>
+                                        <TextBlock Text="Giờ Cao Nhất" Foreground="White" FontSize="13" VerticalAlignment="Center" Opacity="0.95"/>
+                                    </StackPanel>
+                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                        <TextBlock Text="{Binding Shift3.MaxHour}" Foreground="White" FontSize="18" FontWeight="Bold" VerticalAlignment="Bottom"/>
+                                        <TextBlock Text=" - " Foreground="White" FontSize="16" Margin="5,0" VerticalAlignment="Bottom"/>
+                                        <TextBlock Text="{Binding Shift3.MaxOutput}" Foreground="White" FontSize="28" FontWeight="Bold" VerticalAlignment="Bottom"/>
+                                    </StackPanel>
+                                </StackPanel>
+                            </materialDesign:Card>
+
+                            <materialDesign:Card Background="#E53935" UniformCornerRadius="10" Width="220">
+                                <StackPanel Margin="18,14">
+                                    <StackPanel Orientation="Horizontal" Margin="0,0,0,8">
+                                        <materialDesign:PackIcon Kind="TrendingDown" Width="22" Height="22" Foreground="White" Margin="0,0,8,0"/>
+                                        <TextBlock Text="Giờ Thấp Nhất" Foreground="White" FontSize="13" VerticalAlignment="Center" Opacity="0.95"/>
+                                    </StackPanel>
+                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                        <TextBlock Text="{Binding Shift3.MinHour}" Foreground="White" FontSize="18" FontWeight="Bold" VerticalAlignment="Bottom"/>
+                                        <TextBlock Text=" - " Foreground="White" FontSize="16" Margin="5,0" VerticalAlignment="Bottom"/>
+                                        <TextBlock Text="{Binding Shift3.MinOutput}" Foreground="White" FontSize="28" FontWeight="Bold" VerticalAlignment="Bottom"/>
+                                    </StackPanel>
+                                </StackPanel>
+                            </materialDesign:Card>
+                        </StackPanel>
+
+                        <DataGrid x:Name="Shift3DataGrid"
+                                  Grid.Column="1"
+                                  ItemsSource="{Binding Shift3.Data}"
+                                  AutoGenerateColumns="False" 
+                                  CanUserAddRows="False" 
+                                  IsReadOnly="True"
+                                  HeadersVisibility="Column" 
+                                  GridLinesVisibility="All"
+                                  AlternationCount="2"
+                                  RowHeight="35" 
+                                  ColumnHeaderHeight="40"
+                                  Background="White" 
+                                  BorderBrush="#E0E0E0" 
+                                  BorderThickness="1"
+                                  HorizontalScrollBarVisibility="Disabled"
+                                  VerticalScrollBarVisibility="Auto"
+                                  ColumnHeaderStyle="{StaticResource ShiftColumnHeaderStyle}"
+                                  CellStyle="{StaticResource ShiftCellStyle}"
+                                  RowStyle="{StaticResource ShiftRowStyle}"/>
+                    </Grid>
+                </TabItem>
+            </TabControl>
+        </Grid>
+    </Border>
+</UserControl>

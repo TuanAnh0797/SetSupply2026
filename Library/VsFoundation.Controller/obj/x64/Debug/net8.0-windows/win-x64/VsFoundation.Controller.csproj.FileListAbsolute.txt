@@ -1,0 +1,30 @@
+D:\LCFZB_APM\20_PROG\LCFZB_APM_CS\100. Library\VsFoundation\VsFoundation.Controller\bin\x64\Debug\net8.0-windows\win-x64\LICENSE\LICENSE.txt
+D:\LCFZB_APM\20_PROG\LCFZB_APM_CS\100. Library\VsFoundation\VsFoundation.Controller\bin\x64\Debug\net8.0-windows\win-x64\3rd Party Files\Controller\AdlinkLib\Dask\PCI-Dask64.dll
+D:\LCFZB_APM\20_PROG\LCFZB_APM_CS\100. Library\VsFoundation\VsFoundation.Controller\bin\x64\Debug\net8.0-windows\win-x64\3rd Party Files\Controller\AdlinkLib\Dask\PCI-Dask64.lib
+D:\LCFZB_APM\20_PROG\LCFZB_APM_CS\100. Library\VsFoundation\VsFoundation.Controller\bin\x64\Debug\net8.0-windows\win-x64\3rd Party Files\Controller\Ajin\AxtLib\AXTLib.dll
+D:\LCFZB_APM\20_PROG\LCFZB_APM_CS\100. Library\VsFoundation\VsFoundation.Controller\bin\x64\Debug\net8.0-windows\win-x64\3rd Party Files\Controller\Ajin\AxtLib\EzBasicAxl.dll
+D:\LCFZB_APM\20_PROG\LCFZB_APM_CS\100. Library\VsFoundation\VsFoundation.Controller\bin\x64\Debug\net8.0-windows\win-x64\x64\pdfium.dll
+D:\LCFZB_APM\20_PROG\LCFZB_APM_CS\100. Library\VsFoundation\VsFoundation.Controller\bin\x64\Debug\net8.0-windows\win-x64\x86\pdfium.dll
+D:\LCFZB_APM\20_PROG\LCFZB_APM_CS\100. Library\VsFoundation\VsFoundation.Controller\bin\x64\Debug\net8.0-windows\win-x64\VsFoundation.Controller.deps.json
+D:\LCFZB_APM\20_PROG\LCFZB_APM_CS\100. Library\VsFoundation\VsFoundation.Controller\bin\x64\Debug\net8.0-windows\win-x64\VsFoundation.Controller.dll
+D:\LCFZB_APM\20_PROG\LCFZB_APM_CS\100. Library\VsFoundation\VsFoundation.Controller\bin\x64\Debug\net8.0-windows\win-x64\VsFoundation.Controller.pdb
+D:\LCFZB_APM\20_PROG\LCFZB_APM_CS\100. Library\VsFoundation\VsFoundation.Controller\bin\x64\Debug\net8.0-windows\win-x64\VsAlarmConfig.dll
+D:\LCFZB_APM\20_PROG\LCFZB_APM_CS\100. Library\VsFoundation\VsFoundation.Controller\bin\x64\Debug\net8.0-windows\win-x64\VsFoundation.Base.dll
+D:\LCFZB_APM\20_PROG\LCFZB_APM_CS\100. Library\VsFoundation\VsFoundation.Controller\bin\x64\Debug\net8.0-windows\win-x64\VSLibrary.dll
+D:\LCFZB_APM\20_PROG\LCFZB_APM_CS\100. Library\VsFoundation\VsFoundation.Controller\bin\x64\Debug\net8.0-windows\win-x64\VsPdfiumViewer.dll
+D:\LCFZB_APM\20_PROG\LCFZB_APM_CS\100. Library\VsFoundation\VsFoundation.Controller\bin\x64\Debug\net8.0-windows\win-x64\VsVirtualKeyboard.dll
+D:\LCFZB_APM\20_PROG\LCFZB_APM_CS\100. Library\VsFoundation\VsFoundation.Controller\bin\x64\Debug\net8.0-windows\win-x64\VsFoundation.Base.pdb
+D:\LCFZB_APM\20_PROG\LCFZB_APM_CS\100. Library\VsFoundation\VsFoundation.Controller\bin\x64\Debug\net8.0-windows\win-x64\VsAlarmConfig.pdb
+D:\LCFZB_APM\20_PROG\LCFZB_APM_CS\100. Library\VsFoundation\VsFoundation.Controller\bin\x64\Debug\net8.0-windows\win-x64\VSLibrary.pdb
+D:\LCFZB_APM\20_PROG\LCFZB_APM_CS\100. Library\VsFoundation\VsFoundation.Controller\bin\x64\Debug\net8.0-windows\win-x64\VsPdfiumViewer.pdb
+D:\LCFZB_APM\20_PROG\LCFZB_APM_CS\100. Library\VsFoundation\VsFoundation.Controller\bin\x64\Debug\net8.0-windows\win-x64\VsVirtualKeyboard.pdb
+D:\LCFZB_APM\20_PROG\LCFZB_APM_CS\100. Library\VsFoundation\VsFoundation.Controller\obj\x64\Debug\net8.0-windows\win-x64\VsFoundation.Controller.csproj.AssemblyReference.cache
+D:\LCFZB_APM\20_PROG\LCFZB_APM_CS\100. Library\VsFoundation\VsFoundation.Controller\obj\x64\Debug\net8.0-windows\win-x64\VsFoundation.Controller.GeneratedMSBuildEditorConfig.editorconfig
+D:\LCFZB_APM\20_PROG\LCFZB_APM_CS\100. Library\VsFoundation\VsFoundation.Controller\obj\x64\Debug\net8.0-windows\win-x64\VsFoundation.Controller.AssemblyInfoInputs.cache
+D:\LCFZB_APM\20_PROG\LCFZB_APM_CS\100. Library\VsFoundation\VsFoundation.Controller\obj\x64\Debug\net8.0-windows\win-x64\VsFoundation.Controller.AssemblyInfo.cs
+D:\LCFZB_APM\20_PROG\LCFZB_APM_CS\100. Library\VsFoundation\VsFoundation.Controller\obj\x64\Debug\net8.0-windows\win-x64\VsFoundation.Controller.csproj.CoreCompileInputs.cache
+D:\LCFZB_APM\20_PROG\LCFZB_APM_CS\100. Library\VsFoundation\VsFoundation.Controller\obj\x64\Debug\net8.0-windows\win-x64\VsFounda.E911EB85.Up2Date
+D:\LCFZB_APM\20_PROG\LCFZB_APM_CS\100. Library\VsFoundation\VsFoundation.Controller\obj\x64\Debug\net8.0-windows\win-x64\VsFoundation.Controller.dll
+D:\LCFZB_APM\20_PROG\LCFZB_APM_CS\100. Library\VsFoundation\VsFoundation.Controller\obj\x64\Debug\net8.0-windows\win-x64\refint\VsFoundation.Controller.dll
+D:\LCFZB_APM\20_PROG\LCFZB_APM_CS\100. Library\VsFoundation\VsFoundation.Controller\obj\x64\Debug\net8.0-windows\win-x64\VsFoundation.Controller.pdb
+D:\LCFZB_APM\20_PROG\LCFZB_APM_CS\100. Library\VsFoundation\VsFoundation.Controller\obj\x64\Debug\net8.0-windows\win-x64\ref\VsFoundation.Controller.dll

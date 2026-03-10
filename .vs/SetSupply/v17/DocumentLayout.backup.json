@@ -1,0 +1,743 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "D:\\TuanAnh\\APPWPF\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{8C1AE6A3-A5EC-568F-6B6D-42DB8B97D869}|SetSupply\\SetSupply.csproj|d:\\tuananh\\appwpf\\setsupply\\viewmodels\\usercontrolviewmodels\\setting\\sub\\ucplcsettingviewmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{8C1AE6A3-A5EC-568F-6B6D-42DB8B97D869}|SetSupply\\SetSupply.csproj|solutionrelative:setsupply\\viewmodels\\usercontrolviewmodels\\setting\\sub\\ucplcsettingviewmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{8C1AE6A3-A5EC-568F-6B6D-42DB8B97D869}|SetSupply\\SetSupply.csproj|d:\\tuananh\\appwpf\\setsupply\\service\\plcservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{8C1AE6A3-A5EC-568F-6B6D-42DB8B97D869}|SetSupply\\SetSupply.csproj|solutionrelative:setsupply\\service\\plcservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{8C1AE6A3-A5EC-568F-6B6D-42DB8B97D869}|SetSupply\\SetSupply.csproj|d:\\tuananh\\appwpf\\setsupply\\helper\\plc.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{8C1AE6A3-A5EC-568F-6B6D-42DB8B97D869}|SetSupply\\SetSupply.csproj|solutionrelative:setsupply\\helper\\plc.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{8C1AE6A3-A5EC-568F-6B6D-42DB8B97D869}|SetSupply\\SetSupply.csproj|d:\\tuananh\\appwpf\\setsupply\\viewmodels\\formviewmodels\\mainwindowviewmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{8C1AE6A3-A5EC-568F-6B6D-42DB8B97D869}|SetSupply\\SetSupply.csproj|solutionrelative:setsupply\\viewmodels\\formviewmodels\\mainwindowviewmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{8C1AE6A3-A5EC-568F-6B6D-42DB8B97D869}|SetSupply\\SetSupply.csproj|d:\\tuananh\\appwpf\\setsupply\\viewmodels\\usercontrolviewmodels\\home\\uchomeviewmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{8C1AE6A3-A5EC-568F-6B6D-42DB8B97D869}|SetSupply\\SetSupply.csproj|solutionrelative:setsupply\\viewmodels\\usercontrolviewmodels\\home\\uchomeviewmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{8C1AE6A3-A5EC-568F-6B6D-42DB8B97D869}|SetSupply\\SetSupply.csproj|d:\\tuananh\\appwpf\\setsupply\\views\\mainwindow.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
+      "RelativeMoniker": "D:0:0:{8C1AE6A3-A5EC-568F-6B6D-42DB8B97D869}|SetSupply\\SetSupply.csproj|solutionrelative:setsupply\\views\\mainwindow.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{8C1AE6A3-A5EC-568F-6B6D-42DB8B97D869}|SetSupply\\SetSupply.csproj|d:\\tuananh\\appwpf\\setsupply\\app.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
+      "RelativeMoniker": "D:0:0:{8C1AE6A3-A5EC-568F-6B6D-42DB8B97D869}|SetSupply\\SetSupply.csproj|solutionrelative:setsupply\\app.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{8C1AE6A3-A5EC-568F-6B6D-42DB8B97D869}|SetSupply\\SetSupply.csproj|d:\\tuananh\\appwpf\\setsupply\\service\\localizationservice .cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{8C1AE6A3-A5EC-568F-6B6D-42DB8B97D869}|SetSupply\\SetSupply.csproj|solutionrelative:setsupply\\service\\localizationservice .cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{8C1AE6A3-A5EC-568F-6B6D-42DB8B97D869}|SetSupply\\SetSupply.csproj|d:\\tuananh\\appwpf\\setsupply\\app.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{8C1AE6A3-A5EC-568F-6B6D-42DB8B97D869}|SetSupply\\SetSupply.csproj|solutionrelative:setsupply\\app.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{8C1AE6A3-A5EC-568F-6B6D-42DB8B97D869}|SetSupply\\SetSupply.csproj|d:\\tuananh\\appwpf\\setsupply\\resources\\language\\stringresources.en.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
+      "RelativeMoniker": "D:0:0:{8C1AE6A3-A5EC-568F-6B6D-42DB8B97D869}|SetSupply\\SetSupply.csproj|solutionrelative:setsupply\\resources\\language\\stringresources.en.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{8C1AE6A3-A5EC-568F-6B6D-42DB8B97D869}|SetSupply\\SetSupply.csproj|d:\\tuananh\\appwpf\\setsupply\\viewmodels\\usercontrolviewmodels\\common\\uccontrolbarviewmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{8C1AE6A3-A5EC-568F-6B6D-42DB8B97D869}|SetSupply\\SetSupply.csproj|solutionrelative:setsupply\\viewmodels\\usercontrolviewmodels\\common\\uccontrolbarviewmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{8C1AE6A3-A5EC-568F-6B6D-42DB8B97D869}|SetSupply\\SetSupply.csproj|d:\\tuananh\\appwpf\\setsupply\\resources\\language\\stringresources.vi.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
+      "RelativeMoniker": "D:0:0:{8C1AE6A3-A5EC-568F-6B6D-42DB8B97D869}|SetSupply\\SetSupply.csproj|solutionrelative:setsupply\\resources\\language\\stringresources.vi.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{8C1AE6A3-A5EC-568F-6B6D-42DB8B97D869}|SetSupply\\SetSupply.csproj|d:\\tuananh\\appwpf\\setsupply\\usercontrols\\setting\\sub\\ucplcsetting.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
+      "RelativeMoniker": "D:0:0:{8C1AE6A3-A5EC-568F-6B6D-42DB8B97D869}|SetSupply\\SetSupply.csproj|solutionrelative:setsupply\\usercontrols\\setting\\sub\\ucplcsetting.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{8C1AE6A3-A5EC-568F-6B6D-42DB8B97D869}|SetSupply\\SetSupply.csproj|d:\\tuananh\\appwpf\\setsupply\\viewmodels\\usercontrolviewmodels\\dashboard\\ucdashboardviewmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{8C1AE6A3-A5EC-568F-6B6D-42DB8B97D869}|SetSupply\\SetSupply.csproj|solutionrelative:setsupply\\viewmodels\\usercontrolviewmodels\\dashboard\\ucdashboardviewmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{8C1AE6A3-A5EC-568F-6B6D-42DB8B97D869}|SetSupply\\SetSupply.csproj|d:\\tuananh\\appwpf\\setsupply\\setsupply.csproj||{04B8AB82-A572-4FEF-95CE-5222444B6B64}|",
+      "RelativeMoniker": "D:0:0:{8C1AE6A3-A5EC-568F-6B6D-42DB8B97D869}|SetSupply\\SetSupply.csproj|solutionrelative:setsupply\\setsupply.csproj||{04B8AB82-A572-4FEF-95CE-5222444B6B64}|"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{8C1AE6A3-A5EC-568F-6B6D-42DB8B97D869}|SetSupply\\SetSupply.csproj|d:\\tuananh\\appwpf\\setsupply\\usercontrols\\dashboard\\ucdashboard.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{8C1AE6A3-A5EC-568F-6B6D-42DB8B97D869}|SetSupply\\SetSupply.csproj|solutionrelative:setsupply\\usercontrols\\dashboard\\ucdashboard.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{8C1AE6A3-A5EC-568F-6B6D-42DB8B97D869}|SetSupply\\SetSupply.csproj|d:\\tuananh\\appwpf\\setsupply\\usercontrols\\dashboard\\ucdashboard.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
+      "RelativeMoniker": "D:0:0:{8C1AE6A3-A5EC-568F-6B6D-42DB8B97D869}|SetSupply\\SetSupply.csproj|solutionrelative:setsupply\\usercontrols\\dashboard\\ucdashboard.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{8C1AE6A3-A5EC-568F-6B6D-42DB8B97D869}|SetSupply\\SetSupply.csproj|d:\\tuananh\\appwpf\\setsupply\\usercontrols\\history\\uchistory.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
+      "RelativeMoniker": "D:0:0:{8C1AE6A3-A5EC-568F-6B6D-42DB8B97D869}|SetSupply\\SetSupply.csproj|solutionrelative:setsupply\\usercontrols\\history\\uchistory.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{8C1AE6A3-A5EC-568F-6B6D-42DB8B97D869}|SetSupply\\SetSupply.csproj|d:\\tuananh\\appwpf\\setsupply\\usercontrols\\home\\uchome.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{8C1AE6A3-A5EC-568F-6B6D-42DB8B97D869}|SetSupply\\SetSupply.csproj|solutionrelative:setsupply\\usercontrols\\home\\uchome.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{8C1AE6A3-A5EC-568F-6B6D-42DB8B97D869}|SetSupply\\SetSupply.csproj|d:\\tuananh\\appwpf\\setsupply\\usercontrols\\home\\uchome.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
+      "RelativeMoniker": "D:0:0:{8C1AE6A3-A5EC-568F-6B6D-42DB8B97D869}|SetSupply\\SetSupply.csproj|solutionrelative:setsupply\\usercontrols\\home\\uchome.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{8C1AE6A3-A5EC-568F-6B6D-42DB8B97D869}|SetSupply\\SetSupply.csproj|d:\\tuananh\\appwpf\\setsupply\\viewmodels\\usercontrolviewmodels\\home\\shiftviewmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{8C1AE6A3-A5EC-568F-6B6D-42DB8B97D869}|SetSupply\\SetSupply.csproj|solutionrelative:setsupply\\viewmodels\\usercontrolviewmodels\\home\\shiftviewmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\AWESOME\\AppData\\Local\\Temp\\VSGeneratedDocuments\\4a81313f-f087-bf68-bc51-4cccc8761579\\SetSupply.ViewModels.UserControlViewModels.Home.ShiftViewModel.g.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{8C1AE6A3-A5EC-568F-6B6D-42DB8B97D869}|SetSupply\\SetSupply.csproj|d:\\tuananh\\appwpf\\setsupply\\viewmodels\\usercontrolviewmodels\\history\\uchistoryviewmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{8C1AE6A3-A5EC-568F-6B6D-42DB8B97D869}|SetSupply\\SetSupply.csproj|solutionrelative:setsupply\\viewmodels\\usercontrolviewmodels\\history\\uchistoryviewmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{8C1AE6A3-A5EC-568F-6B6D-42DB8B97D869}|SetSupply\\SetSupply.csproj|d:\\tuananh\\appwpf\\setsupply\\service\\shiftsettingservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{8C1AE6A3-A5EC-568F-6B6D-42DB8B97D869}|SetSupply\\SetSupply.csproj|solutionrelative:setsupply\\service\\shiftsettingservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{8C1AE6A3-A5EC-568F-6B6D-42DB8B97D869}|SetSupply\\SetSupply.csproj|d:\\tuananh\\appwpf\\setsupply\\service\\shifthistorybackgroundservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{8C1AE6A3-A5EC-568F-6B6D-42DB8B97D869}|SetSupply\\SetSupply.csproj|solutionrelative:setsupply\\service\\shifthistorybackgroundservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{8C1AE6A3-A5EC-568F-6B6D-42DB8B97D869}|SetSupply\\SetSupply.csproj|d:\\tuananh\\appwpf\\setsupply\\models\\database\\shiftsettinghistory.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{8C1AE6A3-A5EC-568F-6B6D-42DB8B97D869}|SetSupply\\SetSupply.csproj|solutionrelative:setsupply\\models\\database\\shiftsettinghistory.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{8C1AE6A3-A5EC-568F-6B6D-42DB8B97D869}|SetSupply\\SetSupply.csproj|d:\\tuananh\\appwpf\\setsupply\\models\\database\\shiftsetting.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{8C1AE6A3-A5EC-568F-6B6D-42DB8B97D869}|SetSupply\\SetSupply.csproj|solutionrelative:setsupply\\models\\database\\shiftsetting.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{8C1AE6A3-A5EC-568F-6B6D-42DB8B97D869}|SetSupply\\SetSupply.csproj|d:\\tuananh\\appwpf\\setsupply\\service\\productiondataservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{8C1AE6A3-A5EC-568F-6B6D-42DB8B97D869}|SetSupply\\SetSupply.csproj|solutionrelative:setsupply\\service\\productiondataservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{8C1AE6A3-A5EC-568F-6B6D-42DB8B97D869}|SetSupply\\SetSupply.csproj|d:\\tuananh\\appwpf\\setsupply\\extensions\\productiondataextensions.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{8C1AE6A3-A5EC-568F-6B6D-42DB8B97D869}|SetSupply\\SetSupply.csproj|solutionrelative:setsupply\\extensions\\productiondataextensions.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{8C1AE6A3-A5EC-568F-6B6D-42DB8B97D869}|SetSupply\\SetSupply.csproj|d:\\tuananh\\appwpf\\setsupply\\database\\appdbcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{8C1AE6A3-A5EC-568F-6B6D-42DB8B97D869}|SetSupply\\SetSupply.csproj|solutionrelative:setsupply\\database\\appdbcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{8C1AE6A3-A5EC-568F-6B6D-42DB8B97D869}|SetSupply\\SetSupply.csproj|d:\\tuananh\\appwpf\\setsupply\\models\\database\\plcsetting.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{8C1AE6A3-A5EC-568F-6B6D-42DB8B97D869}|SetSupply\\SetSupply.csproj|solutionrelative:setsupply\\models\\database\\plcsetting.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{8C1AE6A3-A5EC-568F-6B6D-42DB8B97D869}|SetSupply\\SetSupply.csproj|d:\\tuananh\\appwpf\\setsupply\\usercontrols\\setting\\sub\\ucplcsetting.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{8C1AE6A3-A5EC-568F-6B6D-42DB8B97D869}|SetSupply\\SetSupply.csproj|solutionrelative:setsupply\\usercontrols\\setting\\sub\\ucplcsetting.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{8C1AE6A3-A5EC-568F-6B6D-42DB8B97D869}|SetSupply\\SetSupply.csproj|d:\\tuananh\\appwpf\\setsupply\\usercontrols\\setting\\sub\\ucshiftsetting.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
+      "RelativeMoniker": "D:0:0:{8C1AE6A3-A5EC-568F-6B6D-42DB8B97D869}|SetSupply\\SetSupply.csproj|solutionrelative:setsupply\\usercontrols\\setting\\sub\\ucshiftsetting.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{8C1AE6A3-A5EC-568F-6B6D-42DB8B97D869}|SetSupply\\SetSupply.csproj|d:\\tuananh\\appwpf\\setsupply\\helper\\datagridcolumnhelper.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{8C1AE6A3-A5EC-568F-6B6D-42DB8B97D869}|SetSupply\\SetSupply.csproj|solutionrelative:setsupply\\helper\\datagridcolumnhelper.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{8C1AE6A3-A5EC-568F-6B6D-42DB8B97D869}|SetSupply\\SetSupply.csproj|d:\\tuananh\\appwpf\\setsupply\\usercontrols\\history\\uchistory.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{8C1AE6A3-A5EC-568F-6B6D-42DB8B97D869}|SetSupply\\SetSupply.csproj|solutionrelative:setsupply\\usercontrols\\history\\uchistory.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{8C1AE6A3-A5EC-568F-6B6D-42DB8B97D869}|SetSupply\\SetSupply.csproj|d:\\tuananh\\appwpf\\setsupply\\models\\home\\shiftsettings.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{8C1AE6A3-A5EC-568F-6B6D-42DB8B97D869}|SetSupply\\SetSupply.csproj|solutionrelative:setsupply\\models\\home\\shiftsettings.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{8C1AE6A3-A5EC-568F-6B6D-42DB8B97D869}|SetSupply\\SetSupply.csproj|d:\\tuananh\\appwpf\\setsupply\\models\\database\\productiondata.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{8C1AE6A3-A5EC-568F-6B6D-42DB8B97D869}|SetSupply\\SetSupply.csproj|solutionrelative:setsupply\\models\\database\\productiondata.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{8C1AE6A3-A5EC-568F-6B6D-42DB8B97D869}|SetSupply\\SetSupply.csproj|d:\\tuananh\\appwpf\\setsupply\\models\\database\\rememberuser.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{8C1AE6A3-A5EC-568F-6B6D-42DB8B97D869}|SetSupply\\SetSupply.csproj|solutionrelative:setsupply\\models\\database\\rememberuser.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{8C1AE6A3-A5EC-568F-6B6D-42DB8B97D869}|SetSupply\\SetSupply.csproj|d:\\tuananh\\appwpf\\setsupply\\viewmodels\\usercontrolviewmodels\\setting\\sub\\ucshiftsettingviewmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{8C1AE6A3-A5EC-568F-6B6D-42DB8B97D869}|SetSupply\\SetSupply.csproj|solutionrelative:setsupply\\viewmodels\\usercontrolviewmodels\\setting\\sub\\ucshiftsettingviewmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{8C1AE6A3-A5EC-568F-6B6D-42DB8B97D869}|SetSupply\\SetSupply.csproj|d:\\tuananh\\appwpf\\setsupply\\usercontrols\\setting\\sub\\ucshiftsetting.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{8C1AE6A3-A5EC-568F-6B6D-42DB8B97D869}|SetSupply\\SetSupply.csproj|solutionrelative:setsupply\\usercontrols\\setting\\sub\\ucshiftsetting.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{8C1AE6A3-A5EC-568F-6B6D-42DB8B97D869}|SetSupply\\SetSupply.csproj|d:\\tuananh\\appwpf\\setsupply\\viewmodels\\usercontrolviewmodels\\setting\\ucsettingviewmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{8C1AE6A3-A5EC-568F-6B6D-42DB8B97D869}|SetSupply\\SetSupply.csproj|solutionrelative:setsupply\\viewmodels\\usercontrolviewmodels\\setting\\ucsettingviewmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{8C1AE6A3-A5EC-568F-6B6D-42DB8B97D869}|SetSupply\\SetSupply.csproj|d:\\tuananh\\appwpf\\setsupply\\service\\usersession .cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{8C1AE6A3-A5EC-568F-6B6D-42DB8B97D869}|SetSupply\\SetSupply.csproj|solutionrelative:setsupply\\service\\usersession .cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{8C1AE6A3-A5EC-568F-6B6D-42DB8B97D869}|SetSupply\\SetSupply.csproj|d:\\tuananh\\appwpf\\setsupply\\service\\authorizationservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{8C1AE6A3-A5EC-568F-6B6D-42DB8B97D869}|SetSupply\\SetSupply.csproj|solutionrelative:setsupply\\service\\authorizationservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{8C1AE6A3-A5EC-568F-6B6D-42DB8B97D869}|SetSupply\\SetSupply.csproj|d:\\tuananh\\appwpf\\setsupply\\models\\database\\user.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{8C1AE6A3-A5EC-568F-6B6D-42DB8B97D869}|SetSupply\\SetSupply.csproj|solutionrelative:setsupply\\models\\database\\user.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 294,
+          "SelectedChildIndex": 7,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "MainWindowViewModel.cs",
+              "DocumentMoniker": "D:\\TuanAnh\\APPWPF\\SetSupply\\ViewModels\\FormViewModels\\MainWindowViewModel.cs",
+              "RelativeDocumentMoniker": "SetSupply\\ViewModels\\FormViewModels\\MainWindowViewModel.cs",
+              "ToolTip": "D:\\TuanAnh\\APPWPF\\SetSupply\\ViewModels\\FormViewModels\\MainWindowViewModel.cs",
+              "RelativeToolTip": "SetSupply\\ViewModels\\FormViewModels\\MainWindowViewModel.cs",
+              "ViewState": "AgIAACMAAAAAAAAAAAArwEYAAABCAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-08T16:41:20.258Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
+              "Title": "App.xaml.cs",
+              "DocumentMoniker": "D:\\TuanAnh\\APPWPF\\SetSupply\\App.xaml.cs",
+              "RelativeDocumentMoniker": "SetSupply\\App.xaml.cs",
+              "ToolTip": "D:\\TuanAnh\\APPWPF\\SetSupply\\App.xaml.cs",
+              "RelativeToolTip": "SetSupply\\App.xaml.cs",
+              "ViewState": "AgIAAN0BAAAAAAAAAAAAAJAAAAAVAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-08T16:32:57.811Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "LocalizationService .cs",
+              "DocumentMoniker": "D:\\TuanAnh\\APPWPF\\SetSupply\\Service\\LocalizationService .cs",
+              "RelativeDocumentMoniker": "SetSupply\\Service\\LocalizationService .cs",
+              "ToolTip": "D:\\TuanAnh\\APPWPF\\SetSupply\\Service\\LocalizationService .cs",
+              "RelativeToolTip": "SetSupply\\Service\\LocalizationService .cs",
+              "ViewState": "AgIAAAgAAAAAAAAAAAAewCAAAAAVAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-08T16:40:12.873Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "App.xaml",
+              "DocumentMoniker": "D:\\TuanAnh\\APPWPF\\SetSupply\\App.xaml",
+              "RelativeDocumentMoniker": "SetSupply\\App.xaml",
+              "ToolTip": "D:\\TuanAnh\\APPWPF\\SetSupply\\App.xaml",
+              "RelativeToolTip": "SetSupply\\App.xaml",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
+              "WhenOpened": "2026-03-10T17:24:40.107Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 11,
+              "Title": "StringResources.vi.xaml",
+              "DocumentMoniker": "D:\\TuanAnh\\APPWPF\\SetSupply\\Resources\\Language\\StringResources.vi.xaml",
+              "RelativeDocumentMoniker": "SetSupply\\Resources\\Language\\StringResources.vi.xaml",
+              "ToolTip": "D:\\TuanAnh\\APPWPF\\SetSupply\\Resources\\Language\\StringResources.vi.xaml",
+              "RelativeToolTip": "SetSupply\\Resources\\Language\\StringResources.vi.xaml",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
+              "WhenOpened": "2026-03-10T17:50:34.68Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "PLC.cs",
+              "DocumentMoniker": "D:\\TuanAnh\\APPWPF\\SetSupply\\Helper\\PLC.cs",
+              "RelativeDocumentMoniker": "SetSupply\\Helper\\PLC.cs",
+              "ToolTip": "D:\\TuanAnh\\APPWPF\\SetSupply\\Helper\\PLC.cs",
+              "RelativeToolTip": "SetSupply\\Helper\\PLC.cs",
+              "ViewState": "AgIAAIYAAAAAAAAAAAAIwBkAAAAcAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-10T16:54:52.646Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "PLCService.cs",
+              "DocumentMoniker": "D:\\TuanAnh\\APPWPF\\SetSupply\\Service\\PLCService.cs",
+              "RelativeDocumentMoniker": "SetSupply\\Service\\PLCService.cs",
+              "ToolTip": "D:\\TuanAnh\\APPWPF\\SetSupply\\Service\\PLCService.cs",
+              "RelativeToolTip": "SetSupply\\Service\\PLCService.cs",
+              "ViewState": "AgIAADUAAAAAAAAAAAAlwIEAAABXAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-08T16:40:15.245Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "UCPLCSettingViewModel.cs",
+              "DocumentMoniker": "D:\\TuanAnh\\APPWPF\\SetSupply\\ViewModels\\UserControlViewModels\\Setting\\Sub\\UCPLCSettingViewModel.cs",
+              "RelativeDocumentMoniker": "SetSupply\\ViewModels\\UserControlViewModels\\Setting\\Sub\\UCPLCSettingViewModel.cs",
+              "ToolTip": "D:\\TuanAnh\\APPWPF\\SetSupply\\ViewModels\\UserControlViewModels\\Setting\\Sub\\UCPLCSettingViewModel.cs",
+              "RelativeToolTip": "SetSupply\\ViewModels\\UserControlViewModels\\Setting\\Sub\\UCPLCSettingViewModel.cs",
+              "ViewState": "AgIAAC0AAAAAAAAAAAAAwDYAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-08T16:50:42.245Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "MainWindow.xaml",
+              "DocumentMoniker": "D:\\TuanAnh\\APPWPF\\SetSupply\\Views\\MainWindow.xaml",
+              "RelativeDocumentMoniker": "SetSupply\\Views\\MainWindow.xaml",
+              "ToolTip": "D:\\TuanAnh\\APPWPF\\SetSupply\\Views\\MainWindow.xaml",
+              "RelativeToolTip": "SetSupply\\Views\\MainWindow.xaml",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
+              "WhenOpened": "2026-03-08T16:40:53.858Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "UCHomeViewModel.cs",
+              "DocumentMoniker": "D:\\TuanAnh\\APPWPF\\SetSupply\\ViewModels\\UserControlViewModels\\Home\\UCHomeViewModel.cs",
+              "RelativeDocumentMoniker": "SetSupply\\ViewModels\\UserControlViewModels\\Home\\UCHomeViewModel.cs",
+              "ToolTip": "D:\\TuanAnh\\APPWPF\\SetSupply\\ViewModels\\UserControlViewModels\\Home\\UCHomeViewModel.cs",
+              "RelativeToolTip": "SetSupply\\ViewModels\\UserControlViewModels\\Home\\UCHomeViewModel.cs",
+              "ViewState": "AgIAABEAAAAAAAAAAAAQwFMAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-08T17:15:51.587Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 18,
+              "Title": "UCHome.xaml.cs",
+              "DocumentMoniker": "D:\\TuanAnh\\APPWPF\\SetSupply\\UserControls\\Home\\UCHome.xaml.cs",
+              "RelativeDocumentMoniker": "SetSupply\\UserControls\\Home\\UCHome.xaml.cs",
+              "ToolTip": "D:\\TuanAnh\\APPWPF\\SetSupply\\UserControls\\Home\\UCHome.xaml.cs",
+              "RelativeToolTip": "SetSupply\\UserControls\\Home\\UCHome.xaml.cs",
+              "ViewState": "AgIAAA4AAAAAAAAAAAAAACcAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-08T17:34:27.4Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 9,
+              "Title": "StringResources.en.xaml",
+              "DocumentMoniker": "D:\\TuanAnh\\APPWPF\\SetSupply\\Resources\\Language\\StringResources.en.xaml",
+              "RelativeDocumentMoniker": "SetSupply\\Resources\\Language\\StringResources.en.xaml",
+              "ToolTip": "D:\\TuanAnh\\APPWPF\\SetSupply\\Resources\\Language\\StringResources.en.xaml",
+              "RelativeToolTip": "SetSupply\\Resources\\Language\\StringResources.en.xaml",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
+              "WhenOpened": "2026-03-10T17:50:37.92Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 10,
+              "Title": "UCControlBarViewModel.cs",
+              "DocumentMoniker": "D:\\TuanAnh\\APPWPF\\SetSupply\\ViewModels\\UserControlViewModels\\Common\\UCControlBarViewModel.cs",
+              "RelativeDocumentMoniker": "SetSupply\\ViewModels\\UserControlViewModels\\Common\\UCControlBarViewModel.cs",
+              "ToolTip": "D:\\TuanAnh\\APPWPF\\SetSupply\\ViewModels\\UserControlViewModels\\Common\\UCControlBarViewModel.cs",
+              "RelativeToolTip": "SetSupply\\ViewModels\\UserControlViewModels\\Common\\UCControlBarViewModel.cs",
+              "ViewState": "AgIAAA4AAAAAAAAAAAAQwAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-10T17:57:27.362Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 12,
+              "Title": "UCPLCSetting.xaml",
+              "DocumentMoniker": "D:\\TuanAnh\\APPWPF\\SetSupply\\UserControls\\Setting\\Sub\\UCPLCSetting.xaml",
+              "RelativeDocumentMoniker": "SetSupply\\UserControls\\Setting\\Sub\\UCPLCSetting.xaml",
+              "ToolTip": "D:\\TuanAnh\\APPWPF\\SetSupply\\UserControls\\Setting\\Sub\\UCPLCSetting.xaml",
+              "RelativeToolTip": "SetSupply\\UserControls\\Setting\\Sub\\UCPLCSetting.xaml",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
+              "WhenOpened": "2026-03-08T16:45:37.34Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 15,
+              "Title": "UCDashboard.xaml.cs",
+              "DocumentMoniker": "D:\\TuanAnh\\APPWPF\\SetSupply\\UserControls\\DashBoard\\UCDashboard.xaml.cs",
+              "RelativeDocumentMoniker": "SetSupply\\UserControls\\DashBoard\\UCDashboard.xaml.cs",
+              "ToolTip": "D:\\TuanAnh\\APPWPF\\SetSupply\\UserControls\\DashBoard\\UCDashboard.xaml.cs",
+              "RelativeToolTip": "SetSupply\\UserControls\\DashBoard\\UCDashboard.xaml.cs",
+              "ViewState": "AgIAABcAAAAAAAAAAAAxwCwAAAAMAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-09T15:54:00.184Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 13,
+              "Title": "UCDashboardViewModel.cs",
+              "DocumentMoniker": "D:\\TuanAnh\\APPWPF\\SetSupply\\ViewModels\\UserControlViewModels\\DashBoard\\UCDashboardViewModel.cs",
+              "RelativeDocumentMoniker": "SetSupply\\ViewModels\\UserControlViewModels\\DashBoard\\UCDashboardViewModel.cs",
+              "ToolTip": "D:\\TuanAnh\\APPWPF\\SetSupply\\ViewModels\\UserControlViewModels\\DashBoard\\UCDashboardViewModel.cs",
+              "RelativeToolTip": "SetSupply\\ViewModels\\UserControlViewModels\\DashBoard\\UCDashboardViewModel.cs",
+              "ViewState": "AgIAAEMAAAAAAAAAAAAqwFsAAAAVAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-09T15:54:45.311Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 16,
+              "Title": "UCDashboard.xaml",
+              "DocumentMoniker": "D:\\TuanAnh\\APPWPF\\SetSupply\\UserControls\\DashBoard\\UCDashboard.xaml",
+              "RelativeDocumentMoniker": "SetSupply\\UserControls\\DashBoard\\UCDashboard.xaml",
+              "ToolTip": "D:\\TuanAnh\\APPWPF\\SetSupply\\UserControls\\DashBoard\\UCDashboard.xaml",
+              "RelativeToolTip": "SetSupply\\UserControls\\DashBoard\\UCDashboard.xaml",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
+              "WhenOpened": "2026-03-09T15:52:54.715Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 17,
+              "Title": "UCHistory.xaml",
+              "DocumentMoniker": "D:\\TuanAnh\\APPWPF\\SetSupply\\UserControls\\History\\UCHistory.xaml",
+              "RelativeDocumentMoniker": "SetSupply\\UserControls\\History\\UCHistory.xaml",
+              "ToolTip": "D:\\TuanAnh\\APPWPF\\SetSupply\\UserControls\\History\\UCHistory.xaml",
+              "RelativeToolTip": "SetSupply\\UserControls\\History\\UCHistory.xaml",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
+              "WhenOpened": "2026-03-09T15:08:50.81Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 14,
+              "Title": "SetSupply",
+              "DocumentMoniker": "D:\\TuanAnh\\APPWPF\\SetSupply\\SetSupply.csproj",
+              "RelativeDocumentMoniker": "SetSupply\\SetSupply.csproj",
+              "ToolTip": "D:\\TuanAnh\\APPWPF\\SetSupply\\SetSupply.csproj",
+              "RelativeToolTip": "SetSupply\\SetSupply.csproj",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
+              "WhenOpened": "2026-03-10T17:27:18.334Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 19,
+              "Title": "UCHome.xaml",
+              "DocumentMoniker": "D:\\TuanAnh\\APPWPF\\SetSupply\\UserControls\\Home\\UCHome.xaml",
+              "RelativeDocumentMoniker": "SetSupply\\UserControls\\Home\\UCHome.xaml",
+              "ToolTip": "D:\\TuanAnh\\APPWPF\\SetSupply\\UserControls\\Home\\UCHome.xaml",
+              "RelativeToolTip": "SetSupply\\UserControls\\Home\\UCHome.xaml",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
+              "WhenOpened": "2026-03-08T17:07:15.962Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 20,
+              "Title": "ShiftViewModel.cs",
+              "DocumentMoniker": "D:\\TuanAnh\\APPWPF\\SetSupply\\ViewModels\\UserControlViewModels\\Home\\ShiftViewModel.cs",
+              "RelativeDocumentMoniker": "SetSupply\\ViewModels\\UserControlViewModels\\Home\\ShiftViewModel.cs",
+              "ToolTip": "D:\\TuanAnh\\APPWPF\\SetSupply\\ViewModels\\UserControlViewModels\\Home\\ShiftViewModel.cs",
+              "RelativeToolTip": "SetSupply\\ViewModels\\UserControlViewModels\\Home\\ShiftViewModel.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAqwBMAAAAgAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-09T14:48:49.009Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 23,
+              "Title": "ShiftSettingService.cs",
+              "DocumentMoniker": "D:\\TuanAnh\\APPWPF\\SetSupply\\Service\\ShiftSettingService.cs",
+              "RelativeDocumentMoniker": "SetSupply\\Service\\ShiftSettingService.cs",
+              "ToolTip": "D:\\TuanAnh\\APPWPF\\SetSupply\\Service\\ShiftSettingService.cs",
+              "RelativeToolTip": "SetSupply\\Service\\ShiftSettingService.cs",
+              "ViewState": "AgIAAHoAAAAAAAAAAAAhwIsAAAA1AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-08T16:40:16.834Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 22,
+              "Title": "UCHistoryViewModel.cs",
+              "DocumentMoniker": "D:\\TuanAnh\\APPWPF\\SetSupply\\ViewModels\\UserControlViewModels\\History\\UCHistoryViewModel.cs",
+              "RelativeDocumentMoniker": "SetSupply\\ViewModels\\UserControlViewModels\\History\\UCHistoryViewModel.cs",
+              "ToolTip": "D:\\TuanAnh\\APPWPF\\SetSupply\\ViewModels\\UserControlViewModels\\History\\UCHistoryViewModel.cs",
+              "RelativeToolTip": "SetSupply\\ViewModels\\UserControlViewModels\\History\\UCHistoryViewModel.cs",
+              "ViewState": "AgIAAFUAAAAAAAAAAAAcwOcAAABbAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-09T15:07:15.159Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 26,
+              "Title": "ShiftSetting.cs",
+              "DocumentMoniker": "D:\\TuanAnh\\APPWPF\\SetSupply\\Models\\Database\\ShiftSetting.cs",
+              "RelativeDocumentMoniker": "SetSupply\\Models\\Database\\ShiftSetting.cs",
+              "ToolTip": "D:\\TuanAnh\\APPWPF\\SetSupply\\Models\\Database\\ShiftSetting.cs",
+              "RelativeToolTip": "SetSupply\\Models\\Database\\ShiftSetting.cs",
+              "ViewState": "AgIAAAkAAAAAAAAAAAAAACEAAAA4AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-08T16:48:18.362Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 21,
+              "Title": "SetSupply.ViewModels.UserControlViewModels.Home.ShiftViewModel.g.cs [generated]",
+              "DocumentMoniker": "C:\\Users\\AWESOME\\AppData\\Local\\Temp\\VSGeneratedDocuments\\4a81313f-f087-bf68-bc51-4cccc8761579\\SetSupply.ViewModels.UserControlViewModels.Home.ShiftViewModel.g.cs",
+              "ToolTip": "SetSupply.ViewModels.UserControlViewModels.Home.ShiftViewModel.g.cs [generated by CommunityToolkit.Mvvm.SourceGenerators.ObservablePropertyGenerator]",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAYAAAASAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "OverriddenToolTip": "SetSupply.ViewModels.UserControlViewModels.Home.ShiftViewModel.g.cs [generated by CommunityToolkit.Mvvm.SourceGenerators.ObservablePropertyGenerator]",
+              "WhenOpened": "2026-03-10T16:42:45.176Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 24,
+              "Title": "ShiftHistoryBackgroundService.cs",
+              "DocumentMoniker": "D:\\TuanAnh\\APPWPF\\SetSupply\\Service\\ShiftHistoryBackgroundService.cs",
+              "RelativeDocumentMoniker": "SetSupply\\Service\\ShiftHistoryBackgroundService.cs",
+              "ToolTip": "D:\\TuanAnh\\APPWPF\\SetSupply\\Service\\ShiftHistoryBackgroundService.cs",
+              "RelativeToolTip": "SetSupply\\Service\\ShiftHistoryBackgroundService.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABYAAAAUAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-10T16:32:43.396Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 27,
+              "Title": "ProductionDataService.cs",
+              "DocumentMoniker": "D:\\TuanAnh\\APPWPF\\SetSupply\\Service\\ProductionDataService.cs",
+              "RelativeDocumentMoniker": "SetSupply\\Service\\ProductionDataService.cs",
+              "ToolTip": "D:\\TuanAnh\\APPWPF\\SetSupply\\Service\\ProductionDataService.cs",
+              "RelativeToolTip": "SetSupply\\Service\\ProductionDataService.cs",
+              "ViewState": "AgIAAFIBAAAAAAAAAAAAAKMBAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-08T17:19:15.068Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 25,
+              "Title": "ShiftSettingHistory.cs",
+              "DocumentMoniker": "D:\\TuanAnh\\APPWPF\\SetSupply\\Models\\Database\\ShiftSettingHistory.cs",
+              "RelativeDocumentMoniker": "SetSupply\\Models\\Database\\ShiftSettingHistory.cs",
+              "ToolTip": "D:\\TuanAnh\\APPWPF\\SetSupply\\Models\\Database\\ShiftSettingHistory.cs",
+              "RelativeToolTip": "SetSupply\\Models\\Database\\ShiftSettingHistory.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAoAAAAkAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-08T16:55:22.559Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 28,
+              "Title": "ProductionDataExtensions.cs",
+              "DocumentMoniker": "D:\\TuanAnh\\APPWPF\\SetSupply\\Extensions\\ProductionDataExtensions.cs",
+              "RelativeDocumentMoniker": "SetSupply\\Extensions\\ProductionDataExtensions.cs",
+              "ToolTip": "D:\\TuanAnh\\APPWPF\\SetSupply\\Extensions\\ProductionDataExtensions.cs",
+              "RelativeToolTip": "SetSupply\\Extensions\\ProductionDataExtensions.cs",
+              "ViewState": "AgIAAAQAAAAAAAAAAAAjwEsAAAAzAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-08T17:23:30.333Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 29,
+              "Title": "AppDbContext.cs",
+              "DocumentMoniker": "D:\\TuanAnh\\APPWPF\\SetSupply\\Database\\AppDbContext.cs",
+              "RelativeDocumentMoniker": "SetSupply\\Database\\AppDbContext.cs",
+              "ToolTip": "D:\\TuanAnh\\APPWPF\\SetSupply\\Database\\AppDbContext.cs",
+              "RelativeToolTip": "SetSupply\\Database\\AppDbContext.cs",
+              "ViewState": "AgIAABcAAAAAAAAAAAAIwBEAAAAzAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-08T16:37:54.13Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 30,
+              "Title": "PLCSetting.cs",
+              "DocumentMoniker": "D:\\TuanAnh\\APPWPF\\SetSupply\\Models\\Database\\PLCSetting.cs",
+              "RelativeDocumentMoniker": "SetSupply\\Models\\Database\\PLCSetting.cs",
+              "ToolTip": "D:\\TuanAnh\\APPWPF\\SetSupply\\Models\\Database\\PLCSetting.cs",
+              "RelativeToolTip": "SetSupply\\Models\\Database\\PLCSetting.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAqwAgAAAANAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-08T16:40:04.792Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 31,
+              "Title": "UCPLCSetting.xaml.cs",
+              "DocumentMoniker": "D:\\TuanAnh\\APPWPF\\SetSupply\\UserControls\\Setting\\Sub\\UCPLCSetting.xaml.cs",
+              "RelativeDocumentMoniker": "SetSupply\\UserControls\\Setting\\Sub\\UCPLCSetting.xaml.cs",
+              "ToolTip": "D:\\TuanAnh\\APPWPF\\SetSupply\\UserControls\\Setting\\Sub\\UCPLCSetting.xaml.cs",
+              "RelativeToolTip": "SetSupply\\UserControls\\Setting\\Sub\\UCPLCSetting.xaml.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-09T16:10:27.706Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 34,
+              "Title": "UCHistory.xaml.cs",
+              "DocumentMoniker": "D:\\TuanAnh\\APPWPF\\SetSupply\\UserControls\\History\\UCHistory.xaml.cs",
+              "RelativeDocumentMoniker": "SetSupply\\UserControls\\History\\UCHistory.xaml.cs",
+              "ToolTip": "D:\\TuanAnh\\APPWPF\\SetSupply\\UserControls\\History\\UCHistory.xaml.cs",
+              "RelativeToolTip": "SetSupply\\UserControls\\History\\UCHistory.xaml.cs",
+              "ViewState": "AgIAACUAAAAAAAAAAAAgwD4AAAANAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-09T15:09:33.256Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 32,
+              "Title": "UCShiftSetting.xaml",
+              "DocumentMoniker": "D:\\TuanAnh\\APPWPF\\SetSupply\\UserControls\\Setting\\Sub\\UCShiftSetting.xaml",
+              "RelativeDocumentMoniker": "SetSupply\\UserControls\\Setting\\Sub\\UCShiftSetting.xaml",
+              "ToolTip": "D:\\TuanAnh\\APPWPF\\SetSupply\\UserControls\\Setting\\Sub\\UCShiftSetting.xaml",
+              "RelativeToolTip": "SetSupply\\UserControls\\Setting\\Sub\\UCShiftSetting.xaml",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
+              "WhenOpened": "2026-03-08T16:45:24.322Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 33,
+              "Title": "DataGridColumnHelper.cs",
+              "DocumentMoniker": "D:\\TuanAnh\\APPWPF\\SetSupply\\Helper\\DataGridColumnHelper.cs",
+              "RelativeDocumentMoniker": "SetSupply\\Helper\\DataGridColumnHelper.cs",
+              "ToolTip": "D:\\TuanAnh\\APPWPF\\SetSupply\\Helper\\DataGridColumnHelper.cs",
+              "RelativeToolTip": "SetSupply\\Helper\\DataGridColumnHelper.cs",
+              "ViewState": "AgIAAJEAAAAAAAAAAAAgwLsAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-09T14:46:23.588Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 35,
+              "Title": "ShiftSettings.cs",
+              "DocumentMoniker": "D:\\TuanAnh\\APPWPF\\SetSupply\\Models\\Home\\ShiftSettings.cs",
+              "RelativeDocumentMoniker": "SetSupply\\Models\\Home\\ShiftSettings.cs",
+              "ToolTip": "D:\\TuanAnh\\APPWPF\\SetSupply\\Models\\Home\\ShiftSettings.cs",
+              "RelativeToolTip": "SetSupply\\Models\\Home\\ShiftSettings.cs",
+              "ViewState": "AgIAAAsAAAAAAAAAAAAvwBoAAAAZAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-09T14:54:48.216Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 36,
+              "Title": "ProductionData.cs",
+              "DocumentMoniker": "D:\\TuanAnh\\APPWPF\\SetSupply\\Models\\Database\\ProductionData.cs",
+              "RelativeDocumentMoniker": "SetSupply\\Models\\Database\\ProductionData.cs",
+              "ToolTip": "D:\\TuanAnh\\APPWPF\\SetSupply\\Models\\Database\\ProductionData.cs",
+              "RelativeToolTip": "SetSupply\\Models\\Database\\ProductionData.cs",
+              "ViewState": "AgIAABsAAAAAAAAAAAAIwD8AAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-08T17:22:25.288Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 37,
+              "Title": "RememberUser.cs",
+              "DocumentMoniker": "D:\\TuanAnh\\APPWPF\\SetSupply\\Models\\Database\\RememberUser.cs",
+              "RelativeDocumentMoniker": "SetSupply\\Models\\Database\\RememberUser.cs",
+              "ToolTip": "D:\\TuanAnh\\APPWPF\\SetSupply\\Models\\Database\\RememberUser.cs",
+              "RelativeToolTip": "SetSupply\\Models\\Database\\RememberUser.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-09T14:50:53.894Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 38,
+              "Title": "UCShiftSettingViewModel.cs",
+              "DocumentMoniker": "D:\\TuanAnh\\APPWPF\\SetSupply\\ViewModels\\UserControlViewModels\\Setting\\Sub\\UCShiftSettingViewModel.cs",
+              "RelativeDocumentMoniker": "SetSupply\\ViewModels\\UserControlViewModels\\Setting\\Sub\\UCShiftSettingViewModel.cs",
+              "ToolTip": "D:\\TuanAnh\\APPWPF\\SetSupply\\ViewModels\\UserControlViewModels\\Setting\\Sub\\UCShiftSettingViewModel.cs",
+              "RelativeToolTip": "SetSupply\\ViewModels\\UserControlViewModels\\Setting\\Sub\\UCShiftSettingViewModel.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAsAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-08T16:50:22.198Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 39,
+              "Title": "UCShiftSetting.xaml.cs",
+              "DocumentMoniker": "D:\\TuanAnh\\APPWPF\\SetSupply\\UserControls\\Setting\\Sub\\UCShiftSetting.xaml.cs",
+              "RelativeDocumentMoniker": "SetSupply\\UserControls\\Setting\\Sub\\UCShiftSetting.xaml.cs",
+              "ToolTip": "D:\\TuanAnh\\APPWPF\\SetSupply\\UserControls\\Setting\\Sub\\UCShiftSetting.xaml.cs",
+              "RelativeToolTip": "SetSupply\\UserControls\\Setting\\Sub\\UCShiftSetting.xaml.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAACQAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-08T16:43:55.271Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 40,
+              "Title": "UCSettingViewModel.cs",
+              "DocumentMoniker": "D:\\TuanAnh\\APPWPF\\SetSupply\\ViewModels\\UserControlViewModels\\Setting\\UCSettingViewModel.cs",
+              "RelativeDocumentMoniker": "SetSupply\\ViewModels\\UserControlViewModels\\Setting\\UCSettingViewModel.cs",
+              "ToolTip": "D:\\TuanAnh\\APPWPF\\SetSupply\\ViewModels\\UserControlViewModels\\Setting\\UCSettingViewModel.cs",
+              "RelativeToolTip": "SetSupply\\ViewModels\\UserControlViewModels\\Setting\\UCSettingViewModel.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAB8AAAAdAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-08T16:45:02.685Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 41,
+              "Title": "UserSession .cs",
+              "DocumentMoniker": "D:\\TuanAnh\\APPWPF\\SetSupply\\Service\\UserSession .cs",
+              "RelativeDocumentMoniker": "SetSupply\\Service\\UserSession .cs",
+              "ToolTip": "D:\\TuanAnh\\APPWPF\\SetSupply\\Service\\UserSession .cs",
+              "RelativeToolTip": "SetSupply\\Service\\UserSession .cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA4AAAArAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-08T16:40:18.235Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 42,
+              "Title": "AuthorizationService.cs",
+              "DocumentMoniker": "D:\\TuanAnh\\APPWPF\\SetSupply\\Service\\AuthorizationService.cs",
+              "RelativeDocumentMoniker": "SetSupply\\Service\\AuthorizationService.cs",
+              "ToolTip": "D:\\TuanAnh\\APPWPF\\SetSupply\\Service\\AuthorizationService.cs",
+              "RelativeToolTip": "SetSupply\\Service\\AuthorizationService.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-08T16:40:09.425Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 43,
+              "Title": "User.cs",
+              "DocumentMoniker": "D:\\TuanAnh\\APPWPF\\SetSupply\\Models\\Database\\User.cs",
+              "RelativeDocumentMoniker": "SetSupply\\Models\\Database\\User.cs",
+              "ToolTip": "D:\\TuanAnh\\APPWPF\\SetSupply\\Models\\Database\\User.cs",
+              "RelativeToolTip": "SetSupply\\Models\\Database\\User.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-08T16:37:51.857Z"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
