@@ -33,5 +33,10 @@ public partial class UCSettingViewModel : ObservableObject
     {
         CurrentView = App.ServiceProvider.GetRequiredService<UCShiftSetting>();
     }
+    [RelayCommand]
+    private void ShowModelGroupSetting()
+    {
+        CurrentView = App.ServiceProvider.GetRequiredService<UCModelGroupSetting>();
+    }
 
 }

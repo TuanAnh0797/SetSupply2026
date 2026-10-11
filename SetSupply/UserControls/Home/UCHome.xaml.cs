@@ -1,7 +1,5 @@
-﻿
 using APP.ViewModels.UserControlViewModels.Home;
 using Microsoft.Extensions.DependencyInjection;
-using SetSupply.Helper;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
@@ -18,24 +16,28 @@ public partial class UCHome : UserControl
         _viewModel = App.ServiceProvider.GetRequiredService<UCHomeViewModel>();
         DataContext = _viewModel;
 
-        this.Loaded += UCHome_Loaded;
-        this.Unloaded += UCHome_Unloaded;
+        Loaded += UCHome_Loaded;
+        BodyScroll.ScrollChanged += (_, _) => AlignHeaderWithBody();
+        BodyScroll.SizeChanged += (_, _) => AlignHeaderWithBody();
     }
 
     private async void UCHome_Loaded(object sender, RoutedEventArgs e)
     {
-        await _viewModel.InitializeAsync();
-
-        DataGridColumnHelper.GenerateShiftColumns(Shift1DataGrid, _viewModel.Shift1);
-        DataGridColumnHelper.GenerateShiftColumns(Shift2DataGrid, _viewModel.Shift2);
-        DataGridColumnHelper.GenerateShiftColumns(Shift3DataGrid, _viewModel.Shift3);
+        await _viewModel.ActivateAsync();
     }
 
-    private void UCHome_Unloaded(object sender, RoutedEventArgs e)
+    /// <summary>
+    /// Khi thân bảng có thanh cuộn dọc, chừa khoảng tương ứng ở header/footer để cột thẳng hàng.
+    /// </summary>
+    private void AlignHeaderWithBody()
     {
-        // Clear DataGrid trước khi unload để tránh lỗi FindAncestor
-        DataGridColumnHelper.ClearDataGrid(Shift1DataGrid);
-        DataGridColumnHelper.ClearDataGrid(Shift2DataGrid);
-        DataGridColumnHelper.ClearDataGrid(Shift3DataGrid);
+        double scrollBarWidth = 0;
+        if (BodyScroll.ComputedVerticalScrollBarVisibility == Visibility.Visible &&
+            BodyScroll.Template?.FindName("PART_VerticalScrollBar", BodyScroll) is ScrollBar bar)
+            scrollBarWidth = bar.ActualWidth;
+
+        var margin = new Thickness(0, 0, scrollBarWidth, 0);
+        HeaderGrid.Margin = margin;
+        FooterGrid.Margin = margin;
     }
 }

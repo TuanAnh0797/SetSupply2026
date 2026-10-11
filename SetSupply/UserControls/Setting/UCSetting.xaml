@@ -42,6 +42,13 @@ BlurRadius="10" Opacity="0.5"/>
                     </StackPanel>
                 </Button>
 
+                <Button Command="{Binding ShowModelGroupSettingCommand}">
+                    <StackPanel Orientation="Horizontal">
+                        <materialDesign:PackIcon Kind="FridgeOutline" Width="20" Height="20" VerticalAlignment="Center" Foreground="#1D4F96"/>
+                        <Label>Model Group / Plan</Label>
+                    </StackPanel>
+                </Button>
+
 
             </StackPanel>
             <ContentControl Grid.Row="1" Content="{Binding CurrentView}" />

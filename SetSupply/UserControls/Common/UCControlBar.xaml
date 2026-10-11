@@ -20,7 +20,7 @@
         </i:EventTrigger>
     </i:Interaction.Triggers>
     <Grid>
-        <materialDesign:ColorZone Padding="0">
+        <materialDesign:ColorZone Padding="0" Background="{Binding Background, ElementName=MyUCControlBar}">
             <Grid Margin="5">
                 <StackPanel DockPanel.Dock="Right" Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right" Background="Transparent">
                     <StackPanel.Resources>
@@ -45,7 +45,9 @@
 
                     </StackPanel.Resources>
 
-                    <Label Background="Transparent" HorizontalContentAlignment="Center" VerticalContentAlignment="Center">
+                    <!-- Tag = độ rộng vùng kéo cửa sổ (mặc định 200) -->
+                    <Label Background="Transparent" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"
+                           Width="{Binding Tag, ElementName=MyUCControlBar, TargetNullValue=200}">
                         <i:Interaction.Triggers>
                             <i:EventTrigger EventName="MouseLeftButtonDown">
                                 <i:InvokeCommandAction Command="{Binding MoveWindowCommand}" CommandParameter="{Binding ElementName=MyUCControlBar}"/>

@@ -91,6 +91,7 @@ namespace APP
             services.AddSingleton<PLCService>();
             services.AddSingleton<ShiftSettingService>(); // THÊM DÒNG NÀY
             services.AddSingleton<ProductionDataService>();
+            services.AddSingleton<ModelGroupService>();
             services.AddSingleton<ILocalizationService, LocalizationService>();
 
             // ViewModels & UserControls
@@ -118,6 +119,9 @@ namespace APP
             services.AddSingleton<UCShiftSettingViewModel>();
             services.AddSingleton<UCShiftSetting>();
             services.AddSingleton<UCDashboard>();
+            services.AddSingleton<UCHomeHeader>();
+            services.AddSingleton<UCModelGroupSettingViewModel>();
+            services.AddSingleton<UCModelGroupSetting>();
 
             //ManagementUser
             services.AddSingleton<UserManagementViewModel>();
@@ -180,6 +184,9 @@ namespace APP
                         Debug.WriteLine("✓ Database đã tồn tại.");
                     }
 
+                    // DB cũ (tạo trước khi có bảng ModelGroups): EnsureCreated không tự thêm bảng mới
+                    await EnsureModelGroupsTableAsync(dbContext);
+
                     // Seed data mặc định
                     await SeedDefaultDataAsync(dbContext);
 
@@ -202,6 +209,23 @@ namespace APP
                 // Có thể shutdown app nếu database critical
                 // Shutdown();
             }
+        }
+
+        /// <summary>
+        /// Tạo bảng ModelGroups nếu chưa có (cho database đã tồn tại từ phiên bản trước)
+        /// </summary>
+        private static async Task EnsureModelGroupsTableAsync(AppDbContext dbContext)
+        {
+            await dbContext.Database.ExecuteSqlRawAsync(@"
+                CREATE TABLE IF NOT EXISTS ""ModelGroups"" (
+                    ""Id"" INTEGER NOT NULL CONSTRAINT ""PK_ModelGroups"" PRIMARY KEY AUTOINCREMENT,
+                    ""Name"" TEXT NOT NULL,
+                    ""Prefixes"" TEXT NOT NULL DEFAULT '',
+                    ""PlanShift1"" INTEGER NOT NULL DEFAULT 0,
+                    ""PlanShift2"" INTEGER NOT NULL DEFAULT 0,
+                    ""PlanShift3"" INTEGER NOT NULL DEFAULT 0,
+                    ""SortOrder"" INTEGER NOT NULL DEFAULT 0
+                );");
         }
 
         /// <summary>
@@ -477,6 +501,13 @@ namespace APP
                 else
                 {
                     Debug.WriteLine("→ ProductionData đã có dữ liệu.");
+                }
+
+                // Seed nhóm "Khác" (gom các model không thuộc nhóm nào)
+                if (!dbContext.ModelGroups.Any())
+                {
+                    dbContext.ModelGroups.Add(new ModelGroup { Name = ModelGroupService.OtherGroupName, SortOrder = 999 });
+                    await dbContext.SaveChangesAsync();
                 }
 
             }

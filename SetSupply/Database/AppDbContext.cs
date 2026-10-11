@@ -24,6 +24,9 @@ public class AppDbContext : DbContext
     // Production Data
     public DbSet<ProductionData> ProductionData => Set<ProductionData>();
 
+    // Nhóm model + kế hoạch (màn hình Home)
+    public DbSet<ModelGroup> ModelGroups => Set<ModelGroup>();
+
     public AppDbContext(DbContextOptions<AppDbContext> options)
         : base(options)
     {
@@ -74,6 +77,9 @@ public class AppDbContext : DbContext
         modelBuilder.Entity<ProductionData>()
             .HasIndex(e => e.DateTimeInsert)
             .HasDatabaseName("IX_ProductionData_DateTimeInsert");
+
+        // ===== CẤU HÌNH CHO MODELGROUP =====
+        modelBuilder.Entity<ModelGroup>().HasKey(e => e.Id);
 
         // ===== SEED DATA CHO USER =====
         modelBuilder.Entity<User>().HasData(

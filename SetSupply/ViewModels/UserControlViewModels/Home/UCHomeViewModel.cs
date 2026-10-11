@@ -1,245 +1,476 @@
-﻿using APP.Database;
-using APP.Models.Home;
 using APP.Service;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using SetSupply.Helper;
 using SetSupply.Models.Database;
 using SetSupply.Models.Home;
 using SetSupply.Service;
-using SetSupply.ViewModels.UserControlViewModels.Home;
 using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Globalization;
+using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Media;
 using System.Windows.Threading;
 
 namespace APP.ViewModels.UserControlViewModels.Home;
 
+/// <summary>
+/// Màn hình Home: sản lượng theo nhóm model / model, theo giờ, cho cả ngày hoặc từng ca.
+/// </summary>
 public partial class UCHomeViewModel : ObservableObject
 {
-    private readonly AppDbContext _db;
-    private readonly ShiftSettingService _shiftService;
-    private readonly ProductionDataService _productionService;
+    public const string AllOption = "Tất cả";
 
+    // Độ rộng cột cố định của bảng (đồng bộ với UCHome.xaml)
+    public const double GroupColumnWidth = 170;
+    public const double PlanColumnWidth = 120;
+    public const double ModelColumnWidth = 250;
+    public const double TotalColumnWidth = 120;
+    public const double MinHourColumnWidth = 46;
+
+    // Màu theo thứ tự nhóm: (màu dòng nhóm, màu nhạt cho dòng model, màu cột biểu đồ)
+    private static readonly (string Row, string Tint, string Bar)[] GroupPalette =
+    {
+        ("#D3E5FB", "#EDF4FD", "#4DA6F5"), // xanh dương
+        ("#D2F3DC", "#ECFAF0", "#3CCB6A"), // xanh lá
+        ("#FCEFB5", "#FEF8DD", "#F7CB3D"), // vàng
+        ("#FBD3E4", "#FDEDF4", "#F47DB6"), // hồng
+        ("#E5D9F8", "#F3EDFC", "#B98AF2"), // tím
+        ("#D0F0F2", "#EBF9FA", "#36C3CC"), // xanh ngọc
+        ("#FDDCC6", "#FEF0E6", "#F7A55A"), // cam
+    };
+
+    private static readonly CultureInfo NumberCulture = CultureInfo.InvariantCulture;
+
+    private readonly ProductionDataService _productionService;
+    private readonly ModelGroupService _modelGroupService;
     private readonly PLCService _plcService;
 
-    //private DispatcherTimer _timer;
-    private bool _isInitialized;
+    private readonly SemaphoreSlim _loadLock = new(1, 1);
+    private readonly HashSet<string> _collapsedGroups = new(StringComparer.OrdinalIgnoreCase);
+    private readonly DispatcherTimer _timer;
 
-    // 3 ca làm việc
-    public ShiftViewModel Shift1 { get; }
-    public ShiftViewModel Shift2 { get; }
-    public ShiftViewModel Shift3 { get; }
+    // Dữ liệu đã tải cho ngày/ca đang chọn (lọc nhóm/model thực hiện trên bộ nhớ)
+    private List<(string Model, int HourIndex)> _records = new();
+    private List<(string Model, DateTime Time)> _dayRecords = new();
+    private List<(ShiftScopeOption Option, DateTime Start, DateTime End)> _shiftRanges = new();
+    private List<ModelGroup> _groups = new();
+    private List<DateTime> _hourSlots = new();
+    private bool _isFollowingToday = true;
+    private bool _suppressReload;
 
-    // Mảng để duyệt vòng lặp
-    private readonly ShiftViewModel[] _allShifts;
+    public ObservableCollection<ShiftScopeOption> ScopeOptions { get; } = new();
+    public ObservableCollection<string> Locations { get; } = new() { "CABI - SetSupply" };
+    public ObservableCollection<string> GroupFilterOptions { get; } = new() { AllOption };
+    public ObservableCollection<string> ModelFilterOptions { get; } = new() { AllOption };
+    public ObservableCollection<string> HourHeaders { get; } = new();
+    public ObservableCollection<ModelGroupRow> Groups { get; } = new();
 
     [ObservableProperty]
-    private DateTime currentTime;
-
-    [ObservableProperty]
-    private string currentShiftName;
-
-    [ObservableProperty]
-    private int selectedTabIndex;
+    private ShiftScopeOption? selectedScope;
 
     [ObservableProperty]
     private DateTime selectedDate = DateTime.Today;
 
     [ObservableProperty]
-    private bool autoSwitchTab = true;
+    private bool isDatePickerOpen;
 
     [ObservableProperty]
-    private string autoSwitchButtonText = "Tắt Tự Động";
+    private string selectedLocation = "CABI - SetSupply";
 
-    public UCHomeViewModel(AppDbContext db, ShiftSettingService shiftService, ProductionDataService productionService, PLCService pLCService)
+    [ObservableProperty]
+    private string selectedGroupFilter = AllOption;
+
+    [ObservableProperty]
+    private string selectedModelFilter = AllOption;
+
+    [ObservableProperty]
+    private TotalRow totals = new();
+
+    [ObservableProperty]
+    private string lastUpdateText = "Cập nhật lần cuối: --";
+
+    [ObservableProperty]
+    private bool isPlcConnected;
+
+    [ObservableProperty]
+    private double tableMinWidth;
+
+    public string SelectedDateText => $"{SelectedDate:dd/MM/yyyy} ({GetDayName(SelectedDate)})";
+
+    public string ConnectionText => IsPlcConnected ? "Đang kết nối" : "Mất kết nối";
+
+    public UCHomeViewModel(ProductionDataService productionService, ModelGroupService modelGroupService, PLCService plcService)
     {
-        _db = db;
-        _shiftService = shiftService;
         _productionService = productionService;
-        _plcService = pLCService;
+        _modelGroupService = modelGroupService;
+        _plcService = plcService;
 
-        Shift1 = new ShiftViewModel(1, "CA 1");
-        Shift2 = new ShiftViewModel(2, "CA 2");
-        Shift3 = new ShiftViewModel(3, "CA 3");
+        ScopeOptions.Add(new ShiftScopeOption { Name = "Cả ngày" });
+        selectedScope = ScopeOptions[0];
 
-        _allShifts = new[] { Shift1, Shift2, Shift3 };
+        IsPlcConnected = _plcService.IsConnected;
+        _plcService.DataReceived += PlcService_DataReceived;
+        _plcService.ConnectionChanged += connected =>
+            Application.Current?.Dispatcher.InvokeAsync(() => IsPlcConnected = connected);
 
-        _plcService.DataReceived += _plcService_DataReceived;
-
-    }
-
-    private async void _plcService_DataReceived(string data)
-    {
-
-        if (data.Length >= 19)
+        // Mỗi phút: làm mới giờ hiện tại / tự chuyển sang ngày sản xuất mới
+        _timer = new DispatcherTimer { Interval = TimeSpan.FromMinutes(1) };
+        _timer.Tick += async (_, _) =>
         {
-            string codeback = data;
-            string model = codeback.Substring(0, 12);
-            string serial = codeback.Substring(12, 7);
-            await _productionService.AddProductionDataAsync(codeback, data, serial);
-            CurrentTime = DateTime.Now;
-            UpdateCurrentShift();
-            await LoadProductionDataAsync();
-        }
+            if (_isFollowingToday) await LoadAsync();
+        };
+        _timer.Start();
     }
 
     /// <summary>
-    /// Khởi tạo async - gọi từ code-behind khi Loaded
+    /// Gọi khi màn hình Home được hiển thị: tải lại cài đặt ca, nhóm model, ảnh và dữ liệu.
     /// </summary>
-    public async Task InitializeAsync()
+    public async Task ActivateAsync()
     {
-        if (_isInitialized) return;
+        ModelImageProvider.ClearCache();
+        await LoadAsync();
+    }
 
-        await LoadShiftSettingsAsync();
-        await LoadProductionDataAsync();
+    private async void PlcService_DataReceived(string data)
+    {
+        // Mã đọc từ PLC: 12 ký tự model + 7 ký tự serial
+        if (data.Length < 19) return;
 
-        _isInitialized = true;
+        string model = data.Substring(0, 12).Trim();
+        string serial = data.Substring(12, 7);
+        await _productionService.AddProductionDataAsync(data, model, serial);
+
+        var dispatcher = Application.Current?.Dispatcher;
+        if (dispatcher != null && _isFollowingToday)
+            await dispatcher.InvokeAsync(LoadAsync).Task.Unwrap();
+    }
+
+    // ===== COMMANDS =====
+
+    [RelayCommand]
+    private void GoToToday()
+    {
+        _isFollowingToday = true;
+        IsDatePickerOpen = false;
+        _ = LoadAsync();
     }
 
     [RelayCommand]
-    private void ToggleAutoSwitch()
+    private async Task Refresh() => await LoadAsync();
+
+    // ===== PROPERTY CHANGES =====
+
+    partial void OnSelectedDateChanged(DateTime value)
     {
-        AutoSwitchTab = !AutoSwitchTab;
-        AutoSwitchButtonText = AutoSwitchTab ? "Tắt Tự Động" : "Bật Tự Động";
+        OnPropertyChanged(nameof(SelectedDateText));
+        IsDatePickerOpen = false;
+        if (_suppressReload) return;
+
+        _isFollowingToday = false;
+        _ = LoadAsync();
     }
 
-    private async Task LoadShiftSettingsAsync()
+    partial void OnSelectedScopeChanged(ShiftScopeOption? value)
     {
+        if (_suppressReload || value == null) return;
+        _ = LoadAsync();
+    }
+
+    partial void OnSelectedGroupFilterChanged(string value)
+    {
+        if (_suppressReload) return;
+        RebuildModelFilterOptions();
+        RebuildTable();
+    }
+
+    partial void OnSelectedModelFilterChanged(string value)
+    {
+        if (_suppressReload) return;
+        RebuildTable();
+    }
+
+    partial void OnIsPlcConnectedChanged(bool value) => OnPropertyChanged(nameof(ConnectionText));
+
+    // ===== LOAD =====
+
+    private async Task LoadAsync()
+    {
+        await _loadLock.WaitAsync();
         try
         {
-            var settings = await _shiftService.GetAllShiftSettingsAsync();
+            var shifts = await _productionService.GetFreshActiveShiftsAsync();
+            _groups = await _modelGroupService.GetAllAsync();
 
-            if (settings != null && settings.Count >= 3)
+            _suppressReload = true;
+            try
             {
-                for (int i = 0; i < 3; i++)
-                {
-                    _allShifts[i].ApplySettings(new ShiftSettings
-                    {
-                        ShiftNumber = settings[i].ShiftNumber,
-                        StartHour = settings[i].StartTime.Hours,
-                        EndHour = settings[i].EndTime.Hours,
-                        StartTime = settings[i].StartTime,
-                        EndTime = settings[i].EndTime,
-                    });
-                }
+                var currentProductionDate = await _productionService.GetProductionDateAsync(DateTime.Now);
+                if (_isFollowingToday)
+                    SelectedDate = currentProductionDate;
+                else if (SelectedDate == currentProductionDate)
+                    _isFollowingToday = true; // chọn lại đúng ngày hiện tại => tiếp tục cập nhật realtime
+                RebuildScopeOptions(shifts);
             }
-            else
+            finally
             {
-                ApplyDefaultSettings();
+                _suppressReload = false;
             }
+
+            // Luôn tải cả ngày sản xuất (bảng theo ca ở dưới cần số liệu mọi ca), bảng chính lọc theo ca đang chọn
+            var (dayStart, dayEnd) = await _productionService.GetProductionRangeAsync(SelectedDate, null);
+            var (start, end) = await _productionService.GetProductionRangeAsync(SelectedDate, SelectedScope?.ShiftNumber);
+
+            _shiftRanges = new List<(ShiftScopeOption Option, DateTime Start, DateTime End)>();
+            foreach (var option in ScopeOptions.Where(o => o.ShiftNumber.HasValue))
+            {
+                var (s, e) = await _productionService.GetProductionRangeAsync(SelectedDate, option.ShiftNumber);
+                _shiftRanges.Add((option, s, e));
+            }
+
+            var firstSlot = start.Date.AddHours(start.Hour);
+            _hourSlots = new List<DateTime>();
+            for (var t = firstSlot; t < end; t = t.AddHours(1))
+                _hourSlots.Add(t);
+
+            _dayRecords = await _productionService.GetModelTimesInRangeAsync(
+                dayStart < start ? dayStart : start, dayEnd > end ? dayEnd : end);
+            _records = _dayRecords
+                .Where(r => r.Time >= start && r.Time < end)
+                .Select(r => (r.Model, (int)(r.Time - firstSlot).TotalHours))
+                .Where(r => r.Item2 >= 0 && r.Item2 < _hourSlots.Count)
+                .ToList();
+
+            HourHeaders.Clear();
+            foreach (var slot in _hourSlots)
+                HourHeaders.Add($"{slot.Hour}:00");
+
+            TableMinWidth = GroupColumnWidth + PlanColumnWidth + ModelColumnWidth + TotalColumnWidth
+                            + _hourSlots.Count * MinHourColumnWidth;
+
+            RebuildGroupFilterOptions();
+            RebuildModelFilterOptions();
+            RebuildTable();
+
+            LastUpdateText = $"Cập nhật lần cuối: {DateTime.Now:dd/MM/yyyy HH:mm:ss}";
         }
         catch (Exception ex)
         {
-            MessageBox.Show($"Lỗi khi tải cài đặt ca: {ex.Message}", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
-            ApplyDefaultSettings();
+            System.Diagnostics.Debug.WriteLine($"Home load error: {ex}");
+        }
+        finally
+        {
+            _loadLock.Release();
         }
     }
 
-    private void ApplyDefaultSettings()
+    private void RebuildScopeOptions(List<ShiftSetting> shifts)
     {
-        var defaults = new (int start, int end)[] { (6, 14), (14, 22), (22, 6) };
-
-        for (int i = 0; i < 3; i++)
+        var options = new List<ShiftScopeOption> { new() { Name = "Cả ngày" } };
+        options.AddRange(shifts.Select(s => new ShiftScopeOption
         {
-            _allShifts[i].ApplySettings(new ShiftSettings
-            {
-                ShiftNumber = i + 1,
-                StartHour = defaults[i].start,
-                EndHour = defaults[i].end,
-                StartTime = new TimeSpan(defaults[i].start, 0, 0),
-                EndTime = new TimeSpan(defaults[i].end, 0, 0),
-                TargetPerHour = 100
-            });
-        }
+            ShiftNumber = s.ShiftNumber,
+            Name = $"Ca {s.ShiftNumber}",
+            TimeRange = $"{s.StartTime:hh\\:mm} - {s.EndTime:hh\\:mm}"
+        }));
+
+        bool same = options.Count == ScopeOptions.Count
+                    && options.Zip(ScopeOptions).All(p => p.First.ShiftNumber == p.Second.ShiftNumber
+                                                          && p.First.TimeRange == p.Second.TimeRange);
+        if (same) return;
+
+        int? selectedShift = SelectedScope?.ShiftNumber;
+        ScopeOptions.Clear();
+        foreach (var option in options)
+            ScopeOptions.Add(option);
+
+        SelectedScope = ScopeOptions.FirstOrDefault(o => o.ShiftNumber == selectedShift) ?? ScopeOptions[0];
     }
 
-    private async Task LoadProductionDataAsync()
+    // ===== BUILD TABLE (TRÊN BỘ NHỚ) =====
+
+    private List<ModelGroup> GetDisplayGroups()
     {
-        try
+        var groups = _groups.ToList();
+        if (!groups.Any(g => g.IsCatchAll))
+            groups.Add(new ModelGroup { Name = ModelGroupService.OtherGroupName, SortOrder = int.MaxValue });
+
+        // Nhóm "Khác" luôn ở cuối
+        return groups.OrderBy(g => g.IsCatchAll).ThenBy(g => g.SortOrder).ThenBy(g => g.Name).ToList();
+    }
+
+    private void RebuildGroupFilterOptions()
+    {
+        var names = GetDisplayGroups().Select(g => g.Name).ToList();
+        if (names.SequenceEqual(GroupFilterOptions.Skip(1))) return;
+
+        var selected = SelectedGroupFilter;
+        _suppressReload = true;
+        GroupFilterOptions.Clear();
+        GroupFilterOptions.Add(AllOption);
+        foreach (var name in names)
+            GroupFilterOptions.Add(name);
+        SelectedGroupFilter = GroupFilterOptions.Contains(selected) ? selected : AllOption;
+        _suppressReload = false;
+    }
+
+    private void RebuildModelFilterOptions()
+    {
+        var displayGroups = GetDisplayGroups();
+        var models = _records.Select(r => r.Model).Distinct()
+            .Where(m => SelectedGroupFilter == AllOption
+                        || ModelGroupService.Match(m, displayGroups)?.Name == SelectedGroupFilter)
+            .OrderBy(m => m)
+            .ToList();
+        if (models.SequenceEqual(ModelFilterOptions.Skip(1))) return;
+
+        var selected = SelectedModelFilter;
+        _suppressReload = true;
+        ModelFilterOptions.Clear();
+        ModelFilterOptions.Add(AllOption);
+        foreach (var model in models)
+            ModelFilterOptions.Add(model);
+        SelectedModelFilter = ModelFilterOptions.Contains(selected) ? selected : AllOption;
+        _suppressReload = false;
+    }
+
+    private void RebuildTable()
+    {
+        var displayGroups = GetDisplayGroups();
+        int hourCount = _hourSlots.Count;
+        var now = DateTime.Now;
+        bool[] isFuture = _hourSlots.Select(s => s > now).ToArray();
+
+        // Model -> số lượng theo giờ
+        var modelHours = new Dictionary<string, int[]>(StringComparer.Ordinal);
+        foreach (var (model, hourIndex) in _records)
         {
-            foreach (var shift in _allShifts)
+            if (!modelHours.TryGetValue(model, out var counts))
+                modelHours[model] = counts = new int[hourCount];
+            counts[hourIndex]++;
+        }
+
+        // Nhóm -> danh sách model
+        var groupModels = displayGroups.ToDictionary(g => g, _ => new List<string>());
+        foreach (var model in modelHours.Keys)
+        {
+            var group = ModelGroupService.Match(model, displayGroups);
+            if (group != null) groupModels[group].Add(model);
+        }
+
+        int? shiftNumber = SelectedScope?.ShiftNumber;
+        var activeShiftNumbers = ScopeOptions.Where(o => o.ShiftNumber.HasValue).Select(o => o.ShiftNumber!.Value).ToList();
+
+        var rows = new List<ModelGroupRow>();
+        var shownGroups = new List<(ModelGroup Group, int Total, string BarColor)>();
+        var grandHours = new int[hourCount];
+        int grandPlan = 0;
+
+        for (int gi = 0; gi < displayGroups.Count; gi++)
+        {
+            var group = displayGroups[gi];
+            if (SelectedGroupFilter != AllOption && group.Name != SelectedGroupFilter) continue;
+
+            var models = groupModels[group]
+                .Where(m => SelectedModelFilter == AllOption || m == SelectedModelFilter)
+                .OrderBy(m => m)
+                .ToList();
+            if (SelectedModelFilter != AllOption && models.Count == 0) continue;
+
+            int plan = shiftNumber.HasValue
+                ? group.GetPlan(shiftNumber.Value)
+                : activeShiftNumbers.Sum(group.GetPlan);
+
+            // Nhóm "Khác" tự sinh: chỉ hiện khi có dữ liệu
+            if (group.Id == 0 && group.IsCatchAll && models.Count == 0 && plan == 0) continue;
+
+            var (rowColor, tintColor, barColor) = GroupPalette[gi % GroupPalette.Length];
+            var rowBrush = CreateBrush(rowColor);
+            var tintBrush = CreateBrush(tintColor);
+
+            var groupHours = new int[hourCount];
+            var children = new List<ModelRow>();
+            foreach (var model in models)
             {
-                if (shift.Settings == null) continue;
+                var counts = modelHours[model];
+                for (int h = 0; h < hourCount; h++) groupHours[h] += counts[h];
 
-                var matrix = await _productionService.GetProductionMatrixAsync(CurrentTime, shift.ShiftNumber);
-
-                Application.Current.Dispatcher.Invoke(() =>
+                children.Add(new ModelRow
                 {
-                    shift.UpdateProductionData(matrix);
+                    ModelName = model,
+                    Image = ModelImageProvider.Get(model, group.Name),
+                    TintBrush = tintBrush,
+                    Hours = FormatHours(counts, isFuture),
+                    TotalText = FormatNumber(counts.Sum())
                 });
             }
-        }
-        catch (Exception ex)
-        {
-            System.Diagnostics.Debug.WriteLine($"Error loading production data: {ex.Message}");
-        }
-    }
 
+            for (int h = 0; h < hourCount; h++) grandHours[h] += groupHours[h];
+            grandPlan += plan;
+            shownGroups.Add((group, groupHours.Sum(), barColor));
 
-
-
-
-    private void UpdateCurrentShift()
-    {
-        var now = CurrentTime.TimeOfDay;
-
-        for (int i = 0; i < _allShifts.Length; i++)
-        {
-            var shift = _allShifts[i];
-            if (shift.Settings == null) continue;
-
-            if (IsInShift(now, shift.Settings.StartTime, shift.Settings.EndTime))
+            rows.Add(new ModelGroupRow(OnGroupToggled)
             {
-                CurrentShiftName = $"{shift.ShiftName} - {shift.TimeRange}";
-                if (AutoSwitchTab)
-                    SelectedTabIndex = i;
-                return;
-            }
+                Name = group.Name,
+                PlanText = FormatNumber(plan),
+                RowBrush = rowBrush,
+                TintBrush = tintBrush,
+                Hours = FormatHours(groupHours, isFuture),
+                TotalText = FormatNumber(groupHours.Sum()),
+                Children = children,
+                IsExpanded = !_collapsedGroups.Contains(group.Name)
+            });
         }
+
+        Groups.Clear();
+        foreach (var row in rows)
+            Groups.Add(row);
+
+        Totals = new TotalRow
+        {
+            PlanText = FormatNumber(grandPlan),
+            Hours = FormatHours(grandHours, isFuture),
+            TotalText = FormatNumber(grandHours.Sum())
+        };
+
+        UpdateBottomPanels(displayGroups, shownGroups, grandHours, isFuture, grandPlan);
     }
 
-    private static bool IsInShift(TimeSpan currentTime, TimeSpan startTime, TimeSpan endTime)
+    private void OnGroupToggled(ModelGroupRow row)
     {
-        if (endTime > startTime)
-            return currentTime >= startTime && currentTime < endTime;
-        else
-            return currentTime >= startTime || currentTime < endTime;
+        if (row.IsExpanded) _collapsedGroups.Remove(row.Name);
+        else _collapsedGroups.Add(row.Name);
     }
 
-    [RelayCommand]
-    private async Task RefreshData()
+    // ===== HELPERS =====
+
+    private static IReadOnlyList<string> FormatHours(int[] counts, bool[] isFuture)
     {
-
-
-        try
-        {
-            await LoadShiftSettingsAsync();
-            await LoadProductionDataAsync();
-            await _productionService.ReloadShiftSettingsAsync();
-        }
-        catch (Exception ex)
-        {
-           
-
-
-        }
+        // Giờ chưa tới: để trống
+        return counts.Select((c, i) => isFuture[i] && c == 0 ? string.Empty : FormatNumber(c)).ToList();
     }
-    [RelayCommand]
-    private async Task ChangeDate(DateTime date)
+
+    private static string FormatNumber(int value) => value.ToString("#,0", NumberCulture);
+
+    private static Brush CreateBrush(string hex)
     {
+        var brush = new SolidColorBrush((Color)ColorConverter.ConvertFromString(hex));
+        brush.Freeze();
+        return brush;
+    }
 
-
-        try
-        {
-            SelectedDate = date;
-            await LoadProductionDataAsync();
-        }
-        catch (Exception ex)
-        {
-            { }
-
-        }
-
-
-    } 
+    private static string GetDayName(DateTime date) => date.DayOfWeek switch
+    {
+        DayOfWeek.Sunday => "Chủ nhật",
+        DayOfWeek.Monday => "Thứ 2",
+        DayOfWeek.Tuesday => "Thứ 3",
+        DayOfWeek.Wednesday => "Thứ 4",
+        DayOfWeek.Thursday => "Thứ 5",
+        DayOfWeek.Friday => "Thứ 6",
+        _ => "Thứ 7"
+    };
 }

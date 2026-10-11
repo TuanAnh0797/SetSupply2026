@@ -103,32 +103,72 @@
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
-            <materialDesign:ColorZone Padding="10,5,5,5" Mode="Standard" BorderBrush="Gray" BorderThickness="0.8">
 
+            <!-- ===== THANH TIÊU ĐỀ ===== -->
+            <Border Grid.Row="0" Padding="6,8,8,8" TextElement.FontFamily="Bahnschrift SemiCondensed, Segoe UI">
+                <Border.Background>
+                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
+                        <GradientStop Color="#0B3470" Offset="0"/>
+                        <GradientStop Color="#0F4590" Offset="1"/>
+                    </LinearGradientBrush>
+                </Border.Background>
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
 
-                <DockPanel>
-                    <uc:UCControlBar DockPanel.Dock="Right"></uc:UCControlBar>
-                    <StackPanel Orientation="Horizontal">
-                        <ToggleButton  IsChecked="{Binding ElementName=DrawerHost, Path=IsLeftDrawerOpen, Mode=TwoWay}"  BorderBrush="Transparent"  Foreground="Black" Background="Transparent" Style="{StaticResource MaterialDesignHamburgerToggleButton}" />
-                        <TextBlock Margin="20,0,0,0" Text="{Binding ApplicationTitle}" FontSize="20" FontWeight="Bold" Foreground="Black" TextWrapping="Wrap" HorizontalAlignment="Left" VerticalAlignment="Center">
-                            <TextBlock.Effect>
-                                <DropShadowEffect Color="Black"  Direction="315" ShadowDepth="2" BlurRadius="4" Opacity="0.4"/>
-                            </TextBlock.Effect>
-                        </TextBlock>
-                    </StackPanel>
-                </DockPanel>
-            </materialDesign:ColorZone>
-            <Grid Grid.Row="1" Background="#e8e3e3">
+                    <ToggleButton Grid.Column="0" IsChecked="{Binding ElementName=DrawerHost, Path=IsLeftDrawerOpen, Mode=TwoWay}"
+                                  Foreground="White" Background="Transparent" BorderBrush="Transparent"
+                                  Style="{StaticResource MaterialDesignHamburgerToggleButton}" VerticalAlignment="Center"/>
+
+                    <TextBlock Grid.Column="1" Text="Panasonic" FontFamily="Arial" FontWeight="Bold" FontSize="36"
+                               Foreground="White" VerticalAlignment="Center" Margin="10,0,0,2"/>
+
+                    <Rectangle Grid.Column="2" Width="2" Height="40" Fill="#6F93CC" Margin="20,0" VerticalAlignment="Center"/>
+
+                    <DockPanel Grid.Column="3" VerticalAlignment="Center" LastChildFill="True">
+                        <TextBlock DockPanel.Dock="Left" Text="{Binding ApplicationTitle}" FontSize="32" FontWeight="Bold"
+                                   Foreground="White" VerticalAlignment="Center"/>
+                        <TextBlock Text="{Binding PageSubtitle}" FontSize="19" Foreground="#D5E2F6" Margin="16,4,12,0"
+                                   VerticalAlignment="Center" TextTrimming="CharacterEllipsis"/>
+                    </DockPanel>
+
+                    <!-- Điều khiển riêng của trang (Home: ngày / ca / cài đặt) -->
+                    <ContentControl Grid.Column="4" Content="{Binding HeaderToolbar}" VerticalAlignment="Center"/>
+
+                    <materialDesign:Chip Grid.Column="5" FontWeight="Bold" Content="{Binding CurrentUser}" Icon="{Binding Avatar}"
+                                         Background="White" VerticalAlignment="Center" Margin="16,0,4,0">
+                        <materialDesign:Chip.ContextMenu>
+                            <ContextMenu materialDesign:MenuAssist.MenuItemsPresenterMargin="0" Placement="Bottom" StaysOpen="True">
+                                <MenuItem Visibility="{Binding IsLoginVisibility}" Header="Login" Icon="{materialDesign:PackIcon Kind=Login}" Command="{Binding LoginCommand}" />
+                                <MenuItem Visibility="{Binding IsLogoutVisibility}" Header="Logout" Icon="{materialDesign:PackIcon Kind=Logout}" Command="{Binding LogoutCommand}"/>
+                                <MenuItem Visibility="{Binding IsAdmin}" Header="User Management" Icon="{materialDesign:PackIcon Kind=AccountGroup}" Command="{Binding UserManagementMethodCommand}"/>
+                                <MenuItem Header="Change language" Icon="{materialDesign:PackIcon Kind=Language}" Command="{Binding ChangeLanguageCommand}"/>
+                            </ContextMenu>
+                        </materialDesign:Chip.ContextMenu>
+                    </materialDesign:Chip>
+
+                    <uc:UCControlBar Grid.Column="6" Background="Transparent" Tag="0" VerticalAlignment="Center"/>
+                </Grid>
+            </Border>
+
+            <Grid Grid.Row="1" Background="#EEF3F9">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="auto"></RowDefinition>
                     <RowDefinition Height="*"></RowDefinition>
                 </Grid.RowDefinitions>
 
-                <Grid Margin="10,0,20,5" Grid.Row="0">
+                <!-- Tiêu đề trang (ẩn ở Home vì Home đã có header riêng) -->
+                <Grid Margin="10,6,20,5" Grid.Row="0" Visibility="{Binding PageHeaderVisibility}">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="auto"></ColumnDefinition>
                         <ColumnDefinition Width="*"></ColumnDefinition>
-                        <ColumnDefinition Width="auto"></ColumnDefinition>
                         <ColumnDefinition Width="auto"></ColumnDefinition>
                     </Grid.ColumnDefinitions>
 
@@ -165,20 +205,6 @@
                             </Style>
                         </TextBlock.Style>
                     </TextBlock>
-                    
-                    <materialDesign:Chip  FontWeight="Bold" Content="{Binding CurrentUser}" Icon="{Binding Avatar}" HorizontalAlignment="Right" Background="White" Grid.Column="3">
-
-
-                        <materialDesign:Chip.ContextMenu>
-                            <ContextMenu materialDesign:MenuAssist.MenuItemsPresenterMargin="0" Placement="Bottom" StaysOpen="True">
-                                <!--<MenuItem Header="Change Password" Icon="{materialDesign:PackIcon Kind=LockReset}"/>-->
-                                <MenuItem Visibility="{Binding IsLoginVisibility}" Header="Login" Icon="{materialDesign:PackIcon Kind=Login}" Command="{Binding LoginCommand}" />
-                                <MenuItem Visibility="{Binding IsLogoutVisibility}" Header="Logout" Icon="{materialDesign:PackIcon Kind=Logout}" Command="{Binding LogoutCommand}"/>
-                                <MenuItem Visibility="{Binding IsAdmin}" Header="User Management" Icon="{materialDesign:PackIcon Kind=AccountGroup}" Command="{Binding UserManagementMethodCommand}"/>
-                                <MenuItem Header="Change language" Icon="{materialDesign:PackIcon Kind=Language}" Command="{Binding ChangeLanguageCommand}"/>
-                            </ContextMenu>
-                        </materialDesign:Chip.ContextMenu>
-                    </materialDesign:Chip>
                 </Grid>
 
                 <ContentControl Grid.Row="1" Content="{Binding CurrentView}" />

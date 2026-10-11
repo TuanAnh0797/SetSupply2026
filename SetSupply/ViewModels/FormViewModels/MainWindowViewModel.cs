@@ -4,6 +4,7 @@ using APP.Models.Database;
 using APP.Service;
 using APP.UserControls;
 using APP.Views;
+using APP.ViewModels.UserControlViewModels.Setting;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
@@ -51,6 +52,16 @@ namespace APP.ViewModels.FormViewModels
 
         [ObservableProperty]
         private string statusConnectionPLC = "Connected";
+
+        // Thanh tiêu đề: phụ đề + điều khiển riêng của trang (Home: ngày / ca / cài đặt)
+        [ObservableProperty]
+        private string pageSubtitle = HomeSubtitle;
+        [ObservableProperty]
+        private object? headerToolbar;
+        [ObservableProperty]
+        private Visibility pageHeaderVisibility = Visibility.Collapsed;
+
+        private const string HomeSubtitle = "Sản lượng theo nhóm model / model";
 
 
 
@@ -120,6 +131,7 @@ namespace APP.ViewModels.FormViewModels
         private void _userSession_PropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
               ShowSettingCommand.NotifyCanExecuteChanged();
+              OpenModelGroupSettingCommand.NotifyCanExecuteChanged();
 
             if (sender != null)
             {
@@ -173,6 +185,24 @@ namespace APP.ViewModels.FormViewModels
             Selectedpage = _localizationService.GetString("Setting");
             PageIcon = "CogOutline";
         }
+        /// <summary>
+        /// Nút "Cài đặt" trên header Home: mở Cài đặt > Nhóm model.
+        /// </summary>
+        [RelayCommand(CanExecute = nameof(CanSetting))]
+        private void OpenModelGroupSetting()
+        {
+            ShowSetting();
+            App.ServiceProvider.GetRequiredService<UCSettingViewModel>().ShowModelGroupSettingCommand.Execute(null);
+        }
+
+        partial void OnCurrentViewChanged(UserControl value)
+        {
+            bool isHome = value is UCHome;
+            HeaderToolbar = isHome ? App.ServiceProvider.GetRequiredService<UCHomeHeader>() : null;
+            PageHeaderVisibility = isHome ? Visibility.Collapsed : Visibility.Visible;
+            PageSubtitle = isHome ? HomeSubtitle : string.Empty;
+        }
+
         [RelayCommand]
         private void ShowHistory()
         {

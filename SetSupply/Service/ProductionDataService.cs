@@ -1,5 +1,6 @@
 ﻿using APP.Database;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using SetSupply.Models.Database;
 using SetSupply.Extensions;
 using System;
@@ -13,12 +14,14 @@ public class ProductionDataService
 {
     private readonly AppDbContext _db;
     private readonly ShiftSettingService _shiftService;
+    private readonly IServiceScopeFactory _scopeFactory;
     private List<ShiftSetting> _cachedShiftSettings;
 
-    public ProductionDataService(AppDbContext db, ShiftSettingService shiftService)
+    public ProductionDataService(AppDbContext db, ShiftSettingService shiftService, IServiceScopeFactory scopeFactory)
     {
         _db = db;
         _shiftService = shiftService;
+        _scopeFactory = scopeFactory;
     }
 
     private async Task<List<ShiftSetting>> GetShiftSettingsAsync()
@@ -75,23 +78,83 @@ public class ProductionDataService
         return (earliest, latest);
     }
 
+    // ===== KHOẢNG THỜI GIAN CHO MÀN HÌNH HOME (DbContext riêng, luôn đọc cài đặt ca mới nhất) =====
+
+    /// <summary>
+    /// Khoảng thời gian thực tế của 1 ngày sản xuất (shiftNumber = null) hoặc 1 ca.
+    /// </summary>
+    public async Task<(DateTime start, DateTime end)> GetProductionRangeAsync(DateTime date, int? shiftNumber)
+    {
+        var shifts = await GetFreshActiveShiftsAsync();
+
+        if (shiftNumber.HasValue)
+        {
+            var shift = shifts.FirstOrDefault(s => s.ShiftNumber == shiftNumber.Value);
+            if (shift != null)
+                return GetShiftDateTimeRange(date, shift);
+        }
+
+        if (!shifts.Any())
+            return (date.Date, date.Date.AddDays(1));
+
+        var ranges = shifts.Select(s => GetShiftDateTimeRange(date, s)).ToList();
+        return (ranges.Min(r => r.start), ranges.Max(r => r.end));
+    }
+
+    /// <summary>
+    /// Ngày sản xuất chứa thời điểm now. VD: ca đầu bắt đầu 06:00 => 03:00 ngày 11 thuộc ngày sản xuất 10.
+    /// </summary>
+    public async Task<DateTime> GetProductionDateAsync(DateTime now)
+    {
+        var (start, _) = await GetProductionRangeAsync(now.Date, null);
+        return now < start ? now.Date.AddDays(-1) : now.Date;
+    }
+
+    public async Task<List<ShiftSetting>> GetFreshActiveShiftsAsync()
+    {
+        using var scope = _scopeFactory.CreateScope();
+        var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+        return await db.ShiftSettings.AsNoTracking()
+            .Where(s => s.IsUse)
+            .OrderBy(s => s.ShiftNumber)
+            .ToListAsync();
+    }
+
+    /// <summary>
+    /// (Model, thời điểm) của các bản ghi trong khoảng [start, end).
+    /// </summary>
+    public async Task<List<(string Model, DateTime Time)>> GetModelTimesInRangeAsync(DateTime start, DateTime end)
+    {
+        using var scope = _scopeFactory.CreateScope();
+        var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+        var rows = await db.ProductionData.AsNoTracking()
+            .Where(p => p.DateTimeInsert >= start && p.DateTimeInsert < end)
+            .Select(p => new { p.Model, p.DateTimeInsert })
+            .ToListAsync();
+        return rows.Select(r => (r.Model, r.DateTimeInsert)).ToList();
+    }
+
     // ===== THÊM DỮ LIỆU =====
 
     public async Task<bool> AddProductionDataAsync(string codeback, string model, string serial)
     {
         try
         {
-            if (await _db.ProductionData.AnyAsync(p => p.Serial == serial))
+            // DbContext riêng: hàm này chạy trên thread PLC, song song với các truy vấn khác
+            using var scope = _scopeFactory.CreateScope();
+            var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+
+            if (await db.ProductionData.AnyAsync(p => p.Serial == serial))
                 return false;
 
-            _db.ProductionData.Add(new ProductionData
+            db.ProductionData.Add(new ProductionData
             {
                 Codeback = codeback,
                 Model = model,
                 Serial = serial,
                 DateTimeInsert = DateTime.Now
             });
-            await _db.SaveChangesAsync();
+            await db.SaveChangesAsync();
             return true;
         }
         catch (Exception ex)
