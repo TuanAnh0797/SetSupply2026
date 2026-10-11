@@ -7,7 +7,7 @@
 - Build: `dotnet build SetSupply/SetSupply.csproj -c Debug` (warning thiếu `DLL\Interop.bpacx64.dll` là bình thường).
 - DB: `<thư mục chạy>\Resources\Database\SetSupply.db` (dùng `Directory.GetCurrentDirectory()`), tạo bằng `EnsureCreated` khi chưa có.
 - Tài khoản admin seed: xem `Database/AppDbContext.cs` (User seed).
-- Lưu ý: thư mục `bin/`, `obj/`, `.vs/` đang bị commit vào git → build xong `git status` sẽ có nhiều file thay đổi, không cần commit các file này.
+- `.gitignore` bỏ qua `bin/ obj/ .vs/ *.user`. Riêng `Library/*/bin|obj` vẫn được track vì chứa DLL bên thứ 3 (Library không nằm trong solution).
 
 ## Kiến trúc
 - MVVM: CommunityToolkit.Mvvm (`[ObservableProperty]`, `[RelayCommand]`), UI MaterialDesignThemes 5.2.1, chart LiveChartsCore.
@@ -69,4 +69,3 @@ Cách test đã dùng: copy `bin/Debug/net6.0-windows7.0` ra thư mục tạm, c
 - Tỷ lệ đạt đang so thực tế với kế hoạch CẢ ca/ngày (giữa ca sẽ thấp); nếu muốn có thể so với kế hoạch tính theo thời gian đã trôi qua.
 - Combobox "Vị trí" hiện chỉ có 1 giá trị cố định "CABI - SetSupply" (`UCHomeViewModel.Locations`).
 - Kế hoạch hiện là cố định mỗi ngày theo ca; nếu cần kế hoạch theo từng ngày phải thêm bảng mới.
-- Thêm `.gitignore` cho `bin/ obj/ .vs/`.
