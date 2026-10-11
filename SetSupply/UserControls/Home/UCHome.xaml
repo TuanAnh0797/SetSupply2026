@@ -239,7 +239,7 @@
 
         <!-- 1 dòng của bảng "Sản lượng theo ca" (dùng cho các ca và dòng Tổng) -->
         <DataTemplate x:Key="ShiftRowTemplate" DataType="{x:Type home:ShiftSummaryRow}">
-            <Grid MinHeight="44">
+            <Grid MinHeight="37">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="1.2*"/>
                     <ColumnDefinition Width="*"/>
@@ -248,8 +248,8 @@
                 </Grid.ColumnDefinitions>
                 <Border Grid.Column="0" Style="{StaticResource ShiftCell}" BorderThickness="1,0,1,1">
                     <StackPanel VerticalAlignment="Center">
-                        <TextBlock Text="{Binding Name}" Style="{StaticResource CellText}" FontSize="15"/>
-                        <TextBlock Text="{Binding TimeRange}" Style="{StaticResource CellText}" FontSize="12" Foreground="#5B6B82"
+                        <TextBlock Text="{Binding Name}" Style="{StaticResource CellText}" FontSize="14"/>
+                        <TextBlock Text="{Binding TimeRange}" Style="{StaticResource CellText}" FontSize="11" Foreground="#5B6B82"
                                    Visibility="{Binding HasTimeRange, Converter={StaticResource BoolToVis}}"/>
                     </StackPanel>
                 </Border>
@@ -472,6 +472,7 @@
                                     <TextBlock Text="Kế hoạch" FontSize="16" Foreground="{StaticResource TextDarkBrush}"/>
                                     <TextBlock Text="{Binding PlanTotalText}" FontSize="32" FontWeight="Bold" Foreground="{StaticResource TextDarkBrush}"/>
                                     <TextBlock Text="tủ" FontSize="16" Foreground="#5B6B82"/>
+                                    <TextBlock Text="{Binding PlanSourceText}" FontSize="12" Foreground="#1F7BEA"/>
                                 </StackPanel>
                             </Grid>
                         </Border>
@@ -578,7 +579,7 @@
                     <Border DockPanel.Dock="Top" Style="{StaticResource PanelHeader}">
                         <TextBlock Text="Sản lượng theo ca" Style="{StaticResource PanelTitle}"/>
                     </Border>
-                    <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" Margin="10">
+                    <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" Margin="10,8">
                         <StackPanel>
                             <Border Background="#EAF1FB" BorderBrush="{StaticResource GridLineBrush}" BorderThickness="1">
                                 <Grid Height="30">

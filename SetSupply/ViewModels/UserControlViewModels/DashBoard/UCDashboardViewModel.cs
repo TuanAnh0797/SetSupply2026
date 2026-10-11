@@ -89,10 +89,14 @@ namespace SetSupply.ViewModels.UserControlViewModels.DashBoard
             InitializeCharts();
         }
 
-        private async void _plcService_DataReceived(string obj)
+        private void _plcService_DataReceived(string obj)
         {
-            await LoadShiftSettingsAsync();
-            await LoadDashboardDataAsync();
+            // Sự kiện đến từ thread PLC; DbContext dùng chung chỉ nên truy cập trên UI thread
+            Application.Current?.Dispatcher.InvokeAsync(async () =>
+            {
+                await LoadShiftSettingsAsync();
+                await LoadDashboardDataAsync();
+            });
         }
 
         public async Task InitializeAsync()

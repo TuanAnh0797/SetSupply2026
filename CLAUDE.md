@@ -13,8 +13,14 @@
 - MVVM: CommunityToolkit.Mvvm (`[ObservableProperty]`, `[RelayCommand]`), UI MaterialDesignThemes 5.2.1, chart LiveChartsCore.
 - DI: `App.xaml.cs` đăng ký tất cả service / ViewModel / UserControl dạng **Singleton**. `AppDbContext` cũng là singleton dùng chung → code mới đọc/ghi DB qua `IServiceScopeFactory` (DbContext riêng mỗi lần) để tránh lỗi truy cập song song (thread PLC + UI).
 - Điều hướng: `MainWindowViewModel.CurrentView` (Home / Dashboard / Setting / History). Menu trái là `DrawerHost`.
-- PLC: `Service/PLCService.cs` → event `DataReceived(string)` (chạy trên thread pool), `ConnectionChanged(bool)`.
-  Mã đọc được: 12 ký tự model + 7 ký tự serial.
+- PLC (Mitsubishi MC protocol 3E binary, TCP) — đã viết lại 2026-10-11:
+  - `Helper/PLC.cs`: mỗi lệnh đọc đủ header 9 byte + phần dữ liệu theo length, kiểm tra subheader D000 và end code. Monitoring timer 4s.
+  - `Service/PLCService.cs`: giữ 1 kết nối; quét bit trigger M mỗi 300ms, ghi bit Alive M mỗi 1s; mất kết nối → 5s sau kết nối lại.
+    Trigger ON → đọc D (TotalRegisterData word, ASCII) → mã 12 ký tự model + 7 serial → `ProductionDataService.TryInsertProductionAsync` → **sau khi lưu xong mới reset trigger**. Lưu lỗi thì không reset (lần quét sau thử lại). Mã < 19 ký tự: ghi WARN rồi reset trigger.
+  - Event `DataReceived(string)` chỉ phát khi đã lưu mới (thread nền) → Home/Dashboard chỉ tải lại (marshal về UI thread). `ConnectionChanged(bool)` chỉ phát khi trạng thái đổi; "đã kết nối" = PLC trả lời đúng giao thức.
+  - Log: `<exe>\Logs\PLC_yyyyMMdd.log` (`Helper/PlcLogger.cs`), giữ 30 ngày, cùng 1 lỗi tối đa 1 lần/5 phút. Mỗi mã nhận được ghi 1 dòng INFO.
+  - Thử không cần PLC thật: `python tools/plc_simulator.py --duration 60 --drop-after 20` rồi cài PLC: IP 127.0.0.1, Port 5000, AddressData 100, TotalRegisterData 10, Trigger 10, Alive 20.
+  - Trang PLC Setting kiểm tra IP/port/số word (>= 10)/trigger ≠ alive trước khi lưu. `AddressConnfirmFinalReadData` không dùng.
 - Ca làm việc: bảng `ShiftSettings` (3 ca, cột `IsUse`), cài ở Cài đặt > Calendar Setting. Ca qua đêm (End <= Start) được hỗ trợ.
 
 ## Màn hình Home (đã làm lại toàn bộ theo `docs/home_design_target.jpg`)
@@ -49,10 +55,20 @@ Chức năng:
 ## Nhóm model & kế hoạch
 - Bảng mới `ModelGroups` (`Models/Database/ModelGroup.cs`): Name, Prefixes (tiền tố model, cách nhau dấu phẩy), PlanShift1/2/3, SortOrder.
   Prefixes rỗng = nhóm "Khác" (gom model không khớp). Khớp theo tiền tố dài nhất: `ModelGroupService.Match`.
-- DB cũ không tự có bảng mới (EnsureCreated không migrate) → `App.EnsureModelGroupsTableAsync` chạy `CREATE TABLE IF NOT EXISTS`. Thêm cột/bảng mới sau này cũng phải làm tương tự.
+- DB cũ không tự có bảng mới (EnsureCreated không migrate) → `App.EnsureSchemaUpdatesAsync` chạy `CREATE TABLE/INDEX IF NOT EXISTS` (ModelGroups, ProductionPlans, index Model+Serial) và sửa dữ liệu cũ. Thêm cột/bảng mới sau này cũng phải thêm vào đây (lệnh phải chạy lại được nhiều lần).
 - Cài đặt: Cài đặt > "Model Group / Plan" (`UserControls/Setting/Sub/UCModelGroupSetting.xaml`, VM `UCModelGroupSettingViewModel`), nút "Cài đặt" trên header Home mở thẳng trang này (cần quyền Admin).
   Có nút "Tạo nhóm" tự sinh nhóm từ model đã chạy 30 ngày theo N ký tự đầu (mặc định 8, VD `NR-C33ES2L-C` → `NR-C33ES`).
 - Ảnh model: `<thư mục exe>\Resources\ModelImages\<tên model>.png` (hoặc `<tên nhóm>.png`, hỗ trợ png/jpg/jpeg/bmp). Không có ảnh → icon tủ lạnh.
+  Trang Model Group / Plan có nút "Ảnh cho nhóm đang chọn", "Thêm ảnh từng model", "Mở thư mục ảnh".
+
+## Kế hoạch theo ngày
+- Bảng `ProductionPlans` (`Models/Database/ProductionPlan.cs`): PlanDate, GroupName (lưu theo TÊN nhóm vì ModelGroups bị ghi đè toàn bộ khi lưu → Id đổi), ShiftNumber, Quantity.
+- Service `ProductionPlanService`; trang Cài đặt > "Daily Plan" (`UCDailyPlanSetting`, VM `UCDailyPlanSettingViewModel`): chọn ngày, Lưu / Copy từ ngày trước / Điền kế hoạch mặc định / Xóa KH riêng.
+- Home: `UCHomeViewModel.GetPlan(group, shift)` = kế hoạch riêng của ngày nếu có, không thì `ModelGroup.PlanShiftN`. Ô Kế hoạch ở panel Tổng quan ghi "KH theo ngày" / "KH mặc định".
+
+## Giờ ca khi xem ngày cũ
+- `ProductionDataService.GetShiftsForDateAsync(date)`: ngày < hôm nay → lấy giờ ca/IsUse từ `ShiftSettingHistory` của ngày đó (bản ghi mới nhất mỗi ca), ca không có lịch sử dùng cài đặt hiện tại. Hôm nay/tương lai → cài đặt hiện tại.
+- Lịch sử được ghi bởi `ShiftSettingService.UpdateShiftSettingAsync` và `ShiftHistoryBackgroundService` (2 tiếng/lần, ghi đè bản ghi của hôm nay).
 
 ## Dữ liệu demo
 `python tools/seed_demo_data.py <đường dẫn SetSupply.db> [--two-shifts]` — tạo nhóm mẫu + dữ liệu ngẫu nhiên hôm nay & hôm qua. `--two-shifts` đặt Ca1 06–18, Ca2 18–06, tắt Ca3 (giống ảnh thiết kế). **Không chạy trên DB thật** (xóa ProductionData 2 ngày gần nhất).
@@ -60,7 +76,8 @@ Cách test đã dùng: copy `bin/Debug/net6.0-windows7.0` ra thư mục tạm, c
 
 ## Thay đổi khác so với bản gốc (commit `version1`)
 - Sửa lỗi: `UCHomeViewModel` cũ lưu cả chuỗi mã vào cột `Model`; nay lưu đúng 12 ký tự model (đã Trim).
-- `ProductionDataService.AddProductionDataAsync` dùng DbContext riêng (tránh xung đột với truy vấn của Dashboard).
+- `ProductionDataService.AddProductionDataAsync` dùng DbContext riêng (tránh xung đột với truy vấn của Dashboard) và kiểm tra trùng theo **Model + Serial** (bản gốc chỉ theo Serial → 2 model trùng serial bị mất bản ghi), có index `IX_ProductionData_Model_Serial`.
+- Khi khởi động: dữ liệu cũ có `Model = Codeback` và dài >= 19 ký tự được sửa thành 12 ký tự đầu (model).
 - `UCControlBar`: `Background` của instance áp cho cả ColorZone; `Tag` = độ rộng vùng kéo cửa sổ (mặc định 200).
 - Nền vùng nội dung đổi sang `#EEF3F9`; hàng tiêu đề trang (icon + tên trang, đồng hồ, trạng thái PLC) bị ẩn ở Home.
 - Không còn dùng ở Home: `ShiftViewModel`, `DataGridColumnHelper`, `BoolToIconConverter` (giữ lại, chưa xóa).
@@ -68,4 +85,3 @@ Cách test đã dùng: copy `bin/Debug/net6.0-windows7.0` ra thư mục tạm, c
 ## Việc có thể làm tiếp
 - Tỷ lệ đạt đang so thực tế với kế hoạch CẢ ca/ngày (giữa ca sẽ thấp); nếu muốn có thể so với kế hoạch tính theo thời gian đã trôi qua.
 - Combobox "Vị trí" hiện chỉ có 1 giá trị cố định "CABI - SetSupply" (`UCHomeViewModel.Locations`).
-- Kế hoạch hiện là cố định mỗi ngày theo ca; nếu cần kế hoạch theo từng ngày phải thêm bảng mới.

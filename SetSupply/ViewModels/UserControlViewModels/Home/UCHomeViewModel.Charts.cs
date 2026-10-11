@@ -41,6 +41,9 @@ public partial class UCHomeViewModel
     private string actualTotalText = "0";
 
     [ObservableProperty]
+    private string planSourceText = string.Empty;
+
+    [ObservableProperty]
     private double achievementPercent;
 
     [ObservableProperty]
@@ -192,7 +195,7 @@ public partial class UCHomeViewModel
 
         foreach (var (option, start, end) in _shiftRanges)
         {
-            int plan = shownGroups.Sum(g => g.Group.GetPlan(option.ShiftNumber!.Value));
+            int plan = shownGroups.Sum(g => GetPlan(g.Group, option.ShiftNumber!.Value));
             int actual = _dayRecords.Count(r => r.Time >= start && r.Time < end && Passes(r.Model));
             totalPlan += plan;
             totalActual += actual;

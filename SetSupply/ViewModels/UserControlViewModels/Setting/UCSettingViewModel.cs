@@ -38,5 +38,10 @@ public partial class UCSettingViewModel : ObservableObject
     {
         CurrentView = App.ServiceProvider.GetRequiredService<UCModelGroupSetting>();
     }
+    [RelayCommand]
+    private void ShowDailyPlanSetting()
+    {
+        CurrentView = App.ServiceProvider.GetRequiredService<UCDailyPlanSetting>();
+    }
 
 }

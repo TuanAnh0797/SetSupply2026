@@ -48,6 +48,7 @@ public partial class UCHomeViewModel : ObservableObject
 
     private readonly ProductionDataService _productionService;
     private readonly ModelGroupService _modelGroupService;
+    private readonly ProductionPlanService _planService;
     private readonly PLCService _plcService;
 
     private readonly SemaphoreSlim _loadLock = new(1, 1);
@@ -59,6 +60,8 @@ public partial class UCHomeViewModel : ObservableObject
     private List<(string Model, DateTime Time)> _dayRecords = new();
     private List<(ShiftScopeOption Option, DateTime Start, DateTime End)> _shiftRanges = new();
     private List<ModelGroup> _groups = new();
+    // Kế hoạch riêng của ngày đang xem: (tên nhóm, ca) -> số lượng. Rỗng => dùng kế hoạch mặc định của nhóm
+    private Dictionary<(string Group, int Shift), int> _dailyPlans = new();
     private List<DateTime> _hourSlots = new();
     private bool _isFollowingToday = true;
     private bool _suppressReload;
@@ -104,10 +107,12 @@ public partial class UCHomeViewModel : ObservableObject
 
     public string ConnectionText => IsPlcConnected ? "Đang kết nối" : "Mất kết nối";
 
-    public UCHomeViewModel(ProductionDataService productionService, ModelGroupService modelGroupService, PLCService plcService)
+    public UCHomeViewModel(ProductionDataService productionService, ModelGroupService modelGroupService,
+                           ProductionPlanService planService, PLCService plcService)
     {
         _productionService = productionService;
         _modelGroupService = modelGroupService;
+        _planService = planService;
         _plcService = plcService;
 
         ScopeOptions.Add(new ShiftScopeOption { Name = "Cả ngày" });
@@ -136,18 +141,13 @@ public partial class UCHomeViewModel : ObservableObject
         await LoadAsync();
     }
 
-    private async void PlcService_DataReceived(string data)
+    /// <summary>
+    /// PLCService đã lưu sản phẩm vào database trước khi phát sự kiện => chỉ cần tải lại.
+    /// </summary>
+    private void PlcService_DataReceived(string data)
     {
-        // Mã đọc từ PLC: 12 ký tự model + 7 ký tự serial
-        if (data.Length < 19) return;
-
-        string model = data.Substring(0, 12).Trim();
-        string serial = data.Substring(12, 7);
-        await _productionService.AddProductionDataAsync(data, model, serial);
-
-        var dispatcher = Application.Current?.Dispatcher;
-        if (dispatcher != null && _isFollowingToday)
-            await dispatcher.InvokeAsync(LoadAsync).Task.Unwrap();
+        if (_isFollowingToday)
+            Application.Current?.Dispatcher.InvokeAsync(LoadAsync);
     }
 
     // ===== COMMANDS =====
@@ -203,7 +203,6 @@ public partial class UCHomeViewModel : ObservableObject
         await _loadLock.WaitAsync();
         try
         {
-            var shifts = await _productionService.GetFreshActiveShiftsAsync();
             _groups = await _modelGroupService.GetAllAsync();
 
             _suppressReload = true;
@@ -214,12 +213,20 @@ public partial class UCHomeViewModel : ObservableObject
                     SelectedDate = currentProductionDate;
                 else if (SelectedDate == currentProductionDate)
                     _isFollowingToday = true; // chọn lại đúng ngày hiện tại => tiếp tục cập nhật realtime
+
+                // Ngày cũ dùng giờ ca theo lịch sử cài đặt ca của ngày đó
+                var shifts = await _productionService.GetShiftsForDateAsync(SelectedDate);
                 RebuildScopeOptions(shifts);
             }
             finally
             {
                 _suppressReload = false;
             }
+
+            _dailyPlans = (await _planService.GetPlansAsync(SelectedDate))
+                .GroupBy(p => (p.GroupName, p.ShiftNumber))
+                .ToDictionary(g => (g.Key.GroupName, g.Key.ShiftNumber), g => g.Sum(p => p.Quantity));
+            PlanSourceText = _dailyPlans.Count > 0 ? "KH theo ngày" : "KH mặc định";
 
             // Luôn tải cả ngày sản xuất (bảng theo ca ở dưới cần số liệu mọi ca), bảng chính lọc theo ca đang chọn
             var (dayStart, dayEnd) = await _productionService.GetProductionRangeAsync(SelectedDate, null);
@@ -382,8 +389,8 @@ public partial class UCHomeViewModel : ObservableObject
             if (SelectedModelFilter != AllOption && models.Count == 0) continue;
 
             int plan = shiftNumber.HasValue
-                ? group.GetPlan(shiftNumber.Value)
-                : activeShiftNumbers.Sum(group.GetPlan);
+                ? GetPlan(group, shiftNumber.Value)
+                : activeShiftNumbers.Sum(n => GetPlan(group, n));
 
             // Nhóm "Khác" tự sinh: chỉ hiện khi có dữ liệu
             if (group.Id == 0 && group.IsCatchAll && models.Count == 0 && plan == 0) continue;
@@ -438,6 +445,16 @@ public partial class UCHomeViewModel : ObservableObject
         };
 
         UpdateBottomPanels(displayGroups, shownGroups, grandHours, isFuture, grandPlan);
+    }
+
+    /// <summary>
+    /// Kế hoạch của nhóm trong 1 ca: ưu tiên kế hoạch riêng của ngày, không có thì lấy mặc định.
+    /// </summary>
+    private int GetPlan(ModelGroup group, int shiftNumber)
+    {
+        return _dailyPlans.TryGetValue((group.Name, shiftNumber), out var quantity)
+            ? quantity
+            : group.GetPlan(shiftNumber);
     }
 
     private void OnGroupToggled(ModelGroupRow row)

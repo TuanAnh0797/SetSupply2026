@@ -85,7 +85,7 @@ public class ProductionDataService
     /// </summary>
     public async Task<(DateTime start, DateTime end)> GetProductionRangeAsync(DateTime date, int? shiftNumber)
     {
-        var shifts = await GetFreshActiveShiftsAsync();
+        var shifts = await GetShiftsForDateAsync(date);
 
         if (shiftNumber.HasValue)
         {
@@ -110,14 +110,36 @@ public class ProductionDataService
         return now < start ? now.Date.AddDays(-1) : now.Date;
     }
 
-    public async Task<List<ShiftSetting>> GetFreshActiveShiftsAsync()
+    /// <summary>
+    /// Các ca đang dùng của 1 ngày: ngày đã qua lấy theo ShiftSettingHistory (nếu có),
+    /// ca nào không có lịch sử thì dùng cài đặt hiện tại.
+    /// </summary>
+    public async Task<List<ShiftSetting>> GetShiftsForDateAsync(DateTime date)
     {
         using var scope = _scopeFactory.CreateScope();
         var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-        return await db.ShiftSettings.AsNoTracking()
-            .Where(s => s.IsUse)
-            .OrderBy(s => s.ShiftNumber)
-            .ToListAsync();
+
+        var shifts = await db.ShiftSettings.AsNoTracking().OrderBy(s => s.ShiftNumber).ToListAsync();
+
+        if (date.Date < DateTime.Today)
+        {
+            var day = date.Date;
+            var next = day.AddDays(1);
+            var history = await db.ShiftSettingHistory.AsNoTracking()
+                .Where(h => h.DateUsing >= day && h.DateUsing < next)
+                .ToListAsync();
+
+            foreach (var h in history.GroupBy(h => h.ShiftNumber).Select(g => g.OrderByDescending(x => x.InsertTime).First()))
+            {
+                var shift = shifts.FirstOrDefault(s => s.ShiftNumber == h.ShiftNumber);
+                if (shift == null) continue;
+                shift.StartTime = h.StartTime;
+                shift.EndTime = h.EndTime;
+                shift.IsUse = h.IsUse;
+            }
+        }
+
+        return shifts.Where(s => s.IsUse).ToList();
     }
 
     /// <summary>
@@ -140,28 +162,38 @@ public class ProductionDataService
     {
         try
         {
-            // DbContext riêng: hàm này chạy trên thread PLC, song song với các truy vấn khác
-            using var scope = _scopeFactory.CreateScope();
-            var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-
-            if (await db.ProductionData.AnyAsync(p => p.Serial == serial))
-                return false;
-
-            db.ProductionData.Add(new ProductionData
-            {
-                Codeback = codeback,
-                Model = model,
-                Serial = serial,
-                DateTimeInsert = DateTime.Now
-            });
-            await db.SaveChangesAsync();
-            return true;
+            return await TryInsertProductionAsync(codeback, model, serial);
         }
         catch (Exception ex)
         {
             System.Diagnostics.Debug.WriteLine($"Error adding production data: {ex.Message}");
             return false;
         }
+    }
+
+    /// <summary>
+    /// Lưu 1 sản phẩm đọc từ PLC. true = đã lưu, false = trùng (cùng model + serial).
+    /// Lỗi database sẽ ném exception để bên gọi KHÔNG xác nhận (reset trigger) với PLC.
+    /// </summary>
+    public async Task<bool> TryInsertProductionAsync(string codeback, string model, string serial)
+    {
+        // DbContext riêng: hàm này chạy trên thread PLC, song song với các truy vấn khác
+        using var scope = _scopeFactory.CreateScope();
+        var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+
+        // Trùng = cùng model + cùng serial (2 model khác nhau có thể trùng số serial)
+        if (await db.ProductionData.AnyAsync(p => p.Model == model && p.Serial == serial))
+            return false;
+
+        db.ProductionData.Add(new ProductionData
+        {
+            Codeback = codeback,
+            Model = model,
+            Serial = serial,
+            DateTimeInsert = DateTime.Now
+        });
+        await db.SaveChangesAsync();
+        return true;
     }
 
     public async Task<int> AddBatchProductionDataAsync(List<ProductionData> dataList)

@@ -26,6 +26,7 @@ public class AppDbContext : DbContext
 
     // Nhóm model + kế hoạch (màn hình Home)
     public DbSet<ModelGroup> ModelGroups => Set<ModelGroup>();
+    public DbSet<ProductionPlan> ProductionPlans => Set<ProductionPlan>();
 
     public AppDbContext(DbContextOptions<AppDbContext> options)
         : base(options)
@@ -78,8 +79,17 @@ public class AppDbContext : DbContext
             .HasIndex(e => e.DateTimeInsert)
             .HasDatabaseName("IX_ProductionData_DateTimeInsert");
 
-        // ===== CẤU HÌNH CHO MODELGROUP =====
+        // Kiểm tra trùng khi nhận dữ liệu PLC (Model + Serial)
+        modelBuilder.Entity<ProductionData>()
+            .HasIndex(e => new { e.Model, e.Serial })
+            .HasDatabaseName("IX_ProductionData_Model_Serial");
+
+        // ===== CẤU HÌNH CHO MODELGROUP / KẾ HOẠCH THEO NGÀY =====
         modelBuilder.Entity<ModelGroup>().HasKey(e => e.Id);
+        modelBuilder.Entity<ProductionPlan>().HasKey(e => e.Id);
+        modelBuilder.Entity<ProductionPlan>()
+            .HasIndex(e => new { e.PlanDate, e.GroupName, e.ShiftNumber })
+            .HasDatabaseName("IX_ProductionPlans_Date_Group_Shift");
 
         // ===== SEED DATA CHO USER =====
         modelBuilder.Entity<User>().HasData(

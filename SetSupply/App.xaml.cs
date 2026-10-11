@@ -92,6 +92,7 @@ namespace APP
             services.AddSingleton<ShiftSettingService>(); // THÊM DÒNG NÀY
             services.AddSingleton<ProductionDataService>();
             services.AddSingleton<ModelGroupService>();
+            services.AddSingleton<ProductionPlanService>();
             services.AddSingleton<ILocalizationService, LocalizationService>();
 
             // ViewModels & UserControls
@@ -122,6 +123,8 @@ namespace APP
             services.AddSingleton<UCHomeHeader>();
             services.AddSingleton<UCModelGroupSettingViewModel>();
             services.AddSingleton<UCModelGroupSetting>();
+            services.AddSingleton<UCDailyPlanSettingViewModel>();
+            services.AddSingleton<UCDailyPlanSetting>();
 
             //ManagementUser
             services.AddSingleton<UserManagementViewModel>();
@@ -184,8 +187,8 @@ namespace APP
                         Debug.WriteLine("✓ Database đã tồn tại.");
                     }
 
-                    // DB cũ (tạo trước khi có bảng ModelGroups): EnsureCreated không tự thêm bảng mới
-                    await EnsureModelGroupsTableAsync(dbContext);
+                    // DB cũ: EnsureCreated không tự thêm bảng/index mới => bổ sung thủ công
+                    await EnsureSchemaUpdatesAsync(dbContext);
 
                     // Seed data mặc định
                     await SeedDefaultDataAsync(dbContext);
@@ -212,9 +215,10 @@ namespace APP
         }
 
         /// <summary>
-        /// Tạo bảng ModelGroups nếu chưa có (cho database đã tồn tại từ phiên bản trước)
+        /// Bổ sung bảng / index / sửa dữ liệu cho database đã tồn tại từ phiên bản trước.
+        /// Tất cả câu lệnh đều chạy lại được nhiều lần (idempotent).
         /// </summary>
-        private static async Task EnsureModelGroupsTableAsync(AppDbContext dbContext)
+        private static async Task EnsureSchemaUpdatesAsync(AppDbContext dbContext)
         {
             await dbContext.Database.ExecuteSqlRawAsync(@"
                 CREATE TABLE IF NOT EXISTS ""ModelGroups"" (
@@ -226,6 +230,31 @@ namespace APP
                     ""PlanShift3"" INTEGER NOT NULL DEFAULT 0,
                     ""SortOrder"" INTEGER NOT NULL DEFAULT 0
                 );");
+
+            await dbContext.Database.ExecuteSqlRawAsync(@"
+                CREATE TABLE IF NOT EXISTS ""ProductionPlans"" (
+                    ""Id"" INTEGER NOT NULL CONSTRAINT ""PK_ProductionPlans"" PRIMARY KEY AUTOINCREMENT,
+                    ""PlanDate"" TEXT NOT NULL,
+                    ""GroupName"" TEXT NOT NULL,
+                    ""ShiftNumber"" INTEGER NOT NULL,
+                    ""Quantity"" INTEGER NOT NULL
+                );");
+            await dbContext.Database.ExecuteSqlRawAsync(@"
+                CREATE INDEX IF NOT EXISTS ""IX_ProductionPlans_Date_Group_Shift""
+                ON ""ProductionPlans"" (""PlanDate"", ""GroupName"", ""ShiftNumber"");");
+
+            await dbContext.Database.ExecuteSqlRawAsync(@"
+                CREATE INDEX IF NOT EXISTS ""IX_ProductionData_Model_Serial""
+                ON ""ProductionData"" (""Model"", ""Serial"");");
+
+            // Phiên bản cũ lưu cả chuỗi mã (model 12 ký tự + serial 7 ký tự) vào cột Model
+            // => tách lại model để gom nhóm được. Bản ghi đúng có Model khác Codeback nên không bị ảnh hưởng.
+            int fixedRows = await dbContext.Database.ExecuteSqlRawAsync(@"
+                UPDATE ""ProductionData""
+                SET ""Model"" = TRIM(SUBSTR(""Model"", 1, 12))
+                WHERE ""Model"" = ""Codeback"" AND LENGTH(""Model"") >= 19;");
+            if (fixedRows > 0)
+                Debug.WriteLine($"✓ Đã sửa cột Model cho {fixedRows} bản ghi ProductionData cũ.");
         }
 
         /// <summary>

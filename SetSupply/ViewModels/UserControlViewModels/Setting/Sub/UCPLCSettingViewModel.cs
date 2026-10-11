@@ -65,6 +65,37 @@ public partial class UCPLCSettingViewModel : ObservableObject
     [RelayCommand]
     private void Save()
     {
+        // Kiểm tra trước khi lưu (cấu hình sai làm vòng giao tiếp PLC lỗi liên tục)
+        if (!System.Net.IPAddress.TryParse(IPAddress?.Trim(), out _))
+        {
+            MessageBox.Show("Địa chỉ IP không hợp lệ (VD: 192.168.1.10).", "Cảnh báo", MessageBoxButton.OK, MessageBoxImage.Warning);
+            return;
+        }
+        if (!int.TryParse(Port, out int port) || port < 1 || port > 65535)
+        {
+            MessageBox.Show("Port phải là số từ 1 đến 65535.", "Cảnh báo", MessageBoxButton.OK, MessageBoxImage.Warning);
+            return;
+        }
+        if (!int.TryParse(AddressData, out int d) || d < 0 ||
+            !int.TryParse(AddressTrigger, out int trigger) || trigger < 0 ||
+            !int.TryParse(AddressAlive, out int alive) || alive < 0)
+        {
+            MessageBox.Show("Địa chỉ D / M phải là số nguyên không âm.", "Cảnh báo", MessageBoxButton.OK, MessageBoxImage.Warning);
+            return;
+        }
+        int minWords = (PLCService.CodeLength + 1) / 2;
+        if (!int.TryParse(TotalRegisterData, out int words) || words < minWords || words > 960)
+        {
+            MessageBox.Show($"Số word dữ liệu phải từ {minWords} đến 960 (mã gồm {PLCService.CodeLength} ký tự, 2 ký tự/word).",
+                "Cảnh báo", MessageBoxButton.OK, MessageBoxImage.Warning);
+            return;
+        }
+        if (trigger == alive)
+        {
+            MessageBox.Show("Bit Trigger và bit Alive không được trùng nhau.", "Cảnh báo", MessageBoxButton.OK, MessageBoxImage.Warning);
+            return;
+        }
+
         try
         {
             var data = _db.PLCSetting.ToList();
@@ -74,7 +105,7 @@ public partial class UCPLCSettingViewModel : ObservableObject
             var setting = new PLCSetting
             {
                 Name = "SetSuply",
-                IPAddress = IPAddress,
+                IPAddress = IPAddress.Trim(),
                 Port = int.Parse(Port),
                 AddressData = int.Parse(AddressData),
                 TotalRegisterData = int.Parse(TotalRegisterData),

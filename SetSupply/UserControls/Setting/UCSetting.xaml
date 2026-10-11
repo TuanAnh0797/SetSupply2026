@@ -49,6 +49,13 @@ BlurRadius="10" Opacity="0.5"/>
                     </StackPanel>
                 </Button>
 
+                <Button Command="{Binding ShowDailyPlanSettingCommand}">
+                    <StackPanel Orientation="Horizontal">
+                        <materialDesign:PackIcon Kind="CalendarEdit" Width="20" Height="20" VerticalAlignment="Center" Foreground="#2E7D32"/>
+                        <Label>Daily Plan</Label>
+                    </StackPanel>
+                </Button>
+
 
             </StackPanel>
             <ContentControl Grid.Row="1" Content="{Binding CurrentView}" />

@@ -51,7 +51,7 @@ namespace APP.ViewModels.FormViewModels
 
 
         [ObservableProperty]
-        private string statusConnectionPLC = "Connected";
+        private string statusConnectionPLC = "Disconnected";
 
         // Thanh tiêu đề: phụ đề + điều khiển riêng của trang (Home: ngày / ca / cài đặt)
         [ObservableProperty]
@@ -87,6 +87,10 @@ namespace APP.ViewModels.FormViewModels
 
             _plcService = pLCService;
 
+            // Đăng ký trước các lệnh return bên dưới (bản cũ không đăng ký khi chưa đăng nhập => luôn hiện "Connected")
+            _plcService.ConnectionChanged += _plcService_ConnectionChanged;
+            _plcService_ConnectionChanged(_plcService.IsConnected);
+
             if (currentUser != null)
             {
                 if (_userSession.Role == "Admin")
@@ -110,10 +114,6 @@ namespace APP.ViewModels.FormViewModels
             {
                 IsAdmin = Visibility.Collapsed;
             }
-
-
-            _plcService.ConnectionChanged += _plcService_ConnectionChanged;
-
         }
 
         private void _plcService_ConnectionChanged(bool obj)

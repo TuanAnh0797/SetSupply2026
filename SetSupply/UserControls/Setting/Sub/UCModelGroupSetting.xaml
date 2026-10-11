@@ -73,10 +73,31 @@
                 </Button>
             </StackPanel>
 
+            <StackPanel Orientation="Horizontal" Margin="0,0,0,8">
+                <Button Style="{StaticResource ToolButton}" Command="{Binding ChooseGroupImageCommand}" Background="#6A1B9A" BorderBrush="#6A1B9A">
+                    <StackPanel Orientation="Horizontal">
+                        <materialDesign:PackIcon Kind="ImageEdit" VerticalAlignment="Center" Margin="0,0,6,0"/>
+                        <TextBlock Text="Ảnh cho nhóm đang chọn"/>
+                    </StackPanel>
+                </Button>
+                <Button Style="{StaticResource ToolButton}" Command="{Binding AddModelImagesCommand}" Background="#6A1B9A" BorderBrush="#6A1B9A">
+                    <StackPanel Orientation="Horizontal">
+                        <materialDesign:PackIcon Kind="ImageMultiple" VerticalAlignment="Center" Margin="0,0,6,0"/>
+                        <TextBlock Text="Thêm ảnh từng model"/>
+                    </StackPanel>
+                </Button>
+                <Button Style="{StaticResource ToolButton}" Command="{Binding OpenImageFolderCommand}" Background="#607D8B" BorderBrush="#607D8B">
+                    <StackPanel Orientation="Horizontal">
+                        <materialDesign:PackIcon Kind="FolderOpen" VerticalAlignment="Center" Margin="0,0,6,0"/>
+                        <TextBlock Text="Mở thư mục ảnh"/>
+                    </StackPanel>
+                </Button>
+            </StackPanel>
+
             <TextBlock FontSize="13" Foreground="#5B6B82" TextWrapping="Wrap">
                 <Run Text="• Tiền tố model: model bắt đầu bằng tiền tố sẽ thuộc nhóm (nhiều tiền tố cách nhau bởi dấu phẩy). Để trống = nhóm &quot;Khác&quot; (gom các model còn lại)."/>
                 <LineBreak/>
-                <Run Text="• Kế hoạch theo ca: chọn &quot;Cả ngày&quot; ở Home sẽ cộng kế hoạch các ca đang dùng."/>
+                <Run Text="• Kế hoạch ở đây là MẶC ĐỊNH cho mọi ngày; muốn kế hoạch khác cho từng ngày dùng trang Daily Plan. Chọn &quot;Cả ngày&quot; ở Home sẽ cộng kế hoạch các ca đang dùng."/>
                 <LineBreak/>
                 <Run Text="• Ảnh model: đặt file &lt;tên model&gt;.png (hoặc &lt;tên nhóm&gt;.png) vào thư mục: "/>
                 <Run Text="{Binding ImageFolder, Mode=OneWay}" FontWeight="SemiBold"/>
