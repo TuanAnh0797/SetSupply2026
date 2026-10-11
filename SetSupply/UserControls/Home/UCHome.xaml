@@ -327,6 +327,15 @@
             </StackPanel>
 
             <StackPanel DockPanel.Dock="Right" Orientation="Horizontal" VerticalAlignment="Center">
+                <!-- Ngày đang xem có dữ liệu test (Cài đặt > Test Data) -->
+                <Border CornerRadius="4" Background="#FFF4E5" BorderBrush="#F5A623" BorderThickness="1" Padding="8,3" Margin="0,0,16,0"
+                        VerticalAlignment="Center" ToolTip="Dữ liệu test tạo ở Cài đặt > Test Data, xóa được ở đó"
+                        Visibility="{Binding HasTestData, Converter={StaticResource BoolToVis}}">
+                    <StackPanel Orientation="Horizontal">
+                        <materialDesign:PackIcon Kind="FlaskOutline" Width="18" Height="18" Foreground="#E08A00" VerticalAlignment="Center" Margin="0,0,6,0"/>
+                        <TextBlock Text="{Binding TestDataText}" FontSize="14" FontWeight="SemiBold" Foreground="#8A5300" VerticalAlignment="Center"/>
+                    </StackPanel>
+                </Border>
                 <TextBlock Text="{Binding LastUpdateText}" FontSize="14" Foreground="#5B6B82" VerticalAlignment="Center"/>
                 <Ellipse Width="12" Height="12" Margin="20,0,8,0" VerticalAlignment="Center">
                     <Ellipse.Style>

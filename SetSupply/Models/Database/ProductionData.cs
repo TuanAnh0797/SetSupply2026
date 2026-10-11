@@ -24,6 +24,11 @@ public class ProductionData
     [Required]
     public DateTime DateTimeInsert { get; set; } = DateTime.Now;
 
+    /// <summary>
+    /// Dữ liệu test (tạo ở Cài đặt > Test Data hoặc giả lập PLC) => xóa riêng được, không ảnh hưởng dữ liệu thật.
+    /// </summary>
+    public bool IsTest { get; set; }
+
     // ===== PROPERTIES TÍNH TOÁN (KHÔNG LƯU VÀO DB) =====
 
     /// <summary>

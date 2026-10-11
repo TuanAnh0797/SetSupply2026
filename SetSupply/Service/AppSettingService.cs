@@ -15,6 +15,14 @@ public class AppSettingService
     public const string ApplicationTitleKey = "ApplicationTitle";
     public const string DefaultApplicationTitle = "SetSupply Monitor";
 
+    // Tự động import file kế hoạch
+    public const string PlanImportFolderKey = "PlanImport.Folder";
+    public const string PlanImportEnabledKey = "PlanImport.Enabled";
+    /// <summary>Ca của app cho cột S.1,S.2,S.3 của file kế hoạch, VD "1,2,3" hoặc "1,0,2" (0 = bỏ qua).</summary>
+    public const string PlanShiftMapKey = "PlanImport.ShiftMap";
+    /// <summary>Tên sheet cần đọc trong file kế hoạch; rỗng = tự dò.</summary>
+    public const string PlanSheetNameKey = "PlanImport.SheetName";
+
     private readonly IServiceScopeFactory _scopeFactory;
 
     /// <summary>Phát khi 1 cài đặt được lưu. Tham số: key, value.</summary>
@@ -54,4 +62,35 @@ public class AppSettingService
     }
 
     public string ApplicationTitle => Get(ApplicationTitleKey, DefaultApplicationTitle);
+
+    public string PlanImportFolder => Get(PlanImportFolderKey, string.Empty);
+
+    public bool PlanImportEnabled => Get(PlanImportEnabledKey, "0") == "1";
+
+    /// <summary>
+    /// Tên sheet đọc trong file kế hoạch. Chưa cài => "Daily revise (3S)"; lưu chuỗi "*" => tự dò sheet.
+    /// </summary>
+    public string PlanSheetName
+    {
+        get
+        {
+            var value = Get(PlanSheetNameKey, PlanFileParser.DefaultSheetName).Trim();
+            return value == "*" ? string.Empty : value;
+        }
+    }
+
+    /// <summary>
+    /// [ca cho S.1, ca cho S.2, ca cho S.3]; mặc định 1,2,3.
+    /// </summary>
+    public int[] PlanShiftMap
+    {
+        get
+        {
+            var parts = Get(PlanShiftMapKey, "1,2,3").Split(',');
+            var map = new[] { 1, 2, 3 };
+            for (int i = 0; i < 3 && i < parts.Length; i++)
+                if (int.TryParse(parts[i].Trim(), out var v) && v >= 0 && v <= 3) map[i] = v;
+            return map;
+        }
+    }
 }

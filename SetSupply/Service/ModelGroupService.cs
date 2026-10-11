@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 namespace SetSupply.Service;
 
 /// <summary>
-/// Quản lý nhóm model (gom các model cùng nhóm).
+/// Nhóm model: gán từng model vào nhóm (bảng ModelMappings). Model chưa gán => nhóm "Khác".
 /// Dùng DbContext riêng cho mỗi lần gọi (tránh xung đột với DbContext singleton dùng chung).
 /// </summary>
 public class ModelGroupService
@@ -24,35 +24,57 @@ public class ModelGroupService
         _scopeFactory = scopeFactory;
     }
 
-    public async Task<List<ModelGroup>> GetAllAsync()
+    public async Task<List<ModelMapping>> GetMappingsAsync()
     {
         using var scope = _scopeFactory.CreateScope();
         var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-        return await db.ModelGroups.AsNoTracking()
-            .OrderBy(g => g.SortOrder).ThenBy(g => g.Name)
+        return await db.ModelMappings.AsNoTracking()
+            .OrderBy(m => m.SortOrder).ThenBy(m => m.GroupName).ThenBy(m => m.ModelName)
             .ToListAsync();
     }
 
     /// <summary>
-    /// Ghi đè toàn bộ danh sách nhóm.
+    /// Danh sách tên nhóm theo thứ tự hiển thị; nhóm "Khác" luôn ở cuối.
     /// </summary>
-    public async Task SaveAllAsync(IEnumerable<ModelGroup> groups)
-    {
-        using var scope = _scopeFactory.CreateScope();
-        var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+    public async Task<List<string>> GetGroupNamesAsync() => GetGroupNames(await GetMappingsAsync());
 
-        db.ModelGroups.RemoveRange(await db.ModelGroups.ToListAsync());
-        db.ModelGroups.AddRange(groups.Select(g => new ModelGroup
-        {
-            Name = g.Name.Trim(),
-            Prefixes = g.Prefixes?.Trim() ?? string.Empty,
-            SortOrder = g.SortOrder
-        }));
-        await db.SaveChangesAsync();
+    public static List<string> GetGroupNames(IEnumerable<ModelMapping> mappings)
+    {
+        var names = mappings
+            .GroupBy(m => m.GroupName, StringComparer.OrdinalIgnoreCase)
+            .OrderBy(g => g.Min(m => m.SortOrder)).ThenBy(g => g.Key)
+            .Select(g => g.First().GroupName)
+            .Where(n => !IsOther(n))
+            .ToList();
+        names.Add(OtherGroupName);
+        return names;
     }
 
     /// <summary>
-    /// Danh sách model đã sản xuất trong N ngày gần nhất (dùng để tự tạo nhóm).
+    /// Ghi đè toàn bộ bảng gán model.
+    /// </summary>
+    public async Task SaveMappingsAsync(IEnumerable<ModelMapping> mappings)
+    {
+        using var scope = _scopeFactory.CreateScope();
+        var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+        using var transaction = await db.Database.BeginTransactionAsync();
+
+        db.ModelMappings.RemoveRange(await db.ModelMappings.ToListAsync());
+        await db.SaveChangesAsync();
+
+        db.ModelMappings.AddRange(mappings.Select(m => new ModelMapping
+        {
+            GroupName = m.GroupName.Trim(),
+            ModelName = m.ModelName.Trim(),
+            ImagePath = m.ImagePath?.Trim() ?? string.Empty,
+            SortOrder = m.SortOrder
+        }));
+        await db.SaveChangesAsync();
+        await transaction.CommitAsync();
+    }
+
+    /// <summary>
+    /// Danh sách model đã sản xuất trong N ngày gần nhất.
     /// </summary>
     public async Task<List<string>> GetRecentModelsAsync(int days = 30)
     {
@@ -68,25 +90,26 @@ public class ModelGroupService
     }
 
     /// <summary>
-    /// Tìm nhóm cho model: ưu tiên tiền tố dài nhất, không khớp => nhóm "Khác" (Prefixes rỗng).
+    /// Bảng tra model -> dòng gán (không phân biệt hoa/thường).
     /// </summary>
-    public static ModelGroup? Match(string model, IReadOnlyList<ModelGroup> groups)
+    public static Dictionary<string, ModelMapping> ToLookup(IEnumerable<ModelMapping> mappings)
     {
-        ModelGroup? best = null;
-        int bestLength = -1;
-
-        foreach (var group in groups)
-        {
-            foreach (var prefix in group.GetPrefixes())
-            {
-                if (prefix.Length > bestLength && model.StartsWith(prefix, StringComparison.OrdinalIgnoreCase))
-                {
-                    best = group;
-                    bestLength = prefix.Length;
-                }
-            }
-        }
-
-        return best ?? groups.FirstOrDefault(g => g.IsCatchAll);
+        var lookup = new Dictionary<string, ModelMapping>(StringComparer.OrdinalIgnoreCase);
+        foreach (var m in mappings)
+            lookup.TryAdd(m.ModelName.Trim(), m);
+        return lookup;
     }
+
+    /// <summary>
+    /// Nhóm của model; chưa gán => "Khác".
+    /// </summary>
+    public static string ResolveGroup(string model, IReadOnlyDictionary<string, ModelMapping> lookup)
+    {
+        return lookup.TryGetValue(model.Trim(), out var mapping) && !string.IsNullOrWhiteSpace(mapping.GroupName) && !IsOther(mapping.GroupName)
+            ? mapping.GroupName
+            : OtherGroupName;
+    }
+
+    public static bool IsOther(string groupName) =>
+        string.Equals(groupName.Trim(), OtherGroupName, StringComparison.OrdinalIgnoreCase);
 }

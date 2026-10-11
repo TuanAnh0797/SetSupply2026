@@ -15,6 +15,10 @@ public partial class UCDailyPlanSetting : UserControl
         _viewModel = App.ServiceProvider.GetRequiredService<UCDailyPlanSettingViewModel>();
         DataContext = _viewModel;
 
-        Loaded += async (_, _) => await _viewModel.Load();
+        Loaded += async (_, _) =>
+        {
+            await _viewModel.Load();
+            await _viewModel.LoadLogsCommand.ExecuteAsync(null);
+        };
     }
 }

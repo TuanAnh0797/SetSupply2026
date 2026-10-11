@@ -66,32 +66,95 @@
             </Button>
         </StackPanel>
 
-        <!-- Import / Export -->
-        <Border Grid.Row="2" Background="#F4F7FC" BorderBrush="#C9D6E8" BorderThickness="1" CornerRadius="4" Padding="10,8" Margin="0,0,0,10">
-            <StackPanel Orientation="Horizontal">
-                <Button Style="{StaticResource ToolButton}" Command="{Binding ImportCommand}" Background="#00897B" BorderBrush="#00897B">
+        <!-- Import file kế hoạch / Export + Tự động import -->
+        <StackPanel Grid.Row="2" Margin="0,0,0,10">
+            <Border Background="#F4F7FC" BorderBrush="#C9D6E8" BorderThickness="1" CornerRadius="4" Padding="10,8" Margin="0,0,0,8">
+                <StackPanel Orientation="Horizontal">
+                    <Button Style="{StaticResource ToolButton}" Command="{Binding ImportCommand}" Background="#00897B" BorderBrush="#00897B"
+                            ToolTip="File kế hoạch sản xuất (sheet Daily revise): chỉ lấy dòng Plan của model NR-, số theo ca ở cột S.1 / S.2 / S.3">
+                        <StackPanel Orientation="Horizontal">
+                            <materialDesign:PackIcon Kind="FileImport" VerticalAlignment="Center" Margin="0,0,6,0"/>
+                            <TextBlock Text="Import file kế hoạch..."/>
+                        </StackPanel>
+                    </Button>
+                    <Rectangle Width="1" Fill="#C9D6E8" Margin="6,4,16,4"/>
+                    <TextBlock Text="Export từ" FontSize="14" VerticalAlignment="Center" Margin="0,0,8,0"/>
+                    <DatePicker SelectedDate="{Binding ExportFrom}" Width="130" FontSize="14" VerticalAlignment="Center"
+                                materialDesign:CalendarAssist.HeaderBackground="#1D4F96"/>
+                    <TextBlock Text="đến" FontSize="14" VerticalAlignment="Center" Margin="10,0,8,0"/>
+                    <DatePicker SelectedDate="{Binding ExportTo}" Width="130" FontSize="14" VerticalAlignment="Center" Margin="0,0,14,0"
+                                materialDesign:CalendarAssist.HeaderBackground="#1D4F96"/>
+                    <Button Style="{StaticResource ToolButton}" Command="{Binding ExportCommand}" Background="#00897B" BorderBrush="#00897B">
+                        <StackPanel Orientation="Horizontal">
+                            <materialDesign:PackIcon Kind="FileExport" VerticalAlignment="Center" Margin="0,0,6,0"/>
+                            <TextBlock Text="Export"/>
+                        </StackPanel>
+                    </Button>
+                    <TextBlock Text="Import: chỉ lấy dòng Plan của model NR-, cộng theo nhóm model. Export: Ngày | Nhóm model | Kế hoạch Ca 1..3."
+                               FontSize="13" Foreground="#5B6B82" VerticalAlignment="Center" Margin="6,0,0,0"/>
+                </StackPanel>
+            </Border>
+
+            <Border Background="#F1F8F4" BorderBrush="#B7DCC4" BorderThickness="1" CornerRadius="4" Padding="10,8">
+                <StackPanel>
                     <StackPanel Orientation="Horizontal">
-                        <materialDesign:PackIcon Kind="FileImport" VerticalAlignment="Center" Margin="0,0,6,0"/>
-                        <TextBlock Text="Import (nhiều ngày)"/>
+                        <CheckBox IsChecked="{Binding AutoImportEnabled}" Content="Tự động import file mới trong thư mục"
+                                  FontSize="14" FontWeight="SemiBold" VerticalAlignment="Center" Margin="0,0,14,0"/>
+                        <TextBox Text="{Binding AutoImportFolder, UpdateSourceTrigger=PropertyChanged}" Width="420" FontSize="14"
+                                 VerticalAlignment="Center" materialDesign:HintAssist.Hint="Đường dẫn thư mục chứa file kế hoạch"/>
+                        <Button Style="{StaticResource ToolButton}" Command="{Binding BrowseFolderCommand}" Background="#607D8B" BorderBrush="#607D8B"
+                                Margin="8,0,16,0" Content="Chọn..."/>
+
+                        <TextBlock Text="Sheet" FontSize="14" VerticalAlignment="Center" Margin="0,0,6,0"/>
+                        <TextBox Text="{Binding PlanSheetName, UpdateSourceTrigger=PropertyChanged}" Width="150" FontSize="14"
+                                 VerticalAlignment="Center" Margin="0,0,16,0"
+                                 ToolTip="Tên sheet cần đọc trong file kế hoạch (để trống = tự tìm sheet đúng cấu trúc)"/>
+                        <TextBlock Text="S.1 →" FontSize="14" VerticalAlignment="Center" Margin="0,0,4,0"/>
+                        <ComboBox ItemsSource="{Binding ShiftChoices}" DisplayMemberPath="Value" SelectedValuePath="Key"
+                                  SelectedValue="{Binding ShiftForS1}" Width="80" FontSize="14" VerticalAlignment="Center" Margin="0,0,10,0"/>
+                        <TextBlock Text="S.2 →" FontSize="14" VerticalAlignment="Center" Margin="0,0,4,0"/>
+                        <ComboBox ItemsSource="{Binding ShiftChoices}" DisplayMemberPath="Value" SelectedValuePath="Key"
+                                  SelectedValue="{Binding ShiftForS2}" Width="80" FontSize="14" VerticalAlignment="Center" Margin="0,0,10,0"/>
+                        <TextBlock Text="S.3 →" FontSize="14" VerticalAlignment="Center" Margin="0,0,4,0"/>
+                        <ComboBox ItemsSource="{Binding ShiftChoices}" DisplayMemberPath="Value" SelectedValuePath="Key"
+                                  SelectedValue="{Binding ShiftForS3}" Width="80" FontSize="14" VerticalAlignment="Center" Margin="0,0,16,0"/>
+
+                        <Button Style="{StaticResource ToolButton}" Command="{Binding SaveAutoImportCommand}" Background="#2E7D32" BorderBrush="#2E7D32">
+                            <StackPanel Orientation="Horizontal">
+                                <materialDesign:PackIcon Kind="ContentSave" VerticalAlignment="Center" Margin="0,0,6,0"/>
+                                <TextBlock Text="Lưu cài đặt"/>
+                            </StackPanel>
+                        </Button>
+                        <Button Style="{StaticResource ToolButton}" Command="{Binding ScanNowCommand}" Background="#0288D1" BorderBrush="#0288D1">
+                            <StackPanel Orientation="Horizontal">
+                                <materialDesign:PackIcon Kind="FolderSync" VerticalAlignment="Center" Margin="0,0,6,0"/>
+                                <TextBlock Text="Quét ngay"/>
+                            </StackPanel>
+                        </Button>
                     </StackPanel>
-                </Button>
-                <Rectangle Width="1" Fill="#C9D6E8" Margin="6,4,16,4"/>
-                <TextBlock Text="Export từ" FontSize="14" VerticalAlignment="Center" Margin="0,0,8,0"/>
-                <DatePicker SelectedDate="{Binding ExportFrom}" Width="130" FontSize="14" VerticalAlignment="Center"
-                            materialDesign:CalendarAssist.HeaderBackground="#1D4F96"/>
-                <TextBlock Text="đến" FontSize="14" VerticalAlignment="Center" Margin="10,0,8,0"/>
-                <DatePicker SelectedDate="{Binding ExportTo}" Width="130" FontSize="14" VerticalAlignment="Center" Margin="0,0,14,0"
-                            materialDesign:CalendarAssist.HeaderBackground="#1D4F96"/>
-                <Button Style="{StaticResource ToolButton}" Command="{Binding ExportCommand}" Background="#00897B" BorderBrush="#00897B">
-                    <StackPanel Orientation="Horizontal">
-                        <materialDesign:PackIcon Kind="FileExport" VerticalAlignment="Center" Margin="0,0,6,0"/>
-                        <TextBlock Text="Export"/>
-                    </StackPanel>
-                </Button>
-                <TextBlock Text="File Excel/CSV, cột: Ngày | Nhóm model | Kế hoạch Ca 1 | Kế hoạch Ca 2 | Kế hoạch Ca 3. Export ra để làm file mẫu."
-                           FontSize="13" Foreground="#5B6B82" VerticalAlignment="Center" Margin="6,0,0,0"/>
-            </StackPanel>
-        </Border>
+
+                    <TextBlock Text="{Binding AutoImportStatus}" FontSize="13" FontWeight="SemiBold" Foreground="#1E7B34" Margin="0,6,0,0"/>
+                    <TextBlock FontSize="12" Foreground="#5B6B82" TextWrapping="Wrap" Margin="0,2,0,0"
+                               Text="Chỉ đọc sheet có tên ở ô Sheet (áp dụng cho cả Import thủ công); file không có sheet đó sẽ báo lỗi trong nhật ký. Mỗi phút (và ngay khi có file chép vào) chương trình kiểm tra thư mục; file .xlsx / .xlsm mới hoặc vừa bị thay đổi sẽ được import (file mới nhất được ghi sau cùng). S.1 / S.2 / S.3 → chọn ca tương ứng của chương trình (VD 2 ca: S.1 → Ca 1, S.3 → Ca 2)."/>
+
+                    <Expander Header="Nhật ký import (30 lần gần nhất)" Margin="0,4,0,0" Padding="0" FontSize="13"
+                              materialDesign:ExpanderAssist.HorizontalHeaderPadding="0,4">
+                        <DataGrid ItemsSource="{Binding ImportLogs}" AutoGenerateColumns="False" IsReadOnly="True" MaxHeight="170"
+                                  HeadersVisibility="Column" FontSize="12" GridLinesVisibility="Horizontal"
+                                  materialDesign:DataGridAssist.CellPadding="6,3" materialDesign:DataGridAssist.ColumnHeaderPadding="6,4">
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Header="Thời gian" Binding="{Binding ImportedAt, StringFormat=dd/MM/yyyy HH:mm:ss}" Width="140"/>
+                                <DataGridTextColumn Header="Nguồn" Binding="{Binding Source}" Width="80"/>
+                                <DataGridCheckBoxColumn Header="OK" Binding="{Binding Success}" Width="45"/>
+                                <DataGridTextColumn Header="File" Binding="{Binding FileName}" Width="220"/>
+                                <DataGridTextColumn Header="Ngày" Binding="{Binding DaysImported}" Width="55"/>
+                                <DataGridTextColumn Header="Ghi chú" Binding="{Binding Message}" Width="*"/>
+                            </DataGrid.Columns>
+                        </DataGrid>
+                    </Expander>
+                </StackPanel>
+            </Border>
+        </StackPanel>
 
         <StackPanel Grid.Row="3" Margin="0,0,0,10">
             <TextBlock Text="{Binding StatusText}" FontSize="14" FontWeight="SemiBold" Foreground="#1D4F96" TextWrapping="Wrap"/>

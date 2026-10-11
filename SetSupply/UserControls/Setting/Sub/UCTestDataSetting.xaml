@@ -1,0 +1,172 @@
+<UserControl x:Class="SetSupply.UserControls.Setting.Sub.UCTestDataSetting"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             mc:Ignorable="d"
+             d:DesignHeight="700" d:DesignWidth="1200">
+
+    <UserControl.Resources>
+        <Style x:Key="ToolButton" TargetType="Button" BasedOn="{StaticResource MaterialDesignRaisedButton}">
+            <Setter Property="Height" Value="38"/>
+            <Setter Property="Margin" Value="0,0,10,0"/>
+            <Setter Property="Background" Value="#1D4F96"/>
+            <Setter Property="BorderBrush" Value="#1D4F96"/>
+        </Style>
+        <Style x:Key="Section" TargetType="Border">
+            <Setter Property="Background" Value="#F4F7FC"/>
+            <Setter Property="BorderBrush" Value="#C9D6E8"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="CornerRadius" Value="4"/>
+            <Setter Property="Padding" Value="12,10"/>
+            <Setter Property="Margin" Value="0,0,0,10"/>
+        </Style>
+        <Style x:Key="SectionTitle" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="16"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="Foreground" Value="#1D4F96"/>
+            <Setter Property="Margin" Value="0,0,0,8"/>
+        </Style>
+        <Style x:Key="Label" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="Margin" Value="0,0,8,0"/>
+        </Style>
+    </UserControl.Resources>
+
+    <ScrollViewer VerticalScrollBarVisibility="Auto">
+        <StackPanel Margin="15">
+            <TextBlock Text="Dữ liệu test" FontSize="22" FontWeight="Bold" Foreground="#1D4F96" Margin="0,0,0,4"/>
+            <TextBlock FontSize="13" Foreground="#5B6B82" TextWrapping="Wrap" Margin="0,0,0,10"
+                       Text="Dữ liệu test được đánh dấu riêng (serial dạng T000123) và hiển thị trên Home như dữ liệu thật (Home có nhãn cảnh báo khi đang có dữ liệu test). Nút xóa CHỈ xóa dữ liệu test."/>
+
+            <!-- Trạng thái + xóa -->
+            <Border Style="{StaticResource Section}" Background="#FFF4E5" BorderBrush="#F5C27A">
+                <StackPanel Orientation="Horizontal">
+                    <materialDesign:PackIcon Kind="FlaskOutline" Width="22" Height="22" Foreground="#E08A00" VerticalAlignment="Center" Margin="0,0,8,0"/>
+                    <TextBlock Text="{Binding TestCountText}" FontSize="15" FontWeight="SemiBold" Foreground="#8A5300"
+                               VerticalAlignment="Center" Margin="0,0,20,0"/>
+                    <Button Style="{StaticResource ToolButton}" Command="{Binding RefreshCountCommand}" Background="#607D8B" BorderBrush="#607D8B">
+                        <StackPanel Orientation="Horizontal">
+                            <materialDesign:PackIcon Kind="Refresh" VerticalAlignment="Center" Margin="0,0,6,0"/>
+                            <TextBlock Text="Đếm lại"/>
+                        </StackPanel>
+                    </Button>
+                    <Button Style="{StaticResource ToolButton}" Command="{Binding DeleteRangeCommand}" Background="#E53935" BorderBrush="#E53935"
+                            ToolTip="Xóa dữ liệu test của các ngày sản xuất trong khoảng 'Từ ngày - Đến ngày' bên dưới">
+                        <StackPanel Orientation="Horizontal">
+                            <materialDesign:PackIcon Kind="CalendarRemove" VerticalAlignment="Center" Margin="0,0,6,0"/>
+                            <TextBlock Text="Xóa test trong khoảng ngày"/>
+                        </StackPanel>
+                    </Button>
+                    <Button Style="{StaticResource ToolButton}" Command="{Binding DeleteAllCommand}" Background="#B71C1C" BorderBrush="#B71C1C">
+                        <StackPanel Orientation="Horizontal">
+                            <materialDesign:PackIcon Kind="DeleteForever" VerticalAlignment="Center" Margin="0,0,6,0"/>
+                            <TextBlock Text="Xóa tất cả dữ liệu test"/>
+                        </StackPanel>
+                    </Button>
+                </StackPanel>
+            </Border>
+
+            <!-- Tạo hàng loạt -->
+            <Border Style="{StaticResource Section}">
+                <StackPanel>
+                    <TextBlock Text="1. Tạo dữ liệu test hàng loạt" Style="{StaticResource SectionTitle}"/>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <StackPanel Grid.Column="0" Margin="0,0,20,0">
+                            <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
+                                <TextBlock Text="Từ ngày" Style="{StaticResource Label}" Width="110"/>
+                                <DatePicker SelectedDate="{Binding FromDate}" Width="140" FontSize="14" materialDesign:CalendarAssist.HeaderBackground="#1D4F96"/>
+                                <TextBlock Text="đến" Style="{StaticResource Label}" Margin="12,0,8,0"/>
+                                <DatePicker SelectedDate="{Binding ToDate}" Width="140" FontSize="14" materialDesign:CalendarAssist.HeaderBackground="#1D4F96"/>
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
+                                <TextBlock Text="Số sp/giờ/model" Style="{StaticResource Label}" Width="110"/>
+                                <TextBox Text="{Binding MinPerHour, UpdateSourceTrigger=PropertyChanged}" Width="60" FontSize="14" HorizontalContentAlignment="Center"/>
+                                <TextBlock Text="đến" Style="{StaticResource Label}" Margin="12,0,8,0"/>
+                                <TextBox Text="{Binding MaxPerHour, UpdateSourceTrigger=PropertyChanged}" Width="60" FontSize="14" HorizontalContentAlignment="Center"/>
+                                <TextBlock Text="(ngẫu nhiên)" Style="{StaticResource Label}" Foreground="#5B6B82" Margin="10,0,0,0"/>
+                            </StackPanel>
+                            <CheckBox IsChecked="{Binding OnlyUntilNow}" Content="Chỉ tạo tới giờ hiện tại (không tạo dữ liệu tương lai)"
+                                      FontSize="14" Margin="0,0,0,12"/>
+                            <StackPanel Orientation="Horizontal">
+                                <Button Style="{StaticResource ToolButton}" Command="{Binding GenerateCommand}" Background="#2E7D32" BorderBrush="#2E7D32">
+                                    <StackPanel Orientation="Horizontal">
+                                        <materialDesign:PackIcon Kind="DatabasePlus" VerticalAlignment="Center" Margin="0,0,6,0"/>
+                                        <TextBlock Text="Tạo dữ liệu test"/>
+                                    </StackPanel>
+                                </Button>
+                                <Button Style="{StaticResource ToolButton}" Command="{Binding LoadModelsCommand}" Background="#607D8B" BorderBrush="#607D8B">
+                                    <StackPanel Orientation="Horizontal">
+                                        <materialDesign:PackIcon Kind="FormatListBulleted" VerticalAlignment="Center" Margin="0,0,6,0"/>
+                                        <TextBlock Text="Lấy model từ Model Group"/>
+                                    </StackPanel>
+                                </Button>
+                            </StackPanel>
+                        </StackPanel>
+                        <DockPanel Grid.Column="1">
+                            <TextBlock DockPanel.Dock="Top" Text="Danh sách model (mỗi dòng 1 model, dùng cho cả giả lập PLC bên dưới)"
+                                       FontSize="13" Foreground="#5B6B82" Margin="0,0,0,4"/>
+                            <TextBox Text="{Binding ModelsText, UpdateSourceTrigger=PropertyChanged}" AcceptsReturn="True" TextWrapping="NoWrap"
+                                     VerticalScrollBarVisibility="Auto" Height="150" FontFamily="Consolas" FontSize="13"
+                                     Background="White" BorderBrush="#C9D6E8" BorderThickness="1" Padding="6"
+                                     Style="{x:Null}"/>
+                        </DockPanel>
+                    </Grid>
+                </StackPanel>
+            </Border>
+
+            <!-- Giả lập PLC -->
+            <Border Style="{StaticResource Section}">
+                <StackPanel>
+                    <TextBlock Text="2. Giả lập PLC gửi mã (đi qua đúng đường xử lý mã thật: lưu DB, ô Codeback, Home realtime)" Style="{StaticResource SectionTitle}"/>
+                    <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
+                        <TextBlock Text="Mã" Style="{StaticResource Label}"/>
+                        <TextBox Text="{Binding SimulateCode, UpdateSourceTrigger=PropertyChanged}" Width="280" FontFamily="Consolas" FontSize="16"
+                                 VerticalAlignment="Center" Margin="0,0,10,0" ToolTip="12 ký tự model + 7 ký tự serial (giống mã PLC)"/>
+                        <Button Style="{StaticResource ToolButton}" Command="{Binding NewCodeCommand}" Background="#607D8B" BorderBrush="#607D8B">
+                            <StackPanel Orientation="Horizontal">
+                                <materialDesign:PackIcon Kind="Dice5" VerticalAlignment="Center" Margin="0,0,6,0"/>
+                                <TextBlock Text="Mã ngẫu nhiên"/>
+                            </StackPanel>
+                        </Button>
+                        <Button Style="{StaticResource ToolButton}" Command="{Binding SendCodeCommand}" Background="#0288D1" BorderBrush="#0288D1">
+                            <StackPanel Orientation="Horizontal">
+                                <materialDesign:PackIcon Kind="Send" VerticalAlignment="Center" Margin="0,0,6,0"/>
+                                <TextBlock Text="Gửi 1 mã"/>
+                            </StackPanel>
+                        </Button>
+
+                        <Rectangle Width="1" Fill="#C9D6E8" Margin="6,4,16,4"/>
+                        <TextBlock Text="Tự gửi mỗi" Style="{StaticResource Label}"/>
+                        <TextBox Text="{Binding AutoSendSeconds, UpdateSourceTrigger=PropertyChanged}" Width="50" FontSize="14"
+                                 HorizontalContentAlignment="Center" VerticalAlignment="Center"/>
+                        <TextBlock Text="giây" Style="{StaticResource Label}" Margin="8,0,10,0"/>
+                        <Button Command="{Binding ToggleAutoSendCommand}" Height="38">
+                            <Button.Style>
+                                <Style TargetType="Button" BasedOn="{StaticResource MaterialDesignRaisedButton}">
+                                    <Setter Property="Background" Value="#2E7D32"/>
+                                    <Setter Property="BorderBrush" Value="#2E7D32"/>
+                                    <Setter Property="Content" Value="Bắt đầu tự gửi"/>
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding IsAutoSending}" Value="True">
+                                            <Setter Property="Background" Value="#E53935"/>
+                                            <Setter Property="BorderBrush" Value="#E53935"/>
+                                            <Setter Property="Content" Value="Dừng tự gửi"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Button.Style>
+                        </Button>
+                    </StackPanel>
+                    <TextBlock Text="{Binding SimulateResult}" FontFamily="Consolas" FontSize="14" Foreground="#15305A"/>
+                </StackPanel>
+            </Border>
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>

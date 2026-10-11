@@ -252,13 +252,35 @@ public class PLCService
         string data = ((string)await Plc.ReadData(stream, CommandTimeoutMs, PLC.PlcDeviceType.D,
                                                    config.AddressData, config.TotalRegisterData, PLC.DataType.ASCII)).TrimEnd();
 
+        var status = await ProcessCodeAsync(data, isTest: false);
+        if (status == PlcReadStatus.SaveError)
+        {
+            // Lỗi database: không reset trigger => lần quét sau thử lưu lại
+            await DelaySafe(SaveRetryDelay, token);
+            return;
+        }
+
+        // Đã lưu / trùng / sai mã => xác nhận để PLC không bị kẹt chờ
+        await Plc.WriteBit(stream, CommandTimeoutMs, PLC.PlcDeviceType.M, config.AddressTrigger, false);
+    }
+
+    /// <summary>
+    /// Giả lập PLC gửi 1 mã (trang Test Data): đi qua đúng đường xử lý như mã thật, bản ghi được đánh dấu dữ liệu test.
+    /// </summary>
+    public Task<PlcReadStatus> SimulateReadAsync(string code) => ProcessCodeAsync((code ?? string.Empty).TrimEnd(), isTest: true);
+
+    /// <summary>
+    /// Xử lý 1 mã đọc được: kiểm tra định dạng (12 ký tự model + 7 ký tự serial) => lưu database => phát sự kiện.
+    /// </summary>
+    private async Task<PlcReadStatus> ProcessCodeAsync(string data, bool isTest)
+    {
+        string tag = isTest ? "[TEST] " : string.Empty;
+
         if (data.Length < CodeLength)
         {
-            // Mã sai định dạng: ghi log rồi vẫn xác nhận để PLC không bị kẹt chờ
-            PlcLogger.Warn($"Bỏ qua mã sai định dạng (cần >= {CodeLength} ký tự): '{data}'");
-            await Plc.WriteBit(stream, CommandTimeoutMs, PLC.PlcDeviceType.M, config.AddressTrigger, false);
+            PlcLogger.Warn($"{tag}Bỏ qua mã sai định dạng (cần >= {CodeLength} ký tự): '{data}'");
             RaiseCodeRead(data, PlcReadStatus.Invalid);
-            return;
+            return PlcReadStatus.Invalid;
         }
 
         string model = data.Substring(0, ModelLength).Trim();
@@ -267,20 +289,18 @@ public class PLCService
         bool inserted;
         try
         {
-            inserted = await _productionService.TryInsertProductionAsync(data, model, serial);
+            inserted = await _productionService.TryInsertProductionAsync(data, model, serial, isTest);
         }
         catch (Exception ex)
         {
-            // Lỗi database: không reset trigger => lần quét sau thử lưu lại
-            PlcLogger.ErrorThrottled($"Lưu database lỗi, sẽ thử lại ({data}): {ex.GetBaseException().Message}");
+            PlcLogger.ErrorThrottled($"{tag}Lưu database lỗi, sẽ thử lại ({data}): {ex.GetBaseException().Message}");
             RaiseCodeRead(data, PlcReadStatus.SaveError);
-            await DelaySafe(SaveRetryDelay, token);
-            return;
+            return PlcReadStatus.SaveError;
         }
 
-        await Plc.WriteBit(stream, CommandTimeoutMs, PLC.PlcDeviceType.M, config.AddressTrigger, false);
-        PlcLogger.Info(inserted ? $"Nhận: {data}" : $"Trùng (bỏ qua): {data}");
-        RaiseCodeRead(data, inserted ? PlcReadStatus.Saved : PlcReadStatus.Duplicate);
+        PlcLogger.Info(tag + (inserted ? $"Nhận: {data}" : $"Trùng (bỏ qua): {data}"));
+        var status = inserted ? PlcReadStatus.Saved : PlcReadStatus.Duplicate;
+        RaiseCodeRead(data, status);
 
         if (inserted)
         {
@@ -293,6 +313,7 @@ public class PLCService
                 PlcLogger.Error($"Lỗi xử lý DataReceived: {ex.Message}");
             }
         }
+        return status;
     }
 
     private void RaiseCodeRead(string code, PlcReadStatus status)

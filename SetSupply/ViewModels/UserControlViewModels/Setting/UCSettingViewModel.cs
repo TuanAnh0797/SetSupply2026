@@ -39,6 +39,11 @@ public partial class UCSettingViewModel : ObservableObject
         CurrentView = App.ServiceProvider.GetRequiredService<UCModelGroupSetting>();
     }
     [RelayCommand]
+    private void ShowTestDataSetting()
+    {
+        CurrentView = App.ServiceProvider.GetRequiredService<UCTestDataSetting>();
+    }
+    [RelayCommand]
     private void ShowGeneralSetting()
     {
         CurrentView = App.ServiceProvider.GetRequiredService<UCGeneralSetting>();

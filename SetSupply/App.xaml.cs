@@ -50,6 +50,7 @@ namespace APP
             var plcService = App.ServiceProvider.GetRequiredService<PLCService>();
             historyService.Stop();
             plcService.Stop();
+            App.ServiceProvider.GetRequiredService<PlanImportService>().Stop();
             base.OnExit(e);
         }
 
@@ -94,6 +95,8 @@ namespace APP
             services.AddSingleton<ModelGroupService>();
             services.AddSingleton<ProductionPlanService>();
             services.AddSingleton<AppSettingService>();
+            services.AddSingleton<PlanImportService>();
+            services.AddSingleton<TestDataService>();
             services.AddSingleton<ILocalizationService, LocalizationService>();
 
             // ViewModels & UserControls
@@ -128,6 +131,8 @@ namespace APP
             services.AddSingleton<UCDailyPlanSetting>();
             services.AddSingleton<UCGeneralSettingViewModel>();
             services.AddSingleton<UCGeneralSetting>();
+            services.AddSingleton<UCTestDataSettingViewModel>();
+            services.AddSingleton<UCTestDataSetting>();
 
             //ManagementUser
             services.AddSingleton<UserManagementViewModel>();
@@ -160,6 +165,9 @@ namespace APP
             // Trong OnStartup hoặc sau khi build ServiceProvider
             var historyService = App.ServiceProvider.GetRequiredService<ShiftHistoryBackgroundService>();
             historyService.Start();
+
+            // Tự động import file kế hoạch mới trong thư mục (Cài đặt > Daily Plan)
+            App.ServiceProvider.GetRequiredService<PlanImportService>().Start();
 
 
             base.OnStartup(e);
@@ -223,16 +231,33 @@ namespace APP
         /// </summary>
         private static async Task EnsureSchemaUpdatesAsync(AppDbContext dbContext)
         {
+            // Nhóm model: gán trực tiếp model -> nhóm (thay cho bảng ModelGroups theo tiền tố của bản trước)
             await dbContext.Database.ExecuteSqlRawAsync(@"
-                CREATE TABLE IF NOT EXISTS ""ModelGroups"" (
-                    ""Id"" INTEGER NOT NULL CONSTRAINT ""PK_ModelGroups"" PRIMARY KEY AUTOINCREMENT,
-                    ""Name"" TEXT NOT NULL,
-                    ""Prefixes"" TEXT NOT NULL DEFAULT '',
+                CREATE TABLE IF NOT EXISTS ""ModelMappings"" (
+                    ""Id"" INTEGER NOT NULL CONSTRAINT ""PK_ModelMappings"" PRIMARY KEY AUTOINCREMENT,
+                    ""GroupName"" TEXT NOT NULL,
+                    ""ModelName"" TEXT NOT NULL,
+                    ""ImagePath"" TEXT NOT NULL DEFAULT '',
                     ""SortOrder"" INTEGER NOT NULL DEFAULT 0
                 );");
+            await dbContext.Database.ExecuteSqlRawAsync(@"
+                CREATE UNIQUE INDEX IF NOT EXISTS ""IX_ModelMappings_ModelName"" ON ""ModelMappings"" (""ModelName"");");
 
-            // Bản trước có kế hoạch theo ca trong ModelGroups => bỏ (kế hoạch chỉ còn ở ProductionPlans)
-            await DropColumnsIfExistAsync(dbContext, "ModelGroups", "PlanShift1", "PlanShift2", "PlanShift3");
+            await dbContext.Database.ExecuteSqlRawAsync(@"
+                CREATE TABLE IF NOT EXISTS ""PlanImportLogs"" (
+                    ""Id"" INTEGER NOT NULL CONSTRAINT ""PK_PlanImportLogs"" PRIMARY KEY AUTOINCREMENT,
+                    ""FilePath"" TEXT NOT NULL,
+                    ""FileName"" TEXT NOT NULL,
+                    ""FileSize"" INTEGER NOT NULL,
+                    ""FileLastWrite"" TEXT NOT NULL,
+                    ""ImportedAt"" TEXT NOT NULL,
+                    ""Source"" TEXT NOT NULL,
+                    ""Success"" INTEGER NOT NULL,
+                    ""DaysImported"" INTEGER NOT NULL,
+                    ""Message"" TEXT NOT NULL
+                );");
+            await dbContext.Database.ExecuteSqlRawAsync(@"
+                CREATE INDEX IF NOT EXISTS ""IX_PlanImportLogs_FilePath"" ON ""PlanImportLogs"" (""FilePath"");");
 
             await dbContext.Database.ExecuteSqlRawAsync(@"
                 CREATE TABLE IF NOT EXISTS ""AppSettings"" (
@@ -264,33 +289,79 @@ namespace APP
                 WHERE ""Model"" = ""Codeback"" AND LENGTH(""Model"") >= 19;");
             if (fixedRows > 0)
                 Debug.WriteLine($"✓ Đã sửa cột Model cho {fixedRows} bản ghi ProductionData cũ.");
+
+            await MigratePrefixGroupsAsync(dbContext);
+
+            // Cột đánh dấu dữ liệu test (Cài đặt > Test Data)
+            var productionColumns = (await QueryAsync(dbContext, "PRAGMA table_info(\"ProductionData\");"))
+                .Select(r => Convert.ToString(r[1])).ToList();
+            if (!productionColumns.Contains("IsTest", StringComparer.OrdinalIgnoreCase))
+                await dbContext.Database.ExecuteSqlRawAsync(@"ALTER TABLE ""ProductionData"" ADD COLUMN ""IsTest"" INTEGER NOT NULL DEFAULT 0;");
         }
 
-        private static async Task DropColumnsIfExistAsync(AppDbContext dbContext, string table, params string[] columns)
+        /// <summary>
+        /// Chuyển 1 lần từ nhóm theo tiền tố (bảng ModelGroups cũ) sang gán từng model (ModelMappings):
+        /// các model đã từng sản xuất được gán vào nhóm có tiền tố khớp dài nhất. Bảng ModelGroups cũ giữ nguyên, không dùng nữa.
+        /// </summary>
+        private static async Task MigratePrefixGroupsAsync(AppDbContext dbContext)
         {
-            var existing = new List<string>();
+            if (await dbContext.ModelMappings.AnyAsync()) return;
+            if ((await QueryAsync(dbContext, "SELECT name FROM sqlite_master WHERE type = 'table' AND name = 'ModelGroups'")).Count == 0) return;
+
+            var groups = (await QueryAsync(dbContext, "SELECT \"Name\", \"Prefixes\", \"SortOrder\" FROM \"ModelGroups\""))
+                .Select(r => new
+                {
+                    Name = Convert.ToString(r[0])?.Trim() ?? string.Empty,
+                    Prefixes = (Convert.ToString(r[1]) ?? string.Empty)
+                        .Split(new[] { ',', ';' }, StringSplitOptions.RemoveEmptyEntries)
+                        .Select(p => p.Trim()).Where(p => p.Length > 0).ToList(),
+                    Order = Convert.ToInt32(r[2])
+                })
+                .Where(g => g.Name.Length > 0 && g.Prefixes.Count > 0)
+                .ToList();
+            if (groups.Count == 0) return;
+
+            var models = await dbContext.ProductionData.AsNoTracking().Select(p => p.Model).Distinct().ToListAsync();
+            var mappings = new List<ModelMapping>();
+            foreach (var model in models.OrderBy(m => m))
+            {
+                var best = groups
+                    .SelectMany(g => g.Prefixes.Select(p => new { Group = g, Prefix = p }))
+                    .Where(x => model.StartsWith(x.Prefix, StringComparison.OrdinalIgnoreCase))
+                    .OrderByDescending(x => x.Prefix.Length)
+                    .FirstOrDefault();
+                if (best == null) continue;
+                mappings.Add(new ModelMapping { GroupName = best.Group.Name, ModelName = model, SortOrder = best.Group.Order * 1000 + mappings.Count });
+            }
+
+            dbContext.ModelMappings.AddRange(mappings);
+            await dbContext.SaveChangesAsync();
+            Debug.WriteLine($"✓ Đã chuyển {mappings.Count} model từ nhóm theo tiền tố sang ModelMappings.");
+        }
+
+        private static async Task<List<object?[]>> QueryAsync(AppDbContext dbContext, string sql)
+        {
+            var rows = new List<object?[]>();
             var connection = dbContext.Database.GetDbConnection();
             await dbContext.Database.OpenConnectionAsync();
             try
             {
                 using var command = connection.CreateCommand();
-                command.CommandText = $"PRAGMA table_info(\"{table}\");";
+                command.CommandText = sql;
                 using var reader = await command.ExecuteReaderAsync();
                 while (await reader.ReadAsync())
-                    existing.Add(reader.GetString(1));
+                {
+                    var values = new object?[reader.FieldCount];
+                    for (int i = 0; i < reader.FieldCount; i++)
+                        values[i] = reader.IsDBNull(i) ? null : reader.GetValue(i);
+                    rows.Add(values);
+                }
             }
             finally
             {
                 await dbContext.Database.CloseConnectionAsync();
             }
-
-            foreach (var column in columns.Where(c => existing.Contains(c, StringComparer.OrdinalIgnoreCase)))
-            {
-#pragma warning disable EF1000 // tên bảng/cột là hằng số trong code
-                await dbContext.Database.ExecuteSqlRawAsync($"ALTER TABLE \"{table}\" DROP COLUMN \"{column}\";");
-#pragma warning restore EF1000
-                Debug.WriteLine($"✓ Đã bỏ cột {table}.{column}");
-            }
+            return rows;
         }
 
         /// <summary>
@@ -568,12 +639,6 @@ namespace APP
                     Debug.WriteLine("→ ProductionData đã có dữ liệu.");
                 }
 
-                // Seed nhóm "Khác" (gom các model không thuộc nhóm nào)
-                if (!dbContext.ModelGroups.Any())
-                {
-                    dbContext.ModelGroups.Add(new ModelGroup { Name = ModelGroupService.OtherGroupName, SortOrder = 999 });
-                    await dbContext.SaveChangesAsync();
-                }
 
             }
             catch (Exception ex)

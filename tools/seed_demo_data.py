@@ -5,7 +5,7 @@ Cách dùng:
     python tools/seed_demo_data.py <đường dẫn SetSupply.db> [--two-shifts]
 
 --two-shifts : đặt Ca 1 = 06:00-18:00, Ca 2 = 18:00-06:00, tắt Ca 3 (giống ảnh thiết kế)
-Script sẽ: tạo bảng ModelGroups / ProductionPlans nếu thiếu, ghi đè nhóm model mẫu, ghi kế hoạch
+Script sẽ: tạo bảng ModelMappings / ProductionPlans nếu thiếu, ghi đè bảng gán model -> nhóm mẫu, ghi kế hoạch
 (Daily Plan) cho hôm qua + hôm nay, xóa ProductionData của hôm nay + hôm qua rồi sinh dữ liệu ngẫu nhiên
 tới thời điểm hiện tại.
 """
@@ -24,10 +24,11 @@ con = sqlite3.connect(db_path)
 cur = con.cursor()
 
 cur.execute("""
-CREATE TABLE IF NOT EXISTS "ModelGroups" (
-    "Id" INTEGER NOT NULL CONSTRAINT "PK_ModelGroups" PRIMARY KEY AUTOINCREMENT,
-    "Name" TEXT NOT NULL,
-    "Prefixes" TEXT NOT NULL DEFAULT '',
+CREATE TABLE IF NOT EXISTS "ModelMappings" (
+    "Id" INTEGER NOT NULL CONSTRAINT "PK_ModelMappings" PRIMARY KEY AUTOINCREMENT,
+    "GroupName" TEXT NOT NULL,
+    "ModelName" TEXT NOT NULL,
+    "ImagePath" TEXT NOT NULL DEFAULT '',
     "SortOrder" INTEGER NOT NULL DEFAULT 0
 )""")
 cur.execute("""
@@ -52,10 +53,6 @@ groups = [
     ("NR-BX420", "NR-BX420", 420, 380, 0, 4),
     ("Khác", "", 300, 200, 0, 999),
 ]
-cur.execute("DELETE FROM ModelGroups")
-cur.executemany("INSERT INTO ModelGroups (Name, Prefixes, SortOrder) VALUES (?,?,?)",
-                [(g[0], g[1], g[5]) for g in groups])
-
 models = {
     "NR-C33ES2-C": (14, 20), "NR-C33ES2L-C": (12, 19), "NR-C33ES2L-W": (12, 18),
     "NR-C33ES2-W": (12, 18), "NR-C33ES2-WJ": (12, 18),
@@ -64,6 +61,17 @@ models = {
     "NR-BX420GKVN": (15, 18), "NR-BX420XNVN": (15, 18), "NR-BX420WKVN": (15, 18), "NR-BX420QKVN": (15, 18),
     "NR-BV280QSVN": (10, 13), "NR-BL381WKVN": (10, 12), "NR-DZ601VGKV": (10, 12), "NR-YW590YMMV": (10, 12),
 }
+
+# Gán model -> nhóm theo tiền tố mẫu (model không khớp nhóm nào => tự vào "Khác" trên Home)
+cur.execute("DELETE FROM ModelMappings")
+order = 0
+for name, prefix, *_ in groups:
+    if not prefix:
+        continue
+    for model in sorted(m for m in models if m.startswith(prefix)):
+        order += 1
+        cur.execute("INSERT INTO ModelMappings (GroupName, ModelName, ImagePath, SortOrder) VALUES (?,?,?,?)",
+                    (name, model, "", order))
 
 now = datetime.now()
 day_start_hour = 6

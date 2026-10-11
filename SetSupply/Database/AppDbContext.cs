@@ -24,12 +24,15 @@ public class AppDbContext : DbContext
     // Production Data
     public DbSet<ProductionData> ProductionData => Set<ProductionData>();
 
-    // Nhóm model + kế hoạch (màn hình Home)
-    public DbSet<ModelGroup> ModelGroups => Set<ModelGroup>();
+    // Nhóm model: gán từng model vào nhóm (màn hình Home)
+    public DbSet<ModelMapping> ModelMappings => Set<ModelMapping>();
     public DbSet<ProductionPlan> ProductionPlans => Set<ProductionPlan>();
 
     // Cài đặt chung (Key - Value)
     public DbSet<AppSetting> AppSettings => Set<AppSetting>();
+
+    // Nhật ký import file kế hoạch
+    public DbSet<PlanImportLog> PlanImportLogs => Set<PlanImportLog>();
 
     public AppDbContext(DbContextOptions<AppDbContext> options)
         : base(options)
@@ -88,9 +91,17 @@ public class AppDbContext : DbContext
             .HasDatabaseName("IX_ProductionData_Model_Serial");
 
         // ===== CẤU HÌNH CHO MODELGROUP / KẾ HOẠCH THEO NGÀY =====
-        modelBuilder.Entity<ModelGroup>().HasKey(e => e.Id);
+        modelBuilder.Entity<ModelMapping>().HasKey(e => e.Id);
+        modelBuilder.Entity<ModelMapping>()
+            .HasIndex(e => e.ModelName)
+            .IsUnique()
+            .HasDatabaseName("IX_ModelMappings_ModelName");
         modelBuilder.Entity<ProductionPlan>().HasKey(e => e.Id);
         modelBuilder.Entity<AppSetting>().HasKey(e => e.Key);
+        modelBuilder.Entity<PlanImportLog>().HasKey(e => e.Id);
+        modelBuilder.Entity<PlanImportLog>()
+            .HasIndex(e => e.FilePath)
+            .HasDatabaseName("IX_PlanImportLogs_FilePath");
         modelBuilder.Entity<ProductionPlan>()
             .HasIndex(e => new { e.PlanDate, e.GroupName, e.ShiftNumber })
             .HasDatabaseName("IX_ProductionPlans_Date_Group_Shift");

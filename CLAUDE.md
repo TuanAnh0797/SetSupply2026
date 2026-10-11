@@ -62,19 +62,34 @@ Chức năng:
 - Home hiện mã + giờ + nhãn trạng thái (xanh Đã lưu / cam Trùng / đỏ Sai mã, Lỗi lưu). Mở chương trình chưa đọc mã nào → hiện bản ghi mới nhất trong DB (nhãn "Gần nhất").
 - Ô "Vị trí" đã bỏ.
 
-## Nhóm model (Model Group)
-- Bảng `ModelGroups` (`Models/Database/ModelGroup.cs`): Name, Prefixes (tiền tố model, cách nhau dấu phẩy), SortOrder. **Chỉ để gom model, không có kế hoạch** (bản trước có PlanShift1-3, đã bỏ; DB cũ được `DROP COLUMN` khi khởi động).
-  Prefixes rỗng = nhóm "Khác" (gom model không khớp). Khớp theo tiền tố dài nhất: `ModelGroupService.Match`.
-- DB cũ không tự có bảng mới (EnsureCreated không migrate) → `App.EnsureSchemaUpdatesAsync` chạy `CREATE TABLE/INDEX IF NOT EXISTS`, `DropColumnsIfExistAsync`, sửa dữ liệu cũ. Thêm cột/bảng mới sau này cũng phải thêm vào đây (lệnh phải chạy lại được nhiều lần).
-- Trang Cài đặt > "Model Group" (`UCModelGroupSetting`), nút "Cài đặt" trên header Home mở thẳng trang này (cần Admin). Có "Tạo nhóm" (tự sinh từ model 30 ngày theo N ký tự đầu), **Import / Export** (cột Thứ tự | Tên nhóm | Tiền tố model; Import chỉ nạp vào bảng, phải bấm Lưu), ảnh nhóm/model.
-- Ảnh model: `<thư mục exe>\Resources\ModelImages\<tên model>.png` (hoặc `<tên nhóm>.png`). Không có ảnh → icon tủ lạnh.
+## Nhóm model (Model Group) — gán TỪNG model vào nhóm
+- Bảng `ModelMappings` (`Models/Database/ModelMapping.cs`): GroupName, ModelName (unique), ImagePath, SortOrder. **Không dùng tiền tố nữa.** Model không có trong bảng → nhóm "Khác" (luôn cuối). Thứ tự nhóm = SortOrder nhỏ nhất của nhóm.
+- `ModelGroupService`: GetMappingsAsync / SaveMappingsAsync (ghi đè toàn bộ, transaction) / GetGroupNames / ToLookup / ResolveGroup / GetRecentModelsAsync.
+- Bản trước dùng bảng `ModelGroups` (Name + Prefixes): khi khởi động, nếu ModelMappings rỗng thì `App.MigratePrefixGroupsAsync` tự gán các model đã có trong ProductionData theo tiền tố dài nhất (1 lần). Bảng ModelGroups cũ để nguyên, không dùng.
+- DB cũ không tự có bảng mới (EnsureCreated không migrate) → `App.EnsureSchemaUpdatesAsync` chạy `CREATE TABLE/INDEX IF NOT EXISTS`, sửa dữ liệu cũ, migration. Thêm cột/bảng mới sau này cũng phải thêm vào đây (chạy lại được nhiều lần).
+- Trang Cài đặt > "Model Group" (`UCModelGroupSetting`, VM `UCModelGroupSettingViewModel`, dòng `ModelMappingRow` có ảnh xem trước + cờ ImageMissing). Nút: Thêm/Xóa dòng, Lưu, Tải lại, "Thêm model chưa có nhóm" (model 30 ngày chưa gán), **Import/Export** (cột Nhóm model | Model | Đường dẫn ảnh; Import chỉ nạp vào bảng, bấm Lưu mới áp dụng; cảnh báo ảnh không tìm thấy), "Chọn ảnh cho dòng đang chọn" (chép vào ModelImages tên `<model>.ext`), Bỏ ảnh, Mở thư mục ảnh.
+- Ảnh (`Helper/ModelImageProvider.cs`): ImagePath (đường dẫn đầy đủ hoặc tên file trong `<exe>\Resources\ModelImages`) → `<model>.png` → `<nhóm>.png` → icon tủ lạnh.
 
 ## Kế hoạch theo ngày (Daily Plan) — nguồn kế hoạch DUY NHẤT
-- Bảng `ProductionPlans` (`Models/Database/ProductionPlan.cs`): PlanDate, GroupName (theo TÊN nhóm vì ModelGroups bị ghi đè khi lưu → Id đổi), ShiftNumber, Quantity.
-- Service `ProductionPlanService` (GetPlansAsync, SavePlansAsync, GetPlansInRangeAsync, SaveDaysAsync trong 1 transaction).
-- Trang Cài đặt > "Daily Plan" (`UCDailyPlanSetting`): chọn ngày, sửa theo ca, Lưu / Copy từ ngày trước / Xóa kế hoạch ngày.
-  **Import** nhiều ngày (cột Ngày | Nhóm model | Kế hoạch Ca 1 | Ca 2 | Ca 3; ngày có trong file bị ghi đè toàn bộ; nhóm chưa có trong Model Group → cảnh báo; tên nhóm khớp không phân biệt hoa/thường). **Export** khoảng ngày (mỗi ngày × mỗi nhóm 1 dòng, chưa có = 0) — dùng làm file mẫu.
-- Đọc/ghi file: `Helper/SpreadsheetHelper.cs` (ClosedXML 0.102.3 cho .xlsx, không cần cài Excel; .csv UTF-8 BOM, tự nhận dấu `,` hoặc `;`).
+- Bảng `ProductionPlans` (PlanDate, GroupName — theo TÊN nhóm, ShiftNumber, Quantity). Service `ProductionPlanService` (SaveDaysAsync ghi đè nhiều ngày trong 1 transaction; danh sách rỗng = xóa kế hoạch ngày đó).
+- Trang Cài đặt > "Daily Plan" (`UCDailyPlanSetting`): sửa tay theo ngày/ca, Copy từ ngày trước, Xóa, Export khoảng ngày (Ngày | Nhóm model | Kế hoạch Ca 1..3).
+
+### Import file kế hoạch sản xuất (định dạng sheet "Daily revise (3S)", mẫu: file Plan.xlsx của người dùng)
+- `Service/PlanFileParser.cs`: tìm dòng tiêu đề có `Model` (cột A), `Production Shifts` (cột L: Plan / Result) và các khối ngày `Manual | Total | S.1 | S.2 | S.3`; ngày của khối lấy ở dòng phía trên (dòng 17, số serial Excel). Chỉ lấy dòng **Plan** của model bắt đầu **NR-**; số lượng ở S.1/S.2/S.3. Ô công thức đọc **CachedValue** (không tính lại → ~2 giây cho file 1,4 MB; tính lại công thức thì treo).
+  - Trong file: `S.3 = Manual - S.1 - S.2` (công thức) → ngày chưa chia ca thì toàn bộ nằm ở S.3; có thể âm khi S.1 > Manual → vẫn cộng (để tổng khớp file) + cảnh báo.
+  - Ô ngày gõ sai (thực tế: CH17 = 14/12/2023) → tự sửa theo thứ tự ngày liên tiếp + cảnh báo.
+  - Đã đối chiếu: tổng 59.189 = ô "Daily Q'ty" M15 của file; từng ngày khớp dòng 15.
+- **Chỉ đọc sheet theo tên**: AppSettings `PlanImport.SheetName`, mặc định "Daily revise (3S)" (so sánh không phân biệt hoa/thường, bỏ khoảng trắng thừa); không có sheet đó → lỗi, liệt kê các sheet trong file. Lưu "*" (ô Sheet để trống) = tự dò sheet đầu tiên đúng cấu trúc (không khuyến khích: file nhiều sheet giống nhau có thể đọc nhầm).
+- Ánh xạ cột S.1/S.2/S.3 → ca của app: AppSettings `PlanImport.ShiftMap` (VD "1,0,2" = S.1→Ca1, S.2 bỏ, S.3→Ca2), mặc định "1,2,3".
+- `Service/PlanImportService.cs`: ReadAsync (đọc file vào bộ nhớ với FileShare.ReadWrite, parse, cộng theo nhóm qua ModelMappings, model chưa gán → "Khác") → SaveAsync (ghi đè các ngày trong file + nhật ký `PlanImportLogs`). Event `PlanImported` → Home tải lại.
+- **Job tự động**: AppSettings `PlanImport.Enabled` / `PlanImport.Folder`. FileSystemWatcher + quét mỗi phút; file .xlsx/.xlsm (bỏ `~$*`, file ẩn) mới hoặc thay đổi (so đường dẫn + kích thước + giờ sửa trong PlanImportLogs) → import theo thứ tự thời gian; file sửa < 15 giây hoặc bị khóa → đợi lần quét sau; file lỗi được ghi nhật ký và không thử lại tới khi file thay đổi. Start khi mở app (App.OnStartup), áp dụng lại khi lưu cài đặt.
+- Thử tay: copy file mẫu vào thư mục theo dõi, ~20 giây sau có dòng trong nhật ký.
+
+## Dữ liệu test (Cài đặt > Test Data)
+- Cột `ProductionData.IsTest` (DB cũ: `ALTER TABLE ... ADD COLUMN IsTest` trong EnsureSchemaUpdatesAsync). Serial test dạng `T000123` (không trùng serial thật dạng số), Codeback = model 12 ký tự + serial 7 ký tự.
+- `Service/TestDataService.cs`: GenerateAsync (khoảng ngày sản xuất, danh sách model, min..max sp/giờ/model ngẫu nhiên, tùy chọn chỉ tới giờ hiện tại, tối đa 200.000 bản ghi/lần).
+- `PLCService.SimulateReadAsync(code)`: giả lập PLC gửi mã, đi qua `ProcessCodeAsync` dùng chung với mã thật (lưu DB IsTest, CodeRead, DataReceived). Trang có nút "Gửi 1 mã" và tự gửi mỗi N giây.
+- Xóa: `ProductionDataService.DeleteTestDataAsync(from, to)` — CHỈ `IsTest = 1`. Event `DataChanged` → Home tải lại. Home hiện nhãn cam "Có N bản ghi TEST" khi ngày đang xem có dữ liệu test.
 
 ## Giờ ca khi xem ngày cũ
 - `ProductionDataService.GetShiftsForDateAsync(date)`: ngày < hôm nay → lấy giờ ca/IsUse từ `ShiftSettingHistory` của ngày đó (bản ghi mới nhất mỗi ca), ca không có lịch sử dùng cài đặt hiện tại. Hôm nay/tương lai → cài đặt hiện tại.

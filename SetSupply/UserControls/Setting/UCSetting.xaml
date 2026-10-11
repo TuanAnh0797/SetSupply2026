@@ -63,6 +63,13 @@ BlurRadius="10" Opacity="0.5"/>
                     </StackPanel>
                 </Button>
 
+                <Button Command="{Binding ShowTestDataSettingCommand}">
+                    <StackPanel Orientation="Horizontal">
+                        <materialDesign:PackIcon Kind="FlaskOutline" Width="20" Height="20" VerticalAlignment="Center" Foreground="#E08A00"/>
+                        <Label>Test Data</Label>
+                    </StackPanel>
+                </Button>
+
 
             </StackPanel>
             <ContentControl Grid.Row="1" Content="{Binding CurrentView}" />

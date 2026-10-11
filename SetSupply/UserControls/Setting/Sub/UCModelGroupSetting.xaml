@@ -8,6 +8,7 @@
              d:DesignHeight="600" d:DesignWidth="1200">
 
     <UserControl.Resources>
+        <BooleanToVisibilityConverter x:Key="BoolToVis"/>
         <Style x:Key="ToolButton" TargetType="Button" BasedOn="{StaticResource MaterialDesignRaisedButton}">
             <Setter Property="Height" Value="38"/>
             <Setter Property="Margin" Value="0,0,10,0"/>
@@ -27,9 +28,10 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
-        <TextBlock Grid.Row="0" Text="Nhóm model" FontSize="22" FontWeight="Bold"
+        <TextBlock Grid.Row="0" Text="Nhóm model (gán từng model vào nhóm)" FontSize="22" FontWeight="Bold"
                    Foreground="#1D4F96" Margin="0,0,0,10"/>
 
         <StackPanel Grid.Row="1" Margin="0,0,0,10">
@@ -37,13 +39,13 @@
                 <Button Style="{StaticResource ToolButton}" Command="{Binding AddCommand}">
                     <StackPanel Orientation="Horizontal">
                         <materialDesign:PackIcon Kind="Plus" VerticalAlignment="Center" Margin="0,0,6,0"/>
-                        <TextBlock Text="Thêm nhóm"/>
+                        <TextBlock Text="Thêm dòng"/>
                     </StackPanel>
                 </Button>
                 <Button Style="{StaticResource ToolButton}" Command="{Binding DeleteCommand}" Background="#E53935" BorderBrush="#E53935">
                     <StackPanel Orientation="Horizontal">
                         <materialDesign:PackIcon Kind="Delete" VerticalAlignment="Center" Margin="0,0,6,0"/>
-                        <TextBlock Text="Xóa nhóm"/>
+                        <TextBlock Text="Xóa dòng"/>
                     </StackPanel>
                 </Button>
                 <Button Style="{StaticResource ToolButton}" Command="{Binding SaveCommand}" Background="#2E7D32" BorderBrush="#2E7D32">
@@ -58,22 +60,16 @@
                         <TextBlock Text="Tải lại"/>
                     </StackPanel>
                 </Button>
-
-                <Rectangle Width="1" Fill="#C9D6E8" Margin="10,4,20,4"/>
-
-                <TextBlock Text="Tự tạo nhóm từ dữ liệu 30 ngày, theo" VerticalAlignment="Center" FontSize="14" Margin="0,0,8,0"/>
-                <TextBox Text="{Binding AutoPrefixLength, UpdateSourceTrigger=PropertyChanged}" Width="40"
-                         HorizontalContentAlignment="Center" VerticalAlignment="Center" FontSize="14"/>
-                <TextBlock Text="ký tự đầu của model" VerticalAlignment="Center" FontSize="14" Margin="8,0,10,0"/>
-                <Button Style="{StaticResource ToolButton}" Command="{Binding AutoCreateCommand}" Background="#0288D1" BorderBrush="#0288D1">
+                <Button Style="{StaticResource ToolButton}" Command="{Binding AddUnmappedModelsCommand}" Background="#0288D1" BorderBrush="#0288D1"
+                        ToolTip="Thêm các model đã sản xuất 30 ngày gần nhất nhưng chưa có nhóm">
                     <StackPanel Orientation="Horizontal">
-                        <materialDesign:PackIcon Kind="AutoFix" VerticalAlignment="Center" Margin="0,0,6,0"/>
-                        <TextBlock Text="Tạo nhóm"/>
+                        <materialDesign:PackIcon Kind="PlaylistPlus" VerticalAlignment="Center" Margin="0,0,6,0"/>
+                        <TextBlock Text="Thêm model chưa có nhóm"/>
                     </StackPanel>
                 </Button>
-            </StackPanel>
 
-            <StackPanel Orientation="Horizontal" Margin="0,0,0,8">
+                <Rectangle Width="1" Fill="#C9D6E8" Margin="0,4,10,4"/>
+
                 <Button Style="{StaticResource ToolButton}" Command="{Binding ImportCommand}" Background="#00897B" BorderBrush="#00897B">
                     <StackPanel Orientation="Horizontal">
                         <materialDesign:PackIcon Kind="FileImport" VerticalAlignment="Center" Margin="0,0,6,0"/>
@@ -86,17 +82,19 @@
                         <TextBlock Text="Export"/>
                     </StackPanel>
                 </Button>
-                <Rectangle Width="1" Fill="#C9D6E8" Margin="0,4,10,4"/>
-                <Button Style="{StaticResource ToolButton}" Command="{Binding ChooseGroupImageCommand}" Background="#6A1B9A" BorderBrush="#6A1B9A">
+            </StackPanel>
+
+            <StackPanel Orientation="Horizontal" Margin="0,0,0,8">
+                <Button Style="{StaticResource ToolButton}" Command="{Binding ChooseImageCommand}" Background="#6A1B9A" BorderBrush="#6A1B9A">
                     <StackPanel Orientation="Horizontal">
                         <materialDesign:PackIcon Kind="ImageEdit" VerticalAlignment="Center" Margin="0,0,6,0"/>
-                        <TextBlock Text="Ảnh cho nhóm đang chọn"/>
+                        <TextBlock Text="Chọn ảnh cho dòng đang chọn"/>
                     </StackPanel>
                 </Button>
-                <Button Style="{StaticResource ToolButton}" Command="{Binding AddModelImagesCommand}" Background="#6A1B9A" BorderBrush="#6A1B9A">
+                <Button Style="{StaticResource ToolButton}" Command="{Binding ClearImageCommand}" Background="#8E6AA8" BorderBrush="#8E6AA8">
                     <StackPanel Orientation="Horizontal">
-                        <materialDesign:PackIcon Kind="ImageMultiple" VerticalAlignment="Center" Margin="0,0,6,0"/>
-                        <TextBlock Text="Thêm ảnh từng model"/>
+                        <materialDesign:PackIcon Kind="ImageRemove" VerticalAlignment="Center" Margin="0,0,6,0"/>
+                        <TextBlock Text="Bỏ ảnh"/>
                     </StackPanel>
                 </Button>
                 <Button Style="{StaticResource ToolButton}" Command="{Binding OpenImageFolderCommand}" Background="#607D8B" BorderBrush="#607D8B">
@@ -108,26 +106,43 @@
             </StackPanel>
 
             <TextBlock FontSize="13" Foreground="#5B6B82" TextWrapping="Wrap">
-                <Run Text="• Tiền tố model: model bắt đầu bằng tiền tố sẽ thuộc nhóm (nhiều tiền tố cách nhau bởi dấu phẩy). Để trống = nhóm &quot;Khác&quot; (gom các model còn lại)."/>
+                <Run Text="• Mỗi dòng gán 1 model vào 1 nhóm. Model chưa có trong bảng sẽ vào nhóm &quot;Khác&quot;. Thứ tự nhóm trên Home theo cột Thứ tự."/>
                 <LineBreak/>
-                <Run Text="• Kế hoạch sản lượng nhập ở trang Daily Plan (theo ngày, theo ca). Import / Export: file Excel hoặc CSV, cột Thứ tự | Tên nhóm | Tiền tố model (Import xong bấm Lưu)."/>
+                <Run Text="• Import / Export: file Excel hoặc CSV, cột Nhóm model | Model | Đường dẫn ảnh (Import xong bấm Lưu)."/>
                 <LineBreak/>
-                <Run Text="• Ảnh model: đặt file &lt;tên model&gt;.png (hoặc &lt;tên nhóm&gt;.png) vào thư mục: "/>
+                <Run Text="• Đường dẫn ảnh: đường dẫn đầy đủ (VD D:\Anh\NR-C33ES2-C.png) hoặc tên file trong thư mục "/>
                 <Run Text="{Binding ImageFolder, Mode=OneWay}" FontWeight="SemiBold"/>
+                <Run Text=". Để trống: tự tìm &lt;tên model&gt;.png hoặc &lt;tên nhóm&gt;.png trong thư mục đó."/>
             </TextBlock>
         </StackPanel>
 
-        <DataGrid Grid.Row="2" ItemsSource="{Binding Groups}" SelectedItem="{Binding SelectedGroup}"
+        <DataGrid Grid.Row="2" ItemsSource="{Binding Rows}" SelectedItem="{Binding SelectedRow}"
                   AutoGenerateColumns="False" CanUserAddRows="False" CanUserDeleteRows="False"
-                  CanUserSortColumns="False" SelectionMode="Single" HeadersVisibility="Column"
+                  SelectionMode="Single" HeadersVisibility="Column" RowHeight="44"
                   GridLinesVisibility="All" BorderBrush="#C9D6E8" BorderThickness="1" FontSize="15"
                   ColumnHeaderStyle="{StaticResource HeaderStyle}"
-                  materialDesign:DataGridAssist.CellPadding="10,8">
+                  materialDesign:DataGridAssist.CellPadding="10,6">
             <DataGrid.Columns>
-                <DataGridTextColumn Header="Thứ tự" Binding="{Binding SortOrder}" Width="90"/>
-                <DataGridTextColumn Header="Tên nhóm" Binding="{Binding Name}" Width="200"/>
-                <DataGridTextColumn Header="Tiền tố model" Binding="{Binding Prefixes}" Width="*"/>
+                <DataGridTextColumn Header="Thứ tự" Binding="{Binding SortOrder}" Width="80"/>
+                <DataGridTextColumn Header="Nhóm model" Binding="{Binding GroupName, UpdateSourceTrigger=PropertyChanged}" Width="200"/>
+                <DataGridTextColumn Header="Model" Binding="{Binding ModelName, UpdateSourceTrigger=PropertyChanged}" Width="240"/>
+                <DataGridTemplateColumn Header="Ảnh" Width="70" IsReadOnly="True">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Grid Width="30" Height="34" HorizontalAlignment="Center">
+                                <Image Source="{Binding Preview}" Stretch="Uniform" RenderOptions.BitmapScalingMode="HighQuality"/>
+                                <materialDesign:PackIcon Kind="AlertCircle" Foreground="#E53935" Width="18" Height="18"
+                                                         HorizontalAlignment="Center" VerticalAlignment="Center"
+                                                         ToolTip="Không tìm thấy file ảnh"
+                                                         Visibility="{Binding ImageMissing, Converter={StaticResource BoolToVis}}"/>
+                            </Grid>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTextColumn Header="Đường dẫn ảnh" Binding="{Binding ImagePath, UpdateSourceTrigger=LostFocus}" Width="*"/>
             </DataGrid.Columns>
         </DataGrid>
+
+        <TextBlock Grid.Row="3" Text="{Binding SummaryText}" FontSize="14" FontWeight="SemiBold" Foreground="#15305A" Margin="0,8,0,0"/>
     </Grid>
 </UserControl>

@@ -12,6 +12,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Input;
 
 namespace SetSupply.ViewModels.UserControlViewModels.Setting.Sub;
 
@@ -38,7 +39,9 @@ public partial class DailyPlanRow : ObservableObject
 }
 
 /// <summary>
-/// Kế hoạch sản lượng theo ngày / theo ca cho từng nhóm model. Có Import (nhiều ngày) / Export (khoảng ngày) Excel, CSV.
+/// Kế hoạch sản lượng theo ngày / theo ca cho từng nhóm model.
+/// Import: file kế hoạch sản xuất (sheet "Daily revise", model NR-), thủ công hoặc tự động khi có file mới trong thư mục.
+/// Export: khoảng ngày ra Excel / CSV (Ngày | Nhóm model | Kế hoạch Ca 1..3).
 /// Ngày không có kế hoạch: Home vẫn đếm thực tế, cột kế hoạch để trống.
 /// </summary>
 public partial class UCDailyPlanSettingViewModel : ObservableObject
@@ -48,6 +51,8 @@ public partial class UCDailyPlanSettingViewModel : ObservableObject
     private readonly ModelGroupService _modelGroupService;
     private readonly ProductionPlanService _planService;
     private readonly ProductionDataService _productionService;
+    private readonly PlanImportService _planImportService;
+    private readonly AppSettingService _settingService;
     private bool _isLoading;
 
     public ObservableCollection<DailyPlanRow> Rows { get; } = new();
@@ -71,11 +76,17 @@ public partial class UCDailyPlanSettingViewModel : ObservableObject
     private string totalText = string.Empty;
 
     public UCDailyPlanSettingViewModel(ModelGroupService modelGroupService, ProductionPlanService planService,
-                                       ProductionDataService productionService)
+                                       ProductionDataService productionService,
+                                       PlanImportService planImportService, AppSettingService settingService)
     {
         _modelGroupService = modelGroupService;
         _planService = planService;
         _productionService = productionService;
+        _planImportService = planImportService;
+        _settingService = settingService;
+        LoadAutoImportSettings();
+        _planImportService.StatusChanged += () =>
+            Application.Current?.Dispatcher.InvokeAsync(() => AutoImportStatus = _planImportService.Status);
     }
 
     partial void OnPlanDateChanged(DateTime value) => _ = Load();
@@ -87,7 +98,7 @@ public partial class UCDailyPlanSettingViewModel : ObservableObject
         _isLoading = true;
         try
         {
-            var groups = await _modelGroupService.GetAllAsync();
+            var groups = await _modelGroupService.GetGroupNamesAsync();
             var plans = await _planService.GetPlansAsync(PlanDate);
 
             int Value(string group, int shift) =>
@@ -95,10 +106,10 @@ public partial class UCDailyPlanSettingViewModel : ObservableObject
 
             SetRows(groups.Select(g => new DailyPlanRow
             {
-                GroupName = g.Name,
-                Shift1 = Value(g.Name, 1),
-                Shift2 = Value(g.Name, 2),
-                Shift3 = Value(g.Name, 3)
+                GroupName = g,
+                Shift1 = Value(g, 1),
+                Shift2 = Value(g, 2),
+                Shift3 = Value(g, 3)
             }));
 
             StatusText = plans.Any()
@@ -216,7 +227,7 @@ public partial class UCDailyPlanSettingViewModel : ObservableObject
 
         try
         {
-            var groups = (await _modelGroupService.GetAllAsync()).Select(g => g.Name).ToList();
+            var groups = await _modelGroupService.GetGroupNamesAsync();
             var plans = await _planService.GetPlansInRangeAsync(ExportFrom, ExportTo);
             var lookup = plans.ToDictionary(p => (p.PlanDate.Date, p.GroupName, p.ShiftNumber), p => p.Quantity);
 
@@ -248,109 +259,197 @@ public partial class UCDailyPlanSettingViewModel : ObservableObject
     }
 
     /// <summary>
-    /// Nhập kế hoạch nhiều ngày. Cột: Ngày | Nhóm model | Kế hoạch Ca 1 | Kế hoạch Ca 2 | Kế hoạch Ca 3.
-    /// Mỗi ngày có trong file sẽ được GHI ĐÈ toàn bộ kế hoạch; ngày không có trong file giữ nguyên.
+    /// Import file kế hoạch (định dạng sheet "Daily revise": cột Model, Production Shifts = Plan, khối S.1 | S.2 | S.3 theo ngày).
+    /// Chỉ lấy model bắt đầu bằng "NR-", cộng theo nhóm model. Các ngày có trong file bị GHI ĐÈ kế hoạch.
     /// </summary>
     [RelayCommand]
     private async Task Import()
     {
-        var dialog = new Microsoft.Win32.OpenFileDialog { Filter = SpreadsheetHelper.FileFilter, Title = "Nhập kế hoạch theo ngày" };
+        var dialog = new Microsoft.Win32.OpenFileDialog
+        {
+            Filter = "Excel (*.xlsx;*.xlsm)|*.xlsx;*.xlsm",
+            Title = "Chọn file kế hoạch sản xuất"
+        };
         if (dialog.ShowDialog() != true) return;
 
         try
         {
-            var rows = SpreadsheetHelper.Read(dialog.FileName, FileHeaders.Length);
-            var errors = new List<string>();
-            var byDate = new Dictionary<DateTime, List<ProductionPlan>>();
-            var seen = new HashSet<(DateTime, string)>();
-
-            foreach (var (rowNumber, cells) in rows)
+            Mouse.OverrideCursor = Cursors.Wait;
+            PlanImportPreview preview;
+            try
             {
-                if (!SpreadsheetHelper.TryParseDate(cells[0], out var date))
-                {
-                    errors.Add($"Dòng {rowNumber}: ngày '{cells[0]}' không hợp lệ (dùng dd/MM/yyyy)");
-                    continue;
-                }
-
-                string group = cells[1].Trim();
-                if (group.Length == 0)
-                {
-                    errors.Add($"Dòng {rowNumber}: thiếu tên nhóm model");
-                    continue;
-                }
-
-                if (!seen.Add((date, group.ToUpperInvariant())))
-                {
-                    errors.Add($"Dòng {rowNumber}: nhóm '{group}' ngày {date:dd/MM/yyyy} bị lặp");
-                    continue;
-                }
-
-                var quantities = new int[3];
-                bool ok = true;
-                for (int i = 0; i < 3; i++)
-                {
-                    if (!SpreadsheetHelper.TryParseQuantity(cells[2 + i], out quantities[i]))
-                    {
-                        errors.Add($"Dòng {rowNumber}: '{FileHeaders[2 + i]}' = '{cells[2 + i]}' không phải số nguyên >= 0");
-                        ok = false;
-                        break;
-                    }
-                }
-                if (!ok) continue;
-
-                if (!byDate.TryGetValue(date, out var list))
-                    byDate[date] = list = new List<ProductionPlan>();
-                for (int i = 0; i < 3; i++)
-                    list.Add(new ProductionPlan { PlanDate = date, GroupName = group, ShiftNumber = i + 1, Quantity = quantities[i] });
+                preview = await _planImportService.ReadAsync(dialog.FileName);
+            }
+            finally
+            {
+                Mouse.OverrideCursor = null;
             }
 
-            if (errors.Count > 0)
+            if (preview.PlansByDate.Count == 0)
             {
-                MessageBox.Show("File có lỗi, chưa nhập:\n" + string.Join("\n", errors.Take(15)) +
-                                (errors.Count > 15 ? $"\n... và {errors.Count - 15} lỗi khác" : ""),
-                    "Lỗi dữ liệu", MessageBoxButton.OK, MessageBoxImage.Warning);
-                return;
-            }
-            if (byDate.Count == 0)
-            {
-                MessageBox.Show("File không có dữ liệu.", "Nhập file", MessageBoxButton.OK, MessageBoxImage.Information);
+                MessageBox.Show("File không có ngày nào để nhập.", "Nhập file", MessageBoxButton.OK, MessageBoxImage.Information);
                 return;
             }
 
-            // Tên nhóm khớp không phân biệt hoa/thường với nhóm đang cài đặt => chuẩn hóa theo tên đã cài đặt
-            var groupNames = (await _modelGroupService.GetAllAsync()).Select(g => g.Name).ToList();
-            var unknown = new SortedSet<string>(StringComparer.OrdinalIgnoreCase);
-            foreach (var plan in byDate.Values.SelectMany(p => p))
-            {
-                var match = groupNames.FirstOrDefault(n => string.Equals(n, plan.GroupName, StringComparison.OrdinalIgnoreCase));
-                if (match != null) plan.GroupName = match;
-                else unknown.Add(plan.GroupName);
-            }
-
-            string message = $"Nhập kế hoạch cho {byDate.Count} ngày ({byDate.Keys.Min():dd/MM/yyyy} - {byDate.Keys.Max():dd/MM/yyyy}).\n" +
+            string message = $"Sheet \"{preview.SheetName}\": {preview.ModelCount} model {PlanFileParser.ModelPrefix}, " +
+                             $"{preview.PlansByDate.Count} ngày ({preview.From:dd/MM/yyyy} - {preview.To:dd/MM/yyyy}), tổng {preview.TotalQuantity.ToString("#,0", CultureInfo.InvariantCulture)}.\n" +
+                             $"Cột S.1 / S.2 / S.3 => {ShiftMapText(_settingService.PlanShiftMap)}.\n" +
                              "Kế hoạch đang có của các ngày này sẽ bị GHI ĐÈ.";
-            if (unknown.Count > 0)
-                message += $"\n\nCảnh báo: {unknown.Count} nhóm chưa có trong Model Group (sẽ không hiện ở Home cho tới khi tạo nhóm):\n" +
-                           string.Join(", ", unknown.Take(10)) + (unknown.Count > 10 ? ", ..." : "");
+            if (preview.UnmappedModels.Count > 0)
+                message += $"\n\n{preview.UnmappedModels.Count} model chưa có nhóm (tính vào \"{ModelGroupService.OtherGroupName}\"):\n" +
+                           string.Join(", ", preview.UnmappedModels.Take(10)) + (preview.UnmappedModels.Count > 10 ? ", ..." : "");
+            if (preview.Warnings.Count > 0)
+                message += "\n\nCảnh báo:\n" + string.Join("\n", preview.Warnings.Take(8)) + (preview.Warnings.Count > 8 ? "\n..." : "");
             message += "\n\nTiếp tục?";
 
             if (MessageBox.Show(message, "Xác nhận nhập kế hoạch", MessageBoxButton.YesNo,
-                    unknown.Count > 0 ? MessageBoxImage.Warning : MessageBoxImage.Question) != MessageBoxResult.Yes)
+                    preview.UnmappedModels.Count > 0 || preview.Warnings.Count > 0 ? MessageBoxImage.Warning : MessageBoxImage.Question) != MessageBoxResult.Yes)
                 return;
 
-            await _planService.SaveDaysAsync(byDate);
+            await _planImportService.SaveAsync(preview, PlanImportService.SourceManual);
             await Load();
-            MessageBox.Show($"Đã nhập kế hoạch {byDate.Count} ngày.", "Thành công", MessageBoxButton.OK, MessageBoxImage.Information);
+            await LoadLogs();
+            MessageBox.Show($"Đã nhập kế hoạch {preview.PlansByDate.Count} ngày.", "Thành công", MessageBoxButton.OK, MessageBoxImage.Information);
         }
         catch (IOException ex)
         {
-            MessageBox.Show($"Không đọc được file (file đang mở trong Excel?): {ex.Message}", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
+            MessageBox.Show($"Không đọc được file: {ex.Message}", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
         }
         catch (Exception ex)
         {
-            MessageBox.Show($"Lỗi nhập file: {ex.Message}", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
+            MessageBox.Show($"Lỗi nhập file: {ex.GetBaseException().Message}", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
         }
     }
+
+    // ===== TỰ ĐỘNG IMPORT =====
+
+    public IReadOnlyList<KeyValuePair<int, string>> ShiftChoices { get; } = new List<KeyValuePair<int, string>>
+    {
+        new(1, "Ca 1"), new(2, "Ca 2"), new(3, "Ca 3"), new(0, "Bỏ qua")
+    };
+
+    public ObservableCollection<PlanImportLog> ImportLogs { get; } = new();
+
+    [ObservableProperty]
+    private bool autoImportEnabled;
+
+    [ObservableProperty]
+    private string autoImportFolder = string.Empty;
+
+    [ObservableProperty]
+    private int shiftForS1 = 1;
+
+    [ObservableProperty]
+    private int shiftForS2 = 2;
+
+    [ObservableProperty]
+    private int shiftForS3 = 3;
+
+    [ObservableProperty]
+    private string autoImportStatus = string.Empty;
+
+    /// <summary>Tên sheet đọc trong file kế hoạch (để trống = tự dò).</summary>
+    [ObservableProperty]
+    private string planSheetName = PlanFileParser.DefaultSheetName;
+
+    private void LoadAutoImportSettings()
+    {
+        AutoImportEnabled = _settingService.PlanImportEnabled;
+        AutoImportFolder = _settingService.PlanImportFolder;
+        var map = _settingService.PlanShiftMap;
+        ShiftForS1 = map[0];
+        ShiftForS2 = map[1];
+        ShiftForS3 = map[2];
+        PlanSheetName = _settingService.PlanSheetName;
+        AutoImportStatus = _planImportService.Status;
+    }
+
+    [RelayCommand]
+    private async Task LoadLogs()
+    {
+        try
+        {
+            var logs = await _planImportService.GetRecentLogsAsync(30);
+            ImportLogs.Clear();
+            foreach (var log in logs) ImportLogs.Add(log);
+            AutoImportStatus = _planImportService.Status;
+        }
+        catch (Exception ex)
+        {
+            AutoImportStatus = $"Lỗi đọc nhật ký: {ex.Message}";
+        }
+    }
+
+    /// <summary>
+    /// Chọn thư mục: chọn 1 file bất kỳ trong thư mục chứa file kế hoạch.
+    /// </summary>
+    [RelayCommand]
+    private void BrowseFolder()
+    {
+        var dialog = new Microsoft.Win32.OpenFileDialog
+        {
+            Filter = "Excel (*.xlsx;*.xlsm)|*.xlsx;*.xlsm|Tất cả file (*.*)|*.*",
+            Title = "Chọn 1 file bất kỳ trong thư mục chứa file kế hoạch",
+            CheckFileExists = true
+        };
+        if (Directory.Exists(AutoImportFolder)) dialog.InitialDirectory = AutoImportFolder;
+        if (dialog.ShowDialog() == true)
+            AutoImportFolder = Path.GetDirectoryName(dialog.FileName) ?? AutoImportFolder;
+    }
+
+    [RelayCommand]
+    private async Task SaveAutoImport()
+    {
+        var folder = (AutoImportFolder ?? string.Empty).Trim();
+        if (AutoImportEnabled && !Directory.Exists(folder))
+        {
+            MessageBox.Show($"Thư mục không tồn tại:\n{folder}", "Cảnh báo", MessageBoxButton.OK, MessageBoxImage.Warning);
+            return;
+        }
+
+        try
+        {
+            await _settingService.SetAsync(AppSettingService.PlanImportFolderKey, folder);
+            await _settingService.SetAsync(AppSettingService.PlanShiftMapKey, $"{ShiftForS1},{ShiftForS2},{ShiftForS3}");
+            var sheet = (PlanSheetName ?? string.Empty).Trim();
+            await _settingService.SetAsync(AppSettingService.PlanSheetNameKey, sheet.Length == 0 ? "*" : sheet);
+            await _settingService.SetAsync(AppSettingService.PlanImportEnabledKey, AutoImportEnabled ? "1" : "0");
+            _planImportService.Start(); // áp dụng cài đặt mới (bật / tắt / đổi thư mục)
+            AutoImportStatus = _planImportService.Status;
+            MessageBox.Show(AutoImportEnabled
+                    ? "Đã lưu. Chương trình sẽ tự import file kế hoạch mới trong thư mục (kiểm tra mỗi phút)."
+                    : "Đã lưu. Tự động import đang TẮT.",
+                "Thành công", MessageBoxButton.OK, MessageBoxImage.Information);
+        }
+        catch (Exception ex)
+        {
+            MessageBox.Show($"Lỗi lưu: {ex.Message}", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
+        }
+    }
+
+    [RelayCommand]
+    private async Task ScanNow()
+    {
+        if (!_settingService.PlanImportEnabled)
+        {
+            MessageBox.Show("Tự động import đang TẮT (bật rồi bấm Lưu cài đặt).", "Thông báo", MessageBoxButton.OK, MessageBoxImage.Information);
+            return;
+        }
+        Mouse.OverrideCursor = Cursors.Wait;
+        try
+        {
+            await _planImportService.ScanAsync();
+        }
+        finally
+        {
+            Mouse.OverrideCursor = null;
+        }
+        await Load();
+        await LoadLogs();
+    }
+
+    private static string ShiftMapText(int[] map) =>
+        string.Join(" / ", map.Select(s => s == 0 ? "bỏ qua" : $"Ca {s}"));
 
     // ===== HELPERS =====
 

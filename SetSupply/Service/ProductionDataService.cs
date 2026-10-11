@@ -187,7 +187,7 @@ public class ProductionDataService
     /// Lưu 1 sản phẩm đọc từ PLC. true = đã lưu, false = trùng (cùng model + serial).
     /// Lỗi database sẽ ném exception để bên gọi KHÔNG xác nhận (reset trigger) với PLC.
     /// </summary>
-    public async Task<bool> TryInsertProductionAsync(string codeback, string model, string serial)
+    public async Task<bool> TryInsertProductionAsync(string codeback, string model, string serial, bool isTest = false)
     {
         // DbContext riêng: hàm này chạy trên thread PLC, song song với các truy vấn khác
         using var scope = _scopeFactory.CreateScope();
@@ -202,10 +202,74 @@ public class ProductionDataService
             Codeback = codeback,
             Model = model,
             Serial = serial,
-            DateTimeInsert = DateTime.Now
+            DateTimeInsert = DateTime.Now,
+            IsTest = isTest
         });
         await db.SaveChangesAsync();
         return true;
+    }
+
+    // ===== DỮ LIỆU TEST (Cài đặt > Test Data) =====
+
+    /// <summary>Phát sau khi thêm / xóa dữ liệu test hàng loạt (màn hình Home tải lại).</summary>
+    public event Action? DataChanged;
+
+    /// <summary>
+    /// Thêm hàng loạt bản ghi test (đã đánh dấu IsTest).
+    /// </summary>
+    public async Task<int> InsertTestDataAsync(IReadOnlyCollection<ProductionData> rows)
+    {
+        using var scope = _scopeFactory.CreateScope();
+        var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+        foreach (var row in rows) row.IsTest = true;
+        db.ProductionData.AddRange(rows);
+        await db.SaveChangesAsync();
+        DataChanged?.Invoke();
+        return rows.Count;
+    }
+
+    /// <summary>
+    /// Số bản ghi test; from/to = khoảng thời gian (null = tất cả).
+    /// </summary>
+    public async Task<int> CountTestDataAsync(DateTime? from = null, DateTime? to = null)
+    {
+        using var scope = _scopeFactory.CreateScope();
+        var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+        var query = db.ProductionData.Where(p => p.IsTest);
+        if (from.HasValue) query = query.Where(p => p.DateTimeInsert >= from.Value);
+        if (to.HasValue) query = query.Where(p => p.DateTimeInsert < to.Value);
+        return await query.CountAsync();
+    }
+
+    /// <summary>
+    /// Xóa CHỈ bản ghi test; from/to = khoảng thời gian (null = tất cả). Trả về số bản ghi đã xóa.
+    /// </summary>
+    public async Task<int> DeleteTestDataAsync(DateTime? from = null, DateTime? to = null)
+    {
+        using var scope = _scopeFactory.CreateScope();
+        var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+        int deleted;
+        if (from.HasValue && to.HasValue)
+            deleted = await db.Database.ExecuteSqlInterpolatedAsync(
+                $"DELETE FROM \"ProductionData\" WHERE \"IsTest\" = 1 AND \"DateTimeInsert\" >= {from.Value} AND \"DateTimeInsert\" < {to.Value}");
+        else
+            deleted = await db.Database.ExecuteSqlRawAsync("DELETE FROM \"ProductionData\" WHERE \"IsTest\" = 1");
+        DataChanged?.Invoke();
+        return deleted;
+    }
+
+    /// <summary>
+    /// Serial test lớn nhất đang có (serial dạng "T" + số) để sinh serial mới không trùng.
+    /// </summary>
+    public async Task<int> GetMaxTestSerialNumberAsync()
+    {
+        using var scope = _scopeFactory.CreateScope();
+        var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+        var serials = await db.ProductionData.AsNoTracking()
+            .Where(p => p.IsTest && p.Serial.StartsWith("T"))
+            .Select(p => p.Serial)
+            .ToListAsync();
+        return serials.Select(s => int.TryParse(s.Substring(1), out var n) ? n : 0).DefaultIfEmpty(0).Max();
     }
 
     public async Task<int> AddBatchProductionDataAsync(List<ProductionData> dataList)

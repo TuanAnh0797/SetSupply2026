@@ -59,7 +59,9 @@ public partial class UCHomeViewModel : ObservableObject
     private List<(string Model, int HourIndex)> _records = new();
     private List<(string Model, DateTime Time)> _dayRecords = new();
     private List<(ShiftScopeOption Option, DateTime Start, DateTime End)> _shiftRanges = new();
-    private List<ModelGroup> _groups = new();
+    // Gán model -> nhóm (Model Group) + thứ tự nhóm ("Khác" luôn cuối)
+    private Dictionary<string, ModelMapping> _mappings = new(StringComparer.OrdinalIgnoreCase);
+    private List<string> _groupNames = new() { ModelGroupService.OtherGroupName };
     // Kế hoạch (Daily Plan) của ngày đang xem: (tên nhóm, ca) -> số lượng. Rỗng => ngày chưa có kế hoạch
     private Dictionary<(string Group, int Shift), int> _dailyPlans = new();
     private List<DateTime> _hourSlots = new();
@@ -97,6 +99,13 @@ public partial class UCHomeViewModel : ObservableObject
     private bool isPlcConnected;
 
     // ===== Ô Codeback (mã vừa đọc từ PLC) =====
+    // ===== Nhãn cảnh báo dữ liệu test trong ngày đang xem =====
+    [ObservableProperty]
+    private string testDataText = string.Empty;
+
+    [ObservableProperty]
+    private bool hasTestData;
+
     [ObservableProperty]
     private string lastCodeText = "--";
 
@@ -117,7 +126,7 @@ public partial class UCHomeViewModel : ObservableObject
     public string ConnectionText => IsPlcConnected ? "Đang kết nối" : "Mất kết nối";
 
     public UCHomeViewModel(ProductionDataService productionService, ModelGroupService modelGroupService,
-                           ProductionPlanService planService, PLCService plcService)
+                           ProductionPlanService planService, PLCService plcService, PlanImportService planImportService)
     {
         _productionService = productionService;
         _modelGroupService = modelGroupService;
@@ -131,6 +140,10 @@ public partial class UCHomeViewModel : ObservableObject
         _plcService.DataReceived += PlcService_DataReceived;
         _plcService.ConnectionChanged += connected =>
             Application.Current?.Dispatcher.InvokeAsync(() => IsPlcConnected = connected);
+        // Có file kế hoạch mới được import => tải lại kế hoạch
+        planImportService.PlanImported += _ => Application.Current?.Dispatcher.InvokeAsync(LoadAsync);
+        // Thêm / xóa dữ liệu test hàng loạt => tải lại
+        _productionService.DataChanged += () => Application.Current?.Dispatcher.InvokeAsync(LoadAsync);
         _plcService.CodeRead += result =>
             Application.Current?.Dispatcher.InvokeAsync(() => ShowCodeRead(result));
 
@@ -259,7 +272,9 @@ public partial class UCHomeViewModel : ObservableObject
         await _loadLock.WaitAsync();
         try
         {
-            _groups = await _modelGroupService.GetAllAsync();
+            var mappings = await _modelGroupService.GetMappingsAsync();
+            _mappings = ModelGroupService.ToLookup(mappings);
+            _groupNames = ModelGroupService.GetGroupNames(mappings);
 
             _suppressReload = true;
             try
@@ -299,6 +314,10 @@ public partial class UCHomeViewModel : ObservableObject
             _hourSlots = new List<DateTime>();
             for (var t = firstSlot; t < end; t = t.AddHours(1))
                 _hourSlots.Add(t);
+
+            int testCount = await _productionService.CountTestDataAsync(dayStart < start ? dayStart : start, dayEnd > end ? dayEnd : end);
+            HasTestData = testCount > 0;
+            TestDataText = HasTestData ? $"Có {testCount.ToString("#,0", CultureInfo.InvariantCulture)} bản ghi TEST" : string.Empty;
 
             _dayRecords = await _productionService.GetModelTimesInRangeAsync(
                 dayStart < start ? dayStart : start, dayEnd > end ? dayEnd : end);
@@ -356,19 +375,11 @@ public partial class UCHomeViewModel : ObservableObject
 
     // ===== BUILD TABLE (TRÊN BỘ NHỚ) =====
 
-    private List<ModelGroup> GetDisplayGroups()
-    {
-        var groups = _groups.ToList();
-        if (!groups.Any(g => g.IsCatchAll))
-            groups.Add(new ModelGroup { Name = ModelGroupService.OtherGroupName, SortOrder = int.MaxValue });
-
-        // Nhóm "Khác" luôn ở cuối
-        return groups.OrderBy(g => g.IsCatchAll).ThenBy(g => g.SortOrder).ThenBy(g => g.Name).ToList();
-    }
+    private string GroupOf(string model) => ModelGroupService.ResolveGroup(model, _mappings);
 
     private void RebuildGroupFilterOptions()
     {
-        var names = GetDisplayGroups().Select(g => g.Name).ToList();
+        var names = _groupNames.ToList();
         if (names.SequenceEqual(GroupFilterOptions.Skip(1))) return;
 
         var selected = SelectedGroupFilter;
@@ -383,10 +394,8 @@ public partial class UCHomeViewModel : ObservableObject
 
     private void RebuildModelFilterOptions()
     {
-        var displayGroups = GetDisplayGroups();
         var models = _records.Select(r => r.Model).Distinct()
-            .Where(m => SelectedGroupFilter == AllOption
-                        || ModelGroupService.Match(m, displayGroups)?.Name == SelectedGroupFilter)
+            .Where(m => SelectedGroupFilter == AllOption || GroupOf(m) == SelectedGroupFilter)
             .OrderBy(m => m)
             .ToList();
         if (models.SequenceEqual(ModelFilterOptions.Skip(1))) return;
@@ -403,7 +412,7 @@ public partial class UCHomeViewModel : ObservableObject
 
     private void RebuildTable()
     {
-        var displayGroups = GetDisplayGroups();
+        var displayGroups = _groupNames;
         int hourCount = _hourSlots.Count;
         var now = DateTime.Now;
         bool[] isFuture = _hourSlots.Select(s => s > now).ToArray();
@@ -418,25 +427,22 @@ public partial class UCHomeViewModel : ObservableObject
         }
 
         // Nhóm -> danh sách model
-        var groupModels = displayGroups.ToDictionary(g => g, _ => new List<string>());
+        var groupModels = displayGroups.ToDictionary(g => g, _ => new List<string>(), StringComparer.OrdinalIgnoreCase);
         foreach (var model in modelHours.Keys)
-        {
-            var group = ModelGroupService.Match(model, displayGroups);
-            if (group != null) groupModels[group].Add(model);
-        }
+            groupModels[GroupOf(model)].Add(model);
 
         int? shiftNumber = SelectedScope?.ShiftNumber;
         var activeShiftNumbers = ScopeOptions.Where(o => o.ShiftNumber.HasValue).Select(o => o.ShiftNumber!.Value).ToList();
 
         var rows = new List<ModelGroupRow>();
-        var shownGroups = new List<(ModelGroup Group, int Total, string BarColor)>();
+        var shownGroups = new List<(string Group, int Total, string BarColor)>();
         var grandHours = new int[hourCount];
         int grandPlan = 0;
 
         for (int gi = 0; gi < displayGroups.Count; gi++)
         {
             var group = displayGroups[gi];
-            if (SelectedGroupFilter != AllOption && group.Name != SelectedGroupFilter) continue;
+            if (SelectedGroupFilter != AllOption && group != SelectedGroupFilter) continue;
 
             var models = groupModels[group]
                 .Where(m => SelectedModelFilter == AllOption || m == SelectedModelFilter)
@@ -448,8 +454,8 @@ public partial class UCHomeViewModel : ObservableObject
                 ? GetPlan(group, shiftNumber.Value)
                 : activeShiftNumbers.Sum(n => GetPlan(group, n));
 
-            // Nhóm "Khác" tự sinh: chỉ hiện khi có dữ liệu
-            if (group.Id == 0 && group.IsCatchAll && models.Count == 0 && plan == 0) continue;
+            // Nhóm "Khác": chỉ hiện khi có dữ liệu hoặc có kế hoạch
+            if (ModelGroupService.IsOther(group) && models.Count == 0 && plan == 0) continue;
 
             var (rowColor, tintColor, barColor) = GroupPalette[gi % GroupPalette.Length];
             var rowBrush = CreateBrush(rowColor);
@@ -465,7 +471,7 @@ public partial class UCHomeViewModel : ObservableObject
                 children.Add(new ModelRow
                 {
                     ModelName = model,
-                    Image = ModelImageProvider.Get(model, group.Name),
+                    Image = ModelImageProvider.Get(model, group, _mappings.TryGetValue(model, out var map) ? map.ImagePath : null),
                     TintBrush = tintBrush,
                     Hours = FormatHours(counts, isFuture),
                     TotalText = FormatNumber(counts.Sum())
@@ -478,14 +484,14 @@ public partial class UCHomeViewModel : ObservableObject
 
             rows.Add(new ModelGroupRow(OnGroupToggled)
             {
-                Name = group.Name,
+                Name = group,
                 PlanText = FormatPlan(plan),
                 RowBrush = rowBrush,
                 TintBrush = tintBrush,
                 Hours = FormatHours(groupHours, isFuture),
                 TotalText = FormatNumber(groupHours.Sum()),
                 Children = children,
-                IsExpanded = !_collapsedGroups.Contains(group.Name)
+                IsExpanded = !_collapsedGroups.Contains(group)
             });
         }
 
@@ -506,9 +512,9 @@ public partial class UCHomeViewModel : ObservableObject
     /// <summary>
     /// Kế hoạch của nhóm trong 1 ca (Daily Plan). Không có kế hoạch => 0; số thực tế vẫn đếm bình thường.
     /// </summary>
-    private int GetPlan(ModelGroup group, int shiftNumber)
+    private int GetPlan(string group, int shiftNumber)
     {
-        return _dailyPlans.TryGetValue((group.Name, shiftNumber), out var quantity) ? quantity : 0;
+        return _dailyPlans.TryGetValue((group, shiftNumber), out var quantity) ? quantity : 0;
     }
 
     private bool HasPlan => _dailyPlans.Count > 0;

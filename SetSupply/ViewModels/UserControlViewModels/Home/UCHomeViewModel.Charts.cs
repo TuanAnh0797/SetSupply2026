@@ -65,8 +65,8 @@ public partial class UCHomeViewModel
     private Axis[] hourlyYAxes = { new Axis { MinLimit = 0 } };
 
     private void UpdateBottomPanels(
-        List<ModelGroup> displayGroups,
-        List<(ModelGroup Group, int Total, string BarColor)> shownGroups,
+        List<string> displayGroups,
+        List<(string Group, int Total, string BarColor)> shownGroups,
         int[] grandHours,
         bool[] isFuture,
         int grandPlan)
@@ -95,7 +95,7 @@ public partial class UCHomeViewModel
         {
             GroupBars.Add(new GroupBarItem
             {
-                Name = group.Name,
+                Name = group,
                 ValueText = FormatNumber(total),
                 BarBrush = CreateBrush(barColor),
                 BarLength = new GridLength(total, GridUnitType.Star),
@@ -174,17 +174,16 @@ public partial class UCHomeViewModel
     }
 
     private void UpdateShiftSummaries(
-        List<ModelGroup> displayGroups,
-        List<(ModelGroup Group, int Total, string BarColor)> shownGroups)
+        List<string> displayGroups,
+        List<(string Group, int Total, string BarColor)> shownGroups)
     {
-        var shownSet = shownGroups.Select(g => g.Group).ToHashSet();
+        var shownSet = shownGroups.Select(g => g.Group).ToHashSet(StringComparer.OrdinalIgnoreCase);
         var passCache = new Dictionary<string, bool>(StringComparer.Ordinal);
 
         bool Passes(string model)
         {
             if (passCache.TryGetValue(model, out var ok)) return ok;
-            var group = ModelGroupService.Match(model, displayGroups);
-            ok = group != null && shownSet.Contains(group)
+            ok = shownSet.Contains(GroupOf(model))
                  && (SelectedModelFilter == AllOption || model == SelectedModelFilter);
             passCache[model] = ok;
             return ok;

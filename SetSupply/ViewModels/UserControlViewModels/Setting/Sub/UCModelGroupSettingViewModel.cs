@@ -11,29 +11,87 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Media;
 
 namespace SetSupply.ViewModels.UserControlViewModels.Setting.Sub;
 
 /// <summary>
-/// Cài đặt nhóm model (gom các model cùng nhóm để hiển thị ở màn hình Home). Có Import / Export Excel, CSV.
+/// 1 dòng gán model vào nhóm (có ảnh xem trước).
+/// </summary>
+public partial class ModelMappingRow : ObservableObject
+{
+    [ObservableProperty]
+    private int sortOrder;
+
+    [ObservableProperty]
+    private string groupName = string.Empty;
+
+    [ObservableProperty]
+    private string modelName = string.Empty;
+
+    [ObservableProperty]
+    private string imagePath = string.Empty;
+
+    [ObservableProperty]
+    private ImageSource? preview;
+
+    /// <summary>Có khai báo đường dẫn ảnh nhưng không tìm thấy file.</summary>
+    [ObservableProperty]
+    private bool imageMissing;
+
+    partial void OnImagePathChanged(string value) => UpdatePreview();
+    partial void OnModelNameChanged(string value) => UpdatePreview();
+    partial void OnGroupNameChanged(string value) => UpdatePreview();
+
+    public void UpdatePreview()
+    {
+        var resolved = ModelImageProvider.ResolvePath(ImagePath);
+        ImageMissing = resolved != null && !File.Exists(resolved);
+        Preview = ModelImageProvider.Get(ModelName ?? string.Empty, GroupName ?? string.Empty, ImagePath);
+    }
+
+    public ModelMapping ToEntity() => new()
+    {
+        SortOrder = SortOrder,
+        GroupName = (GroupName ?? string.Empty).Trim(),
+        ModelName = (ModelName ?? string.Empty).Trim(),
+        ImagePath = (ImagePath ?? string.Empty).Trim()
+    };
+
+    public static ModelMappingRow From(ModelMapping m)
+    {
+        var row = new ModelMappingRow { SortOrder = m.SortOrder, GroupName = m.GroupName, ModelName = m.ModelName, ImagePath = m.ImagePath };
+        row.UpdatePreview();
+        return row;
+    }
+}
+
+/// <summary>
+/// Cài đặt nhóm model: gán TỪNG model vào nhóm (không dùng tiền tố) + ảnh model.
+/// Model chưa gán => nhóm "Khác". Có Import / Export Excel, CSV (cột Nhóm model | Model | Đường dẫn ảnh).
 /// </summary>
 public partial class UCModelGroupSettingViewModel : ObservableObject
 {
+    private static readonly string[] FileHeaders = { "Nhóm model", "Model", "Đường dẫn ảnh" };
+    private static readonly string[] ImageExtensions = { ".png", ".jpg", ".jpeg", ".bmp" };
+    private const string ImageFilter = "Ảnh (*.png;*.jpg;*.jpeg;*.bmp)|*.png;*.jpg;*.jpeg;*.bmp";
+
     private readonly ModelGroupService _modelGroupService;
 
-    public ObservableCollection<ModelGroup> Groups { get; } = new();
+    public ObservableCollection<ModelMappingRow> Rows { get; } = new();
 
     [ObservableProperty]
-    private ModelGroup? selectedGroup;
+    private ModelMappingRow? selectedRow;
 
     [ObservableProperty]
-    private int autoPrefixLength = 8;
+    private string summaryText = string.Empty;
 
     public string ImageFolder => ModelImageProvider.ImageFolder;
 
     public UCModelGroupSettingViewModel(ModelGroupService modelGroupService)
     {
         _modelGroupService = modelGroupService;
+        Rows.CollectionChanged += (_, _) => UpdateSummary();
     }
 
     [RelayCommand]
@@ -41,10 +99,11 @@ public partial class UCModelGroupSettingViewModel : ObservableObject
     {
         try
         {
-            var groups = await _modelGroupService.GetAllAsync();
-            Groups.Clear();
-            foreach (var g in groups)
-                Groups.Add(g);
+            ModelImageProvider.ClearCache();
+            var mappings = await _modelGroupService.GetMappingsAsync();
+            Rows.Clear();
+            foreach (var m in mappings)
+                Rows.Add(ModelMappingRow.From(m));
         }
         catch (Exception ex)
         {
@@ -55,49 +114,45 @@ public partial class UCModelGroupSettingViewModel : ObservableObject
     [RelayCommand]
     private void Add()
     {
-        var group = new ModelGroup
+        var row = new ModelMappingRow
         {
-            Name = "",
-            SortOrder = Groups.Where(g => !g.IsCatchAll).Select(g => g.SortOrder).DefaultIfEmpty(0).Max() + 1
+            SortOrder = Rows.Select(r => r.SortOrder).DefaultIfEmpty(0).Max() + 1,
+            GroupName = SelectedRow?.GroupName ?? string.Empty // tiện thêm nhiều model cho cùng nhóm
         };
-        Groups.Add(group);
-        SelectedGroup = group;
+        Rows.Add(row);
+        SelectedRow = row;
     }
 
     [RelayCommand]
     private void Delete()
     {
-        if (SelectedGroup != null)
-            Groups.Remove(SelectedGroup);
+        if (SelectedRow != null)
+            Rows.Remove(SelectedRow);
     }
 
     /// <summary>
-    /// Tạo nhóm từ các model đã sản xuất 30 ngày gần nhất, theo N ký tự đầu (VD: NR-C33ES2L-C => NR-C33ES).
+    /// Thêm các model đã sản xuất 30 ngày gần nhất nhưng chưa được gán nhóm (cột nhóm để trống để điền).
     /// </summary>
     [RelayCommand]
-    private async Task AutoCreate()
+    private async Task AddUnmappedModels()
     {
         try
         {
-            int length = Math.Max(1, AutoPrefixLength);
-            var models = await _modelGroupService.GetRecentModelsAsync(30);
-            var existing = Groups.ToList();
-            int order = existing.Where(g => !g.IsCatchAll).Select(g => g.SortOrder).DefaultIfEmpty(0).Max();
-            int added = 0;
+            var existing = new HashSet<string>(Rows.Select(r => r.ModelName.Trim()), StringComparer.OrdinalIgnoreCase);
+            var models = (await _modelGroupService.GetRecentModelsAsync(30)).Where(m => !existing.Contains(m)).ToList();
+            int order = Rows.Select(r => r.SortOrder).DefaultIfEmpty(0).Max();
 
-            foreach (var prefix in models.Select(m => m.Length > length ? m.Substring(0, length) : m).Distinct())
+            foreach (var model in models)
             {
-                var matched = ModelGroupService.Match(prefix, existing);
-                if (matched != null && !matched.IsCatchAll) continue;
-
-                var group = new ModelGroup { Name = prefix, Prefixes = prefix, SortOrder = ++order };
-                Groups.Add(group);
-                existing.Add(group);
-                added++;
+                var row = new ModelMappingRow { SortOrder = ++order, ModelName = model };
+                row.UpdatePreview();
+                Rows.Add(row);
             }
 
-            MessageBox.Show(added > 0 ? $"Đã thêm {added} nhóm. Nhập kế hoạch rồi bấm Lưu." : "Không có nhóm mới.",
-                "Tạo nhóm", MessageBoxButton.OK, MessageBoxImage.Information);
+            MessageBox.Show(models.Count > 0
+                    ? $"Đã thêm {models.Count} model chưa có nhóm (cuối bảng). Điền cột Nhóm model rồi bấm Lưu."
+                    : "Tất cả model đã sản xuất trong 30 ngày đều đã có nhóm.",
+                "Model chưa có nhóm", MessageBoxButton.OK, MessageBoxImage.Information);
         }
         catch (Exception ex)
         {
@@ -105,12 +160,32 @@ public partial class UCModelGroupSettingViewModel : ObservableObject
         }
     }
 
+    [RelayCommand]
+    private async Task Save()
+    {
+        var errors = Validate(Rows.Select((r, i) => (i + 1, r.GroupName, r.ModelName)));
+        if (errors.Count > 0)
+        {
+            ShowErrors("Chưa lưu, dữ liệu có lỗi:", errors);
+            return;
+        }
+
+        try
+        {
+            await _modelGroupService.SaveMappingsAsync(Rows.Select(r => r.ToEntity()));
+            await Load();
+            MessageBox.Show($"Đã lưu {Rows.Count} model.", "Thành công", MessageBoxButton.OK, MessageBoxImage.Information);
+        }
+        catch (Exception ex)
+        {
+            MessageBox.Show($"Lỗi lưu: {ex.GetBaseException().Message}", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
+        }
+    }
+
     // ===== IMPORT / EXPORT =====
 
-    private static readonly string[] FileHeaders = { "Thứ tự", "Tên nhóm", "Tiền tố model" };
-
     /// <summary>
-    /// Xuất danh sách đang hiển thị (kể cả phần chưa lưu) ra Excel / CSV. Có thể dùng làm file mẫu để Import.
+    /// Xuất bảng đang hiển thị (kể cả phần chưa lưu). Dùng làm file mẫu để Import.
     /// </summary>
     [RelayCommand]
     private void Export()
@@ -125,9 +200,13 @@ public partial class UCModelGroupSettingViewModel : ObservableObject
 
         try
         {
-            var rows = Groups.Select(g => new object?[] { g.SortOrder, g.Name, g.Prefixes });
+            var rows = Rows.OrderBy(r => r.SortOrder).Select(r => new object?[] { r.GroupName, r.ModelName, r.ImagePath });
             SpreadsheetHelper.Write(dialog.FileName, "ModelGroup", FileHeaders, rows);
-            MessageBox.Show($"Đã xuất {Groups.Count} nhóm ra file:\n{dialog.FileName}", "Xuất file", MessageBoxButton.OK, MessageBoxImage.Information);
+            MessageBox.Show($"Đã xuất {Rows.Count} model ra file:\n{dialog.FileName}", "Xuất file", MessageBoxButton.OK, MessageBoxImage.Information);
+        }
+        catch (IOException ex)
+        {
+            MessageBox.Show($"Không ghi được file (file đang mở trong Excel?): {ex.Message}", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
         }
         catch (Exception ex)
         {
@@ -136,7 +215,8 @@ public partial class UCModelGroupSettingViewModel : ObservableObject
     }
 
     /// <summary>
-    /// Nhập danh sách nhóm từ file (cột: Thứ tự | Tên nhóm | Tiền tố model) => thay danh sách trên màn hình, bấm Lưu để áp dụng.
+    /// Nhập từ file (cột: Nhóm model | Model | Đường dẫn ảnh) => thay bảng trên màn hình, bấm Lưu để áp dụng.
+    /// Thứ tự hiển thị nhóm / model theo thứ tự dòng trong file.
     /// </summary>
     [RelayCommand]
     private void Import()
@@ -147,57 +227,42 @@ public partial class UCModelGroupSettingViewModel : ObservableObject
         try
         {
             var rows = SpreadsheetHelper.Read(dialog.FileName, FileHeaders.Length);
-            var imported = new List<ModelGroup>();
-            var errors = new List<string>();
-
-            foreach (var (rowNumber, cells) in rows)
-            {
-                string name = cells[1].Trim();
-                if (name.Length == 0)
-                {
-                    errors.Add($"Dòng {rowNumber}: thiếu tên nhóm");
-                    continue;
-                }
-
-                int sortOrder = imported.Count + 1;
-                if (cells[0].Trim().Length > 0 && !int.TryParse(cells[0].Trim(), out sortOrder))
-                {
-                    errors.Add($"Dòng {rowNumber}: thứ tự '{cells[0]}' không phải số");
-                    continue;
-                }
-
-                if (imported.Any(g => string.Equals(g.Name, name, StringComparison.OrdinalIgnoreCase)))
-                {
-                    errors.Add($"Dòng {rowNumber}: tên nhóm '{name}' bị trùng");
-                    continue;
-                }
-
-                imported.Add(new ModelGroup { SortOrder = sortOrder, Name = name, Prefixes = cells[2].Trim() });
-            }
-
+            var errors = Validate(rows.Select(r => (r.RowNumber, r.Cells[0], r.Cells[1])));
             if (errors.Count > 0)
             {
-                MessageBox.Show("File có lỗi, chưa nhập:\n" + string.Join("\n", errors.Take(15)) +
-                                (errors.Count > 15 ? $"\n... và {errors.Count - 15} lỗi khác" : ""),
-                    "Lỗi dữ liệu", MessageBoxButton.OK, MessageBoxImage.Warning);
+                ShowErrors("File có lỗi, chưa nhập:", errors);
                 return;
             }
-            if (imported.Count == 0)
+            if (rows.Count == 0)
             {
                 MessageBox.Show("File không có dữ liệu.", "Nhập file", MessageBoxButton.OK, MessageBoxImage.Information);
                 return;
             }
 
-            if (Groups.Count > 0 && MessageBox.Show(
-                    $"Thay toàn bộ {Groups.Count} nhóm đang có bằng {imported.Count} nhóm trong file?",
-                    "Xác nhận", MessageBoxButton.YesNo, MessageBoxImage.Question) != MessageBoxResult.Yes)
+            var imported = rows.Select((r, i) => ModelMappingRow.From(new ModelMapping
+            {
+                SortOrder = i + 1,
+                GroupName = r.Cells[0].Trim(),
+                ModelName = r.Cells[1].Trim(),
+                ImagePath = r.Cells[2].Trim()
+            })).ToList();
+
+            var missing = imported.Where(r => r.ImageMissing).Select(r => r.ModelName).ToList();
+            string message = $"Thay toàn bộ {Rows.Count} dòng đang có bằng {imported.Count} model trong file " +
+                             $"({imported.Select(r => r.GroupName).Distinct(StringComparer.OrdinalIgnoreCase).Count()} nhóm)?";
+            if (missing.Count > 0)
+                message += $"\n\nCảnh báo: {missing.Count} model có đường dẫn ảnh không tìm thấy file (vẫn nhập, ảnh sẽ không hiện):\n" +
+                           string.Join(", ", missing.Take(10)) + (missing.Count > 10 ? ", ..." : "");
+
+            if (MessageBox.Show(message, "Xác nhận nhập", MessageBoxButton.YesNo,
+                    missing.Count > 0 ? MessageBoxImage.Warning : MessageBoxImage.Question) != MessageBoxResult.Yes)
                 return;
 
-            Groups.Clear();
-            foreach (var group in imported.OrderBy(g => g.SortOrder))
-                Groups.Add(group);
+            Rows.Clear();
+            foreach (var row in imported)
+                Rows.Add(row);
 
-            MessageBox.Show($"Đã nhập {imported.Count} nhóm. Kiểm tra lại rồi bấm Lưu để áp dụng.", "Nhập file",
+            MessageBox.Show($"Đã nhập {imported.Count} model. Kiểm tra lại rồi bấm Lưu để áp dụng.", "Nhập file",
                 MessageBoxButton.OK, MessageBoxImage.Information);
         }
         catch (IOException ex)
@@ -212,39 +277,43 @@ public partial class UCModelGroupSettingViewModel : ObservableObject
 
     // ===== ẢNH MODEL =====
 
-    private static readonly string[] ImageExtensions = { ".png", ".jpg", ".jpeg", ".bmp" };
-    private const string ImageFilter = "Ảnh (*.png;*.jpg;*.jpeg;*.bmp)|*.png;*.jpg;*.jpeg;*.bmp";
-
     /// <summary>
-    /// Chọn ảnh cho nhóm đang chọn => lưu thành &lt;tên nhóm&gt;.ext, dùng cho các model chưa có ảnh riêng.
+    /// Chọn ảnh cho dòng đang chọn: chép vào thư mục ModelImages với tên &lt;model&gt;.ext và điền vào cột Đường dẫn ảnh.
     /// </summary>
     [RelayCommand]
-    private void ChooseGroupImage()
+    private void ChooseImage()
     {
-        if (SelectedGroup == null || string.IsNullOrWhiteSpace(SelectedGroup.Name))
+        if (SelectedRow == null || string.IsNullOrWhiteSpace(SelectedRow.ModelName))
         {
-            MessageBox.Show("Chọn 1 nhóm (đã có tên) trong bảng trước.", "Thông báo", MessageBoxButton.OK, MessageBoxImage.Information);
+            MessageBox.Show("Chọn 1 dòng (đã có tên model) trong bảng trước.", "Thông báo", MessageBoxButton.OK, MessageBoxImage.Information);
             return;
         }
 
-        var dialog = new Microsoft.Win32.OpenFileDialog { Filter = ImageFilter, Title = $"Chọn ảnh cho nhóm {SelectedGroup.Name}" };
+        var dialog = new Microsoft.Win32.OpenFileDialog { Filter = ImageFilter, Title = $"Chọn ảnh cho model {SelectedRow.ModelName}" };
         if (dialog.ShowDialog() != true) return;
 
         try
         {
             Directory.CreateDirectory(ImageFolder);
-            var safeName = string.Concat(SelectedGroup.Name.Trim().Split(Path.GetInvalidFileNameChars()));
+            var safeName = string.Concat(SelectedRow.ModelName.Trim().Split(Path.GetInvalidFileNameChars()));
+            var fileName = safeName + Path.GetExtension(dialog.FileName).ToLowerInvariant();
+            var target = Path.Combine(ImageFolder, fileName);
 
-            // Bỏ ảnh cũ của nhóm (có thể khác đuôi file)
-            foreach (var ext in ImageExtensions)
+            if (!string.Equals(Path.GetFullPath(dialog.FileName), Path.GetFullPath(target), StringComparison.OrdinalIgnoreCase))
             {
-                var old = Path.Combine(ImageFolder, safeName + ext);
-                if (File.Exists(old)) File.Delete(old);
+                // Bỏ ảnh cũ của model (có thể khác đuôi file)
+                foreach (var ext in ImageExtensions)
+                {
+                    var old = Path.Combine(ImageFolder, safeName + ext);
+                    bool isSource = string.Equals(Path.GetFullPath(old), Path.GetFullPath(dialog.FileName), StringComparison.OrdinalIgnoreCase);
+                    if (File.Exists(old) && !isSource) File.Delete(old);
+                }
+                File.Copy(dialog.FileName, target, true);
             }
 
-            File.Copy(dialog.FileName, Path.Combine(ImageFolder, safeName + Path.GetExtension(dialog.FileName).ToLowerInvariant()), true);
             ModelImageProvider.ClearCache();
-            MessageBox.Show($"Đã đặt ảnh cho nhóm {SelectedGroup.Name}.", "Thành công", MessageBoxButton.OK, MessageBoxImage.Information);
+            SelectedRow.ImagePath = fileName; // tên file trong thư mục ModelImages
+            SelectedRow.UpdatePreview();
         }
         catch (Exception ex)
         {
@@ -252,32 +321,11 @@ public partial class UCModelGroupSettingViewModel : ObservableObject
         }
     }
 
-    /// <summary>
-    /// Thêm ảnh riêng cho từng model: chọn nhiều file, tên file phải là tên model (VD NR-C33ES2-C.png).
-    /// </summary>
     [RelayCommand]
-    private void AddModelImages()
+    private void ClearImage()
     {
-        var dialog = new Microsoft.Win32.OpenFileDialog
-        {
-            Filter = ImageFilter,
-            Multiselect = true,
-            Title = "Chọn ảnh model (tên file = tên model, VD NR-C33ES2-C.png)"
-        };
-        if (dialog.ShowDialog() != true) return;
-
-        try
-        {
-            Directory.CreateDirectory(ImageFolder);
-            foreach (var file in dialog.FileNames)
-                File.Copy(file, Path.Combine(ImageFolder, Path.GetFileName(file)), true);
-            ModelImageProvider.ClearCache();
-            MessageBox.Show($"Đã thêm {dialog.FileNames.Length} ảnh.", "Thành công", MessageBoxButton.OK, MessageBoxImage.Information);
-        }
-        catch (Exception ex)
-        {
-            MessageBox.Show($"Lỗi chép ảnh: {ex.Message}", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
-        }
+        if (SelectedRow == null) return;
+        SelectedRow.ImagePath = string.Empty;
     }
 
     [RelayCommand]
@@ -294,43 +342,39 @@ public partial class UCModelGroupSettingViewModel : ObservableObject
         }
     }
 
-    [RelayCommand]
-    private async Task Save()
+    // ===== HELPERS =====
+
+    /// <summary>
+    /// Model bắt buộc + không trùng; nhóm bắt buộc.
+    /// </summary>
+    private static List<string> Validate(IEnumerable<(int RowNumber, string Group, string Model)> rows)
     {
-        foreach (var g in Groups)
-        {
-            g.Name = g.Name?.Trim() ?? "";
-            // Chưa nhập tiền tố => dùng tên nhóm (trừ nhóm "Khác")
-            if (string.IsNullOrWhiteSpace(g.Prefixes) &&
-                !string.Equals(g.Name, ModelGroupService.OtherGroupName, StringComparison.OrdinalIgnoreCase))
-                g.Prefixes = g.Name;
-        }
+        var errors = new List<string>();
+        var seen = new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase);
 
-        if (Groups.Any(g => string.IsNullOrEmpty(g.Name)))
+        foreach (var (rowNumber, group, model) in rows)
         {
-            MessageBox.Show("Tên nhóm không được để trống.", "Cảnh báo", MessageBoxButton.OK, MessageBoxImage.Warning);
-            return;
-        }
-        if (Groups.GroupBy(g => g.Name, StringComparer.OrdinalIgnoreCase).Any(x => x.Count() > 1))
-        {
-            MessageBox.Show("Tên nhóm bị trùng.", "Cảnh báo", MessageBoxButton.OK, MessageBoxImage.Warning);
-            return;
-        }
-        if (Groups.Count(g => g.IsCatchAll) > 1)
-        {
-            MessageBox.Show("Chỉ được có 1 nhóm \"Khác\" (tiền tố để trống).", "Cảnh báo", MessageBoxButton.OK, MessageBoxImage.Warning);
-            return;
-        }
+            var m = (model ?? string.Empty).Trim();
+            var g = (group ?? string.Empty).Trim();
 
-        try
-        {
-            await _modelGroupService.SaveAllAsync(Groups);
-            await Load();
-            MessageBox.Show("Đã lưu cài đặt nhóm model.", "Thành công", MessageBoxButton.OK, MessageBoxImage.Information);
+            if (m.Length == 0) { errors.Add($"Dòng {rowNumber}: thiếu tên model"); continue; }
+            if (g.Length == 0) errors.Add($"Dòng {rowNumber}: model '{m}' chưa có tên nhóm");
+            if (seen.TryGetValue(m, out var first)) errors.Add($"Dòng {rowNumber}: model '{m}' bị trùng với dòng {first}");
+            else seen[m] = rowNumber;
         }
-        catch (Exception ex)
-        {
-            MessageBox.Show($"Lỗi lưu: {ex.Message}", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
-        }
+        return errors;
+    }
+
+    private static void ShowErrors(string title, List<string> errors)
+    {
+        MessageBox.Show(title + "\n" + string.Join("\n", errors.Take(15)) +
+                        (errors.Count > 15 ? $"\n... và {errors.Count - 15} lỗi khác" : ""),
+            "Lỗi dữ liệu", MessageBoxButton.OK, MessageBoxImage.Warning);
+    }
+
+    private void UpdateSummary()
+    {
+        int groups = Rows.Select(r => r.GroupName.Trim()).Where(g => g.Length > 0).Distinct(StringComparer.OrdinalIgnoreCase).Count();
+        SummaryText = $"{Rows.Count} model / {groups} nhóm. Model không có trong bảng sẽ vào nhóm \"{ModelGroupService.OtherGroupName}\".";
     }
 }
