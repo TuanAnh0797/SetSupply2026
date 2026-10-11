@@ -11,6 +11,19 @@ using System.Threading.Tasks;
 
 namespace APP.Service;
 
+public enum PlcReadStatus
+{
+    Saved,       // đã lưu mới
+    Duplicate,   // trùng model + serial, bỏ qua
+    Invalid,     // sai định dạng (< 19 ký tự), bỏ qua
+    SaveError    // lỗi database, sẽ thử lại
+}
+
+/// <summary>
+/// 1 lần đọc mã từ PLC (hiển thị ô Codeback trên Home).
+/// </summary>
+public sealed record PlcReadResult(string Code, DateTime Time, PlcReadStatus Status);
+
 /// <summary>
 /// Vòng giao tiếp PLC (chạy nền):
 /// - Giữ 1 kết nối TCP, mất kết nối thì 5 giây sau kết nối lại.
@@ -51,6 +64,11 @@ public class PLCService
     public event Action<string>? DataReceived;
     /// <summary>Phát (trên thread nền) khi trạng thái kết nối thay đổi.</summary>
     public event Action<bool>? ConnectionChanged;
+    /// <summary>Phát (trên thread nền) cho MỌI mã đọc được từ PLC, kèm trạng thái xử lý.</summary>
+    public event Action<PlcReadResult>? CodeRead;
+
+    /// <summary>Mã đọc gần nhất kể từ khi chương trình chạy (null nếu chưa đọc).</summary>
+    public PlcReadResult? LastRead { get; private set; }
 
     private bool _isConnected;
     public bool IsConnected => _isConnected;
@@ -239,6 +257,7 @@ public class PLCService
             // Mã sai định dạng: ghi log rồi vẫn xác nhận để PLC không bị kẹt chờ
             PlcLogger.Warn($"Bỏ qua mã sai định dạng (cần >= {CodeLength} ký tự): '{data}'");
             await Plc.WriteBit(stream, CommandTimeoutMs, PLC.PlcDeviceType.M, config.AddressTrigger, false);
+            RaiseCodeRead(data, PlcReadStatus.Invalid);
             return;
         }
 
@@ -254,12 +273,14 @@ public class PLCService
         {
             // Lỗi database: không reset trigger => lần quét sau thử lưu lại
             PlcLogger.ErrorThrottled($"Lưu database lỗi, sẽ thử lại ({data}): {ex.GetBaseException().Message}");
+            RaiseCodeRead(data, PlcReadStatus.SaveError);
             await DelaySafe(SaveRetryDelay, token);
             return;
         }
 
         await Plc.WriteBit(stream, CommandTimeoutMs, PLC.PlcDeviceType.M, config.AddressTrigger, false);
         PlcLogger.Info(inserted ? $"Nhận: {data}" : $"Trùng (bỏ qua): {data}");
+        RaiseCodeRead(data, inserted ? PlcReadStatus.Saved : PlcReadStatus.Duplicate);
 
         if (inserted)
         {
@@ -271,6 +292,20 @@ public class PLCService
             {
                 PlcLogger.Error($"Lỗi xử lý DataReceived: {ex.Message}");
             }
+        }
+    }
+
+    private void RaiseCodeRead(string code, PlcReadStatus status)
+    {
+        var result = new PlcReadResult(code, DateTime.Now, status);
+        LastRead = result;
+        try
+        {
+            CodeRead?.Invoke(result);
+        }
+        catch (Exception ex)
+        {
+            PlcLogger.Error($"Lỗi xử lý CodeRead: {ex.Message}");
         }
     }
 

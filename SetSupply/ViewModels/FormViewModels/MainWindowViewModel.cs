@@ -4,6 +4,7 @@ using APP.Models.Database;
 using APP.Service;
 using APP.UserControls;
 using APP.Views;
+using SetSupply.Service;
 using APP.ViewModels.UserControlViewModels.Setting;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
@@ -29,8 +30,9 @@ namespace APP.ViewModels.FormViewModels
     {
 
 
+        // Tên ứng dụng: đổi được ở Cài đặt > General (bảng AppSettings)
         [ObservableProperty]
-        private string applicationTitle = "SetSupply Monitor";
+        private string applicationTitle = AppSettingService.DefaultApplicationTitle;
 
         [ObservableProperty]
         private UserControl currentView;
@@ -72,8 +74,15 @@ namespace APP.ViewModels.FormViewModels
 
         private readonly PLCService _plcService;
 
-        public MainWindowViewModel(ILocalizationService localizationService, UserSession userSession, AuthorizationService authorizationService, AppDbContext db, PLCService pLCService)
+        public MainWindowViewModel(ILocalizationService localizationService, UserSession userSession, AuthorizationService authorizationService, AppDbContext db, PLCService pLCService, AppSettingService appSettingService)
         {
+            ApplicationTitle = appSettingService.ApplicationTitle;
+            appSettingService.SettingChanged += (key, value) =>
+            {
+                if (key == AppSettingService.ApplicationTitleKey)
+                    Application.Current?.Dispatcher.Invoke(() => ApplicationTitle = value);
+            };
+
             _db = db;
             _localizationService = localizationService;
 

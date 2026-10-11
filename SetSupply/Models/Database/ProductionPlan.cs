@@ -5,7 +5,7 @@ namespace SetSupply.Models.Database;
 
 /// <summary>
 /// Kế hoạch sản lượng của 1 nhóm model, 1 ca, trong 1 ngày sản xuất.
-/// Ngày nào không có dòng ở đây thì dùng kế hoạch mặc định trong ModelGroup.PlanShiftN.
+/// Ngày nào không có dòng ở đây thì coi như chưa có kế hoạch (Home vẫn đếm thực tế, cột kế hoạch để trống).
 /// Lưu theo tên nhóm (ModelGroup bị ghi đè toàn bộ khi lưu cài đặt nên Id thay đổi).
 /// </summary>
 public class ProductionPlan

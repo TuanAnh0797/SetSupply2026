@@ -143,6 +143,18 @@ public class ProductionDataService
     }
 
     /// <summary>
+    /// Bản ghi mới nhất (hiển thị Codeback khi mở chương trình, trước khi đọc được mã mới).
+    /// </summary>
+    public async Task<ProductionData?> GetLatestRecordAsync()
+    {
+        using var scope = _scopeFactory.CreateScope();
+        var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+        return await db.ProductionData.AsNoTracking()
+            .OrderByDescending(p => p.DateTimeInsert)
+            .FirstOrDefaultAsync();
+    }
+
+    /// <summary>
     /// (Model, thời điểm) của các bản ghi trong khoảng [start, end).
     /// </summary>
     public async Task<List<(string Model, DateTime Time)>> GetModelTimesInRangeAsync(DateTime start, DateTime end)

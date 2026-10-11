@@ -7,7 +7,8 @@ using System.Linq;
 namespace SetSupply.Models.Database;
 
 /// <summary>
-/// Nhóm model (VD: NR-C33ES gồm NR-C33ES2-C, NR-C33ES2L-W...) + sản lượng kế hoạch theo ca.
+/// Nhóm model (VD: NR-C33ES gồm NR-C33ES2-C, NR-C33ES2L-W...). Chỉ dùng để gom model,
+/// kế hoạch sản lượng nằm ở bảng ProductionPlans (Daily Plan).
 /// Prefixes rỗng => nhóm "Khác" (gom tất cả model không khớp nhóm nào).
 /// </summary>
 public class ModelGroup
@@ -25,10 +26,6 @@ public class ModelGroup
     [MaxLength(500)]
     public string Prefixes { get; set; } = string.Empty;
 
-    public int PlanShift1 { get; set; }
-    public int PlanShift2 { get; set; }
-    public int PlanShift3 { get; set; }
-
     public int SortOrder { get; set; }
 
     [NotMapped]
@@ -41,12 +38,4 @@ public class ModelGroup
             .Select(p => p.Trim())
             .Where(p => p.Length > 0);
     }
-
-    public int GetPlan(int shiftNumber) => shiftNumber switch
-    {
-        1 => PlanShift1,
-        2 => PlanShift2,
-        3 => PlanShift3,
-        _ => 0
-    };
 }

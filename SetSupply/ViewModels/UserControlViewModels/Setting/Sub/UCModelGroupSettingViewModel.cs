@@ -4,6 +4,7 @@ using SetSupply.Helper;
 using SetSupply.Models.Database;
 using SetSupply.Service;
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO;
@@ -14,7 +15,7 @@ using System.Windows;
 namespace SetSupply.ViewModels.UserControlViewModels.Setting.Sub;
 
 /// <summary>
-/// Cài đặt nhóm model + sản lượng kế hoạch theo ca (hiển thị ở màn hình Home).
+/// Cài đặt nhóm model (gom các model cùng nhóm để hiển thị ở màn hình Home). Có Import / Export Excel, CSV.
 /// </summary>
 public partial class UCModelGroupSettingViewModel : ObservableObject
 {
@@ -101,6 +102,111 @@ public partial class UCModelGroupSettingViewModel : ObservableObject
         catch (Exception ex)
         {
             MessageBox.Show($"Lỗi: {ex.Message}", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
+        }
+    }
+
+    // ===== IMPORT / EXPORT =====
+
+    private static readonly string[] FileHeaders = { "Thứ tự", "Tên nhóm", "Tiền tố model" };
+
+    /// <summary>
+    /// Xuất danh sách đang hiển thị (kể cả phần chưa lưu) ra Excel / CSV. Có thể dùng làm file mẫu để Import.
+    /// </summary>
+    [RelayCommand]
+    private void Export()
+    {
+        var dialog = new Microsoft.Win32.SaveFileDialog
+        {
+            Filter = SpreadsheetHelper.FileFilter,
+            FileName = $"ModelGroup_{DateTime.Now:yyyyMMdd}.xlsx",
+            Title = "Xuất nhóm model"
+        };
+        if (dialog.ShowDialog() != true) return;
+
+        try
+        {
+            var rows = Groups.Select(g => new object?[] { g.SortOrder, g.Name, g.Prefixes });
+            SpreadsheetHelper.Write(dialog.FileName, "ModelGroup", FileHeaders, rows);
+            MessageBox.Show($"Đã xuất {Groups.Count} nhóm ra file:\n{dialog.FileName}", "Xuất file", MessageBoxButton.OK, MessageBoxImage.Information);
+        }
+        catch (Exception ex)
+        {
+            MessageBox.Show($"Lỗi xuất file: {ex.Message}", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
+        }
+    }
+
+    /// <summary>
+    /// Nhập danh sách nhóm từ file (cột: Thứ tự | Tên nhóm | Tiền tố model) => thay danh sách trên màn hình, bấm Lưu để áp dụng.
+    /// </summary>
+    [RelayCommand]
+    private void Import()
+    {
+        var dialog = new Microsoft.Win32.OpenFileDialog { Filter = SpreadsheetHelper.FileFilter, Title = "Nhập nhóm model" };
+        if (dialog.ShowDialog() != true) return;
+
+        try
+        {
+            var rows = SpreadsheetHelper.Read(dialog.FileName, FileHeaders.Length);
+            var imported = new List<ModelGroup>();
+            var errors = new List<string>();
+
+            foreach (var (rowNumber, cells) in rows)
+            {
+                string name = cells[1].Trim();
+                if (name.Length == 0)
+                {
+                    errors.Add($"Dòng {rowNumber}: thiếu tên nhóm");
+                    continue;
+                }
+
+                int sortOrder = imported.Count + 1;
+                if (cells[0].Trim().Length > 0 && !int.TryParse(cells[0].Trim(), out sortOrder))
+                {
+                    errors.Add($"Dòng {rowNumber}: thứ tự '{cells[0]}' không phải số");
+                    continue;
+                }
+
+                if (imported.Any(g => string.Equals(g.Name, name, StringComparison.OrdinalIgnoreCase)))
+                {
+                    errors.Add($"Dòng {rowNumber}: tên nhóm '{name}' bị trùng");
+                    continue;
+                }
+
+                imported.Add(new ModelGroup { SortOrder = sortOrder, Name = name, Prefixes = cells[2].Trim() });
+            }
+
+            if (errors.Count > 0)
+            {
+                MessageBox.Show("File có lỗi, chưa nhập:\n" + string.Join("\n", errors.Take(15)) +
+                                (errors.Count > 15 ? $"\n... và {errors.Count - 15} lỗi khác" : ""),
+                    "Lỗi dữ liệu", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
+            if (imported.Count == 0)
+            {
+                MessageBox.Show("File không có dữ liệu.", "Nhập file", MessageBoxButton.OK, MessageBoxImage.Information);
+                return;
+            }
+
+            if (Groups.Count > 0 && MessageBox.Show(
+                    $"Thay toàn bộ {Groups.Count} nhóm đang có bằng {imported.Count} nhóm trong file?",
+                    "Xác nhận", MessageBoxButton.YesNo, MessageBoxImage.Question) != MessageBoxResult.Yes)
+                return;
+
+            Groups.Clear();
+            foreach (var group in imported.OrderBy(g => g.SortOrder))
+                Groups.Add(group);
+
+            MessageBox.Show($"Đã nhập {imported.Count} nhóm. Kiểm tra lại rồi bấm Lưu để áp dụng.", "Nhập file",
+                MessageBoxButton.OK, MessageBoxImage.Information);
+        }
+        catch (IOException ex)
+        {
+            MessageBox.Show($"Không đọc được file (file đang mở trong Excel?): {ex.Message}", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
+        }
+        catch (Exception ex)
+        {
+            MessageBox.Show($"Lỗi nhập file: {ex.Message}", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
         }
     }
 
@@ -213,11 +319,6 @@ public partial class UCModelGroupSettingViewModel : ObservableObject
         if (Groups.Count(g => g.IsCatchAll) > 1)
         {
             MessageBox.Show("Chỉ được có 1 nhóm \"Khác\" (tiền tố để trống).", "Cảnh báo", MessageBoxButton.OK, MessageBoxImage.Warning);
-            return;
-        }
-        if (Groups.Any(g => g.PlanShift1 < 0 || g.PlanShift2 < 0 || g.PlanShift3 < 0))
-        {
-            MessageBox.Show("Kế hoạch không được âm.", "Cảnh báo", MessageBoxButton.OK, MessageBoxImage.Warning);
             return;
         }
 

@@ -29,7 +29,7 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <TextBlock Grid.Row="0" Text="Nhóm model &amp; sản lượng kế hoạch" FontSize="22" FontWeight="Bold"
+        <TextBlock Grid.Row="0" Text="Nhóm model" FontSize="22" FontWeight="Bold"
                    Foreground="#1D4F96" Margin="0,0,0,10"/>
 
         <StackPanel Grid.Row="1" Margin="0,0,0,10">
@@ -74,6 +74,19 @@
             </StackPanel>
 
             <StackPanel Orientation="Horizontal" Margin="0,0,0,8">
+                <Button Style="{StaticResource ToolButton}" Command="{Binding ImportCommand}" Background="#00897B" BorderBrush="#00897B">
+                    <StackPanel Orientation="Horizontal">
+                        <materialDesign:PackIcon Kind="FileImport" VerticalAlignment="Center" Margin="0,0,6,0"/>
+                        <TextBlock Text="Import"/>
+                    </StackPanel>
+                </Button>
+                <Button Style="{StaticResource ToolButton}" Command="{Binding ExportCommand}" Background="#00897B" BorderBrush="#00897B">
+                    <StackPanel Orientation="Horizontal">
+                        <materialDesign:PackIcon Kind="FileExport" VerticalAlignment="Center" Margin="0,0,6,0"/>
+                        <TextBlock Text="Export"/>
+                    </StackPanel>
+                </Button>
+                <Rectangle Width="1" Fill="#C9D6E8" Margin="0,4,10,4"/>
                 <Button Style="{StaticResource ToolButton}" Command="{Binding ChooseGroupImageCommand}" Background="#6A1B9A" BorderBrush="#6A1B9A">
                     <StackPanel Orientation="Horizontal">
                         <materialDesign:PackIcon Kind="ImageEdit" VerticalAlignment="Center" Margin="0,0,6,0"/>
@@ -97,7 +110,7 @@
             <TextBlock FontSize="13" Foreground="#5B6B82" TextWrapping="Wrap">
                 <Run Text="• Tiền tố model: model bắt đầu bằng tiền tố sẽ thuộc nhóm (nhiều tiền tố cách nhau bởi dấu phẩy). Để trống = nhóm &quot;Khác&quot; (gom các model còn lại)."/>
                 <LineBreak/>
-                <Run Text="• Kế hoạch ở đây là MẶC ĐỊNH cho mọi ngày; muốn kế hoạch khác cho từng ngày dùng trang Daily Plan. Chọn &quot;Cả ngày&quot; ở Home sẽ cộng kế hoạch các ca đang dùng."/>
+                <Run Text="• Kế hoạch sản lượng nhập ở trang Daily Plan (theo ngày, theo ca). Import / Export: file Excel hoặc CSV, cột Thứ tự | Tên nhóm | Tiền tố model (Import xong bấm Lưu)."/>
                 <LineBreak/>
                 <Run Text="• Ảnh model: đặt file &lt;tên model&gt;.png (hoặc &lt;tên nhóm&gt;.png) vào thư mục: "/>
                 <Run Text="{Binding ImageFolder, Mode=OneWay}" FontWeight="SemiBold"/>
@@ -114,9 +127,6 @@
                 <DataGridTextColumn Header="Thứ tự" Binding="{Binding SortOrder}" Width="90"/>
                 <DataGridTextColumn Header="Tên nhóm" Binding="{Binding Name}" Width="200"/>
                 <DataGridTextColumn Header="Tiền tố model" Binding="{Binding Prefixes}" Width="*"/>
-                <DataGridTextColumn Header="Kế hoạch Ca 1" Binding="{Binding PlanShift1}" Width="140"/>
-                <DataGridTextColumn Header="Kế hoạch Ca 2" Binding="{Binding PlanShift2}" Width="140"/>
-                <DataGridTextColumn Header="Kế hoạch Ca 3" Binding="{Binding PlanShift3}" Width="140"/>
             </DataGrid.Columns>
         </DataGrid>
     </Grid>

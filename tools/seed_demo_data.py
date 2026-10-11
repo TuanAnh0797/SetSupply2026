@@ -5,8 +5,9 @@ Cách dùng:
     python tools/seed_demo_data.py <đường dẫn SetSupply.db> [--two-shifts]
 
 --two-shifts : đặt Ca 1 = 06:00-18:00, Ca 2 = 18:00-06:00, tắt Ca 3 (giống ảnh thiết kế)
-Script sẽ: tạo bảng ModelGroups nếu thiếu, ghi đè nhóm model mẫu, xóa ProductionData của
-hôm nay + hôm qua rồi sinh dữ liệu ngẫu nhiên tới thời điểm hiện tại.
+Script sẽ: tạo bảng ModelGroups / ProductionPlans nếu thiếu, ghi đè nhóm model mẫu, ghi kế hoạch
+(Daily Plan) cho hôm qua + hôm nay, xóa ProductionData của hôm nay + hôm qua rồi sinh dữ liệu ngẫu nhiên
+tới thời điểm hiện tại.
 """
 import random
 import sqlite3
@@ -27,10 +28,15 @@ CREATE TABLE IF NOT EXISTS "ModelGroups" (
     "Id" INTEGER NOT NULL CONSTRAINT "PK_ModelGroups" PRIMARY KEY AUTOINCREMENT,
     "Name" TEXT NOT NULL,
     "Prefixes" TEXT NOT NULL DEFAULT '',
-    "PlanShift1" INTEGER NOT NULL DEFAULT 0,
-    "PlanShift2" INTEGER NOT NULL DEFAULT 0,
-    "PlanShift3" INTEGER NOT NULL DEFAULT 0,
     "SortOrder" INTEGER NOT NULL DEFAULT 0
+)""")
+cur.execute("""
+CREATE TABLE IF NOT EXISTS "ProductionPlans" (
+    "Id" INTEGER NOT NULL CONSTRAINT "PK_ProductionPlans" PRIMARY KEY AUTOINCREMENT,
+    "PlanDate" TEXT NOT NULL,
+    "GroupName" TEXT NOT NULL,
+    "ShiftNumber" INTEGER NOT NULL,
+    "Quantity" INTEGER NOT NULL
 )""")
 
 if two_shifts:
@@ -47,9 +53,8 @@ groups = [
     ("Khác", "", 300, 200, 0, 999),
 ]
 cur.execute("DELETE FROM ModelGroups")
-cur.executemany(
-    "INSERT INTO ModelGroups (Name, Prefixes, PlanShift1, PlanShift2, PlanShift3, SortOrder) VALUES (?,?,?,?,?,?)",
-    groups)
+cur.executemany("INSERT INTO ModelGroups (Name, Prefixes, SortOrder) VALUES (?,?,?)",
+                [(g[0], g[1], g[5]) for g in groups])
 
 models = {
     "NR-C33ES2-C": (14, 20), "NR-C33ES2L-C": (12, 19), "NR-C33ES2L-W": (12, 18),
@@ -67,6 +72,16 @@ start = datetime.combine(prod_day - timedelta(days=1), datetime.min.time()) + ti
 end = now
 
 cur.execute("DELETE FROM ProductionData WHERE DateTimeInsert >= ?", (start.strftime("%Y-%m-%d %H:%M:%S"),))
+
+# Kế hoạch theo ngày (Daily Plan) cho hôm qua + hôm nay
+for day in (prod_day - timedelta(days=1), prod_day):
+    key = day.strftime("%Y-%m-%d 00:00:00")
+    cur.execute("DELETE FROM ProductionPlans WHERE PlanDate >= ? AND PlanDate < ?",
+                (key, (day + timedelta(days=1)).strftime("%Y-%m-%d 00:00:00")))
+    for name, _, p1, p2, p3, _ in groups:
+        for shift, qty in ((1, p1), (2, p2), (3, p3)):
+            cur.execute("INSERT INTO ProductionPlans (PlanDate, GroupName, ShiftNumber, Quantity) VALUES (?,?,?,?)",
+                        (key, name, shift, qty))
 
 rows = []
 serial = random.randint(1000000, 5000000)

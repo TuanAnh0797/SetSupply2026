@@ -1,0 +1,47 @@
+<UserControl x:Class="SetSupply.UserControls.Setting.Sub.UCGeneralSetting"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             mc:Ignorable="d"
+             d:DesignHeight="400" d:DesignWidth="1000">
+
+    <UserControl.Resources>
+        <Style x:Key="ToolButton" TargetType="Button" BasedOn="{StaticResource MaterialDesignRaisedButton}">
+            <Setter Property="Height" Value="38"/>
+            <Setter Property="Margin" Value="0,0,10,0"/>
+            <Setter Property="Background" Value="#1D4F96"/>
+            <Setter Property="BorderBrush" Value="#1D4F96"/>
+        </Style>
+    </UserControl.Resources>
+
+    <StackPanel Margin="15">
+        <TextBlock Text="Cài đặt chung" FontSize="22" FontWeight="Bold" Foreground="#1D4F96" Margin="0,0,0,16"/>
+
+        <TextBlock Text="Tên ứng dụng (hiển thị trên thanh tiêu đề)" FontSize="15" FontWeight="SemiBold" Margin="0,0,0,6"/>
+        <StackPanel Orientation="Horizontal">
+            <TextBox Text="{Binding ApplicationTitle, UpdateSourceTrigger=PropertyChanged}" Width="420" FontSize="18"
+                     MaxLength="60" Style="{StaticResource MaterialDesignOutlinedTextBox}" Padding="10,6"
+                     materialDesign:TextFieldAssist.CharacterCounterVisibility="Collapsed"
+                     VerticalAlignment="Center" Margin="0,0,14,0"/>
+            <Button Style="{StaticResource ToolButton}" Command="{Binding SaveCommand}" Background="#2E7D32" BorderBrush="#2E7D32">
+                <StackPanel Orientation="Horizontal">
+                    <materialDesign:PackIcon Kind="ContentSave" VerticalAlignment="Center" Margin="0,0,6,0"/>
+                    <TextBlock Text="Lưu"/>
+                </StackPanel>
+            </Button>
+            <Button Style="{StaticResource ToolButton}" Command="{Binding RestoreDefaultCommand}" Background="#607D8B" BorderBrush="#607D8B">
+                <StackPanel Orientation="Horizontal">
+                    <materialDesign:PackIcon Kind="Restore" VerticalAlignment="Center" Margin="0,0,6,0"/>
+                    <TextBlock Text="Mặc định"/>
+                </StackPanel>
+            </Button>
+        </StackPanel>
+        <TextBlock FontSize="13" Foreground="#5B6B82" Margin="0,8,0,0" TextWrapping="Wrap">
+            <Run Text="VD: đổi thành tên line / khu vực khi dùng chương trình ở chỗ khác. Mặc định:"/>
+            <Run Text="{Binding DefaultTitle, Mode=OneWay}" FontWeight="SemiBold"/>
+            <Run Text=". Áp dụng ngay sau khi Lưu."/>
+        </TextBlock>
+    </StackPanel>
+</UserControl>

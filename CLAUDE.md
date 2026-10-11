@@ -30,7 +30,7 @@
 |---|---|
 | Thanh tiêu đề navy (Panasonic \| SetSupply Monitor + phụ đề, user chip, nút cửa sổ) | `Views/MainWindow.xaml` |
 | Điều khiển Home trên thanh tiêu đề: chọn ngày (popup lịch), Cả ngày / Ca N, nút Cài đặt | `UserControls/Home/UCHomeHeader.xaml(.cs)` — gắn vào `MainWindowViewModel.HeaderToolbar` khi `CurrentView is UCHome` |
-| Thanh lọc (Vị trí, Nhóm model, Model, cập nhật lần cuối, trạng thái kết nối) + bảng | `UserControls/Home/UCHome.xaml(.cs)` |
+| Thanh lọc (Nhóm model, Model, ô **Codeback** vừa đọc từ PLC, cập nhật lần cuối, trạng thái kết nối) + bảng | `UserControls/Home/UCHome.xaml(.cs)` |
 | Logic bảng | `ViewModels/UserControlViewModels/Home/UCHomeViewModel.cs` |
 | Logic 4 panel dưới (partial class) | `ViewModels/UserControlViewModels/Home/UCHomeViewModel.Charts.cs` |
 | Vòng tròn % (donut) | `ComponentUI/RingProgress.cs` |
@@ -41,7 +41,7 @@ Chức năng:
 - Ngày sản xuất: bắt đầu từ giờ bắt đầu sớm nhất của các ca đang dùng (VD 06:00 → 06:00 hôm sau). `ProductionDataService.GetProductionRangeAsync / GetProductionDateAsync`.
 - "Cả ngày" = các cột giờ của cả ngày sản xuất; "Ca N" = cột giờ của ca đó. Nút ca sinh tự động theo ca `IsUse = true`.
 - Bảng: dòng nhóm (màu theo thứ tự nhóm, nút +/− mở rộng/thu gọn, trạng thái được nhớ trong phiên), dòng model con (thumbnail + số theo giờ), dòng **Tổng** cố định ở cuối. Giờ chưa tới để trống.
-- Cột "Sản lượng (Kế hoạch)": Cả ngày = tổng kế hoạch các ca đang dùng; chọn ca = kế hoạch ca đó.
+- Cột "Sản lượng (Kế hoạch)": lấy từ Daily Plan. Cả ngày = tổng kế hoạch các ca đang dùng; chọn ca = kế hoạch ca đó. Ngày chưa có kế hoạch → hiện "-", tỷ lệ "--"; **số thực tế luôn đếm từ ProductionData, không phụ thuộc kế hoạch**.
 - Realtime: khi PLC gửi dữ liệu và đang xem ngày sản xuất hiện tại → tải lại; timer 1 phút tự cập nhật / tự sang ngày mới. Chọn ngày khác = xem lịch sử (không tự nhảy về hôm nay; bấm "Hôm nay" trong popup lịch để quay lại).
 - 4 panel phía dưới (hàng cao 250px trong `UCHome.xaml`), số liệu theo đúng ngày / ca / bộ lọc đang chọn, khớp dòng Tổng của bảng:
   1. Tổng quan ngày: Kế hoạch, Thực tế, donut Tỷ lệ đạt (màu: >=98% xanh, >=90% cam, còn lại đỏ — `GetRatioColors`).
@@ -52,27 +52,38 @@ Chức năng:
 - Độ rộng cột cố định khai báo ở 2 nơi phải khớp nhau: hằng số trong `UCHomeViewModel` (GroupColumnWidth...) và `GridLength` trong `UCHome.xaml`.
 - Header/footer bảng tự chừa chỗ cho thanh cuộn dọc (`UCHome.xaml.cs` → `AlignHeaderWithBody`, đo `PART_VerticalScrollBar`; KHÔNG dùng `ViewportWidth` vì = 0 khi tắt cuộn ngang → gây vòng lặp layout).
 
-## Nhóm model & kế hoạch
-- Bảng mới `ModelGroups` (`Models/Database/ModelGroup.cs`): Name, Prefixes (tiền tố model, cách nhau dấu phẩy), PlanShift1/2/3, SortOrder.
-  Prefixes rỗng = nhóm "Khác" (gom model không khớp). Khớp theo tiền tố dài nhất: `ModelGroupService.Match`.
-- DB cũ không tự có bảng mới (EnsureCreated không migrate) → `App.EnsureSchemaUpdatesAsync` chạy `CREATE TABLE/INDEX IF NOT EXISTS` (ModelGroups, ProductionPlans, index Model+Serial) và sửa dữ liệu cũ. Thêm cột/bảng mới sau này cũng phải thêm vào đây (lệnh phải chạy lại được nhiều lần).
-- Cài đặt: Cài đặt > "Model Group / Plan" (`UserControls/Setting/Sub/UCModelGroupSetting.xaml`, VM `UCModelGroupSettingViewModel`), nút "Cài đặt" trên header Home mở thẳng trang này (cần quyền Admin).
-  Có nút "Tạo nhóm" tự sinh nhóm từ model đã chạy 30 ngày theo N ký tự đầu (mặc định 8, VD `NR-C33ES2L-C` → `NR-C33ES`).
-- Ảnh model: `<thư mục exe>\Resources\ModelImages\<tên model>.png` (hoặc `<tên nhóm>.png`, hỗ trợ png/jpg/jpeg/bmp). Không có ảnh → icon tủ lạnh.
-  Trang Model Group / Plan có nút "Ảnh cho nhóm đang chọn", "Thêm ảnh từng model", "Mở thư mục ảnh".
+## Cài đặt chung (General)
+- Bảng `AppSettings` (Key, Value) — `Models/Database/AppSetting.cs`, `Service/AppSettingService.cs` (event `SettingChanged`).
+- `ApplicationTitle` (mặc định "SetSupply Monitor") hiển thị trên thanh tiêu đề + tiêu đề cửa sổ; đổi ở Cài đặt > General (`UCGeneralSetting`), áp dụng ngay.
+- Thêm cài đặt chung mới: thêm key vào `AppSettingService`, KHÔNG cần đổi schema.
 
-## Kế hoạch theo ngày
-- Bảng `ProductionPlans` (`Models/Database/ProductionPlan.cs`): PlanDate, GroupName (lưu theo TÊN nhóm vì ModelGroups bị ghi đè toàn bộ khi lưu → Id đổi), ShiftNumber, Quantity.
-- Service `ProductionPlanService`; trang Cài đặt > "Daily Plan" (`UCDailyPlanSetting`, VM `UCDailyPlanSettingViewModel`): chọn ngày, Lưu / Copy từ ngày trước / Điền kế hoạch mặc định / Xóa KH riêng.
-- Home: `UCHomeViewModel.GetPlan(group, shift)` = kế hoạch riêng của ngày nếu có, không thì `ModelGroup.PlanShiftN`. Ô Kế hoạch ở panel Tổng quan ghi "KH theo ngày" / "KH mặc định".
+## Ô Codeback trên Home
+- `PLCService.CodeRead(PlcReadResult)` phát cho MỌI mã đọc được (Saved / Duplicate / Invalid / SaveError); `PLCService.LastRead` giữ mã gần nhất.
+- Home hiện mã + giờ + nhãn trạng thái (xanh Đã lưu / cam Trùng / đỏ Sai mã, Lỗi lưu). Mở chương trình chưa đọc mã nào → hiện bản ghi mới nhất trong DB (nhãn "Gần nhất").
+- Ô "Vị trí" đã bỏ.
+
+## Nhóm model (Model Group)
+- Bảng `ModelGroups` (`Models/Database/ModelGroup.cs`): Name, Prefixes (tiền tố model, cách nhau dấu phẩy), SortOrder. **Chỉ để gom model, không có kế hoạch** (bản trước có PlanShift1-3, đã bỏ; DB cũ được `DROP COLUMN` khi khởi động).
+  Prefixes rỗng = nhóm "Khác" (gom model không khớp). Khớp theo tiền tố dài nhất: `ModelGroupService.Match`.
+- DB cũ không tự có bảng mới (EnsureCreated không migrate) → `App.EnsureSchemaUpdatesAsync` chạy `CREATE TABLE/INDEX IF NOT EXISTS`, `DropColumnsIfExistAsync`, sửa dữ liệu cũ. Thêm cột/bảng mới sau này cũng phải thêm vào đây (lệnh phải chạy lại được nhiều lần).
+- Trang Cài đặt > "Model Group" (`UCModelGroupSetting`), nút "Cài đặt" trên header Home mở thẳng trang này (cần Admin). Có "Tạo nhóm" (tự sinh từ model 30 ngày theo N ký tự đầu), **Import / Export** (cột Thứ tự | Tên nhóm | Tiền tố model; Import chỉ nạp vào bảng, phải bấm Lưu), ảnh nhóm/model.
+- Ảnh model: `<thư mục exe>\Resources\ModelImages\<tên model>.png` (hoặc `<tên nhóm>.png`). Không có ảnh → icon tủ lạnh.
+
+## Kế hoạch theo ngày (Daily Plan) — nguồn kế hoạch DUY NHẤT
+- Bảng `ProductionPlans` (`Models/Database/ProductionPlan.cs`): PlanDate, GroupName (theo TÊN nhóm vì ModelGroups bị ghi đè khi lưu → Id đổi), ShiftNumber, Quantity.
+- Service `ProductionPlanService` (GetPlansAsync, SavePlansAsync, GetPlansInRangeAsync, SaveDaysAsync trong 1 transaction).
+- Trang Cài đặt > "Daily Plan" (`UCDailyPlanSetting`): chọn ngày, sửa theo ca, Lưu / Copy từ ngày trước / Xóa kế hoạch ngày.
+  **Import** nhiều ngày (cột Ngày | Nhóm model | Kế hoạch Ca 1 | Ca 2 | Ca 3; ngày có trong file bị ghi đè toàn bộ; nhóm chưa có trong Model Group → cảnh báo; tên nhóm khớp không phân biệt hoa/thường). **Export** khoảng ngày (mỗi ngày × mỗi nhóm 1 dòng, chưa có = 0) — dùng làm file mẫu.
+- Đọc/ghi file: `Helper/SpreadsheetHelper.cs` (ClosedXML 0.102.3 cho .xlsx, không cần cài Excel; .csv UTF-8 BOM, tự nhận dấu `,` hoặc `;`).
 
 ## Giờ ca khi xem ngày cũ
 - `ProductionDataService.GetShiftsForDateAsync(date)`: ngày < hôm nay → lấy giờ ca/IsUse từ `ShiftSettingHistory` của ngày đó (bản ghi mới nhất mỗi ca), ca không có lịch sử dùng cài đặt hiện tại. Hôm nay/tương lai → cài đặt hiện tại.
 - Lịch sử được ghi bởi `ShiftSettingService.UpdateShiftSettingAsync` và `ShiftHistoryBackgroundService` (2 tiếng/lần, ghi đè bản ghi của hôm nay).
 
 ## Dữ liệu demo
-`python tools/seed_demo_data.py <đường dẫn SetSupply.db> [--two-shifts]` — tạo nhóm mẫu + dữ liệu ngẫu nhiên hôm nay & hôm qua. `--two-shifts` đặt Ca1 06–18, Ca2 18–06, tắt Ca3 (giống ảnh thiết kế). **Không chạy trên DB thật** (xóa ProductionData 2 ngày gần nhất).
+`python tools/seed_demo_data.py <đường dẫn SetSupply.db> [--two-shifts]` — tạo nhóm mẫu + Daily Plan + dữ liệu ngẫu nhiên hôm nay & hôm qua. `--two-shifts` đặt Ca1 06–18, Ca2 18–06, tắt Ca3 (giống ảnh thiết kế). **Không chạy trên DB thật** (xóa ProductionData 2 ngày gần nhất).
 Cách test đã dùng: copy `bin/Debug/net6.0-windows7.0` ra thư mục tạm, chạy exe với working dir là thư mục đó, seed DB ở đó.
+Lưu ý: app chỉ cho chạy 1 instance (Mutex "APP") — nếu đang mở app thì bản test sẽ tự thoát; khi app đang mở, `bin/Debug/.../SetSupply.exe` bị khóa → build ra thư mục khác (`dotnet build -o <thư mục>`).
 
 ## Thay đổi khác so với bản gốc (commit `version1`)
 - Sửa lỗi: `UCHomeViewModel` cũ lưu cả chuỗi mã vào cột `Model`; nay lưu đúng 12 ký tự model (đã Trim).
@@ -84,4 +95,3 @@ Cách test đã dùng: copy `bin/Debug/net6.0-windows7.0` ra thư mục tạm, c
 
 ## Việc có thể làm tiếp
 - Tỷ lệ đạt đang so thực tế với kế hoạch CẢ ca/ngày (giữa ca sẽ thấp); nếu muốn có thể so với kế hoạch tính theo thời gian đã trôi qua.
-- Combobox "Vị trí" hiện chỉ có 1 giá trị cố định "CABI - SetSupply" (`UCHomeViewModel.Locations`).

@@ -7,6 +7,7 @@
         xmlns:uc ="clr-namespace:APP.UserControls"
         xmlns:componenUI="clr-namespace:APP.ComponentUI"
         mc:Ignorable="d"
+        Title="{Binding ApplicationTitle}"
         WindowStartupLocation="CenterScreen"
         WindowState="Maximized"
         WindowStyle="None"

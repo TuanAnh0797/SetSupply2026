@@ -93,6 +93,7 @@ namespace APP
             services.AddSingleton<ProductionDataService>();
             services.AddSingleton<ModelGroupService>();
             services.AddSingleton<ProductionPlanService>();
+            services.AddSingleton<AppSettingService>();
             services.AddSingleton<ILocalizationService, LocalizationService>();
 
             // ViewModels & UserControls
@@ -125,6 +126,8 @@ namespace APP
             services.AddSingleton<UCModelGroupSetting>();
             services.AddSingleton<UCDailyPlanSettingViewModel>();
             services.AddSingleton<UCDailyPlanSetting>();
+            services.AddSingleton<UCGeneralSettingViewModel>();
+            services.AddSingleton<UCGeneralSetting>();
 
             //ManagementUser
             services.AddSingleton<UserManagementViewModel>();
@@ -225,10 +228,16 @@ namespace APP
                     ""Id"" INTEGER NOT NULL CONSTRAINT ""PK_ModelGroups"" PRIMARY KEY AUTOINCREMENT,
                     ""Name"" TEXT NOT NULL,
                     ""Prefixes"" TEXT NOT NULL DEFAULT '',
-                    ""PlanShift1"" INTEGER NOT NULL DEFAULT 0,
-                    ""PlanShift2"" INTEGER NOT NULL DEFAULT 0,
-                    ""PlanShift3"" INTEGER NOT NULL DEFAULT 0,
                     ""SortOrder"" INTEGER NOT NULL DEFAULT 0
+                );");
+
+            // Bản trước có kế hoạch theo ca trong ModelGroups => bỏ (kế hoạch chỉ còn ở ProductionPlans)
+            await DropColumnsIfExistAsync(dbContext, "ModelGroups", "PlanShift1", "PlanShift2", "PlanShift3");
+
+            await dbContext.Database.ExecuteSqlRawAsync(@"
+                CREATE TABLE IF NOT EXISTS ""AppSettings"" (
+                    ""Key"" TEXT NOT NULL CONSTRAINT ""PK_AppSettings"" PRIMARY KEY,
+                    ""Value"" TEXT NOT NULL
                 );");
 
             await dbContext.Database.ExecuteSqlRawAsync(@"
@@ -255,6 +264,33 @@ namespace APP
                 WHERE ""Model"" = ""Codeback"" AND LENGTH(""Model"") >= 19;");
             if (fixedRows > 0)
                 Debug.WriteLine($"✓ Đã sửa cột Model cho {fixedRows} bản ghi ProductionData cũ.");
+        }
+
+        private static async Task DropColumnsIfExistAsync(AppDbContext dbContext, string table, params string[] columns)
+        {
+            var existing = new List<string>();
+            var connection = dbContext.Database.GetDbConnection();
+            await dbContext.Database.OpenConnectionAsync();
+            try
+            {
+                using var command = connection.CreateCommand();
+                command.CommandText = $"PRAGMA table_info(\"{table}\");";
+                using var reader = await command.ExecuteReaderAsync();
+                while (await reader.ReadAsync())
+                    existing.Add(reader.GetString(1));
+            }
+            finally
+            {
+                await dbContext.Database.CloseConnectionAsync();
+            }
+
+            foreach (var column in columns.Where(c => existing.Contains(c, StringComparer.OrdinalIgnoreCase)))
+            {
+#pragma warning disable EF1000 // tên bảng/cột là hằng số trong code
+                await dbContext.Database.ExecuteSqlRawAsync($"ALTER TABLE \"{table}\" DROP COLUMN \"{column}\";");
+#pragma warning restore EF1000
+                Debug.WriteLine($"✓ Đã bỏ cột {table}.{column}");
+            }
         }
 
         /// <summary>

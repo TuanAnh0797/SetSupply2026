@@ -28,6 +28,9 @@ public class AppDbContext : DbContext
     public DbSet<ModelGroup> ModelGroups => Set<ModelGroup>();
     public DbSet<ProductionPlan> ProductionPlans => Set<ProductionPlan>();
 
+    // Cài đặt chung (Key - Value)
+    public DbSet<AppSetting> AppSettings => Set<AppSetting>();
+
     public AppDbContext(DbContextOptions<AppDbContext> options)
         : base(options)
     {
@@ -87,6 +90,7 @@ public class AppDbContext : DbContext
         // ===== CẤU HÌNH CHO MODELGROUP / KẾ HOẠCH THEO NGÀY =====
         modelBuilder.Entity<ModelGroup>().HasKey(e => e.Id);
         modelBuilder.Entity<ProductionPlan>().HasKey(e => e.Id);
+        modelBuilder.Entity<AppSetting>().HasKey(e => e.Key);
         modelBuilder.Entity<ProductionPlan>()
             .HasIndex(e => new { e.PlanDate, e.GroupName, e.ShiftNumber })
             .HasDatabaseName("IX_ProductionPlans_Date_Group_Shift");

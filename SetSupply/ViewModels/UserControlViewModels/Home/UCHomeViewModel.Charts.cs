@@ -77,7 +77,7 @@ public partial class UCHomeViewModel
         // ===== Tổng quan =====
         int actual = grandHours.Sum();
         OverviewTitle = $"Tổng quan ngày {SelectedDate:dd/MM/yyyy}" + (isShift ? $" - {scopeName}" : "");
-        PlanTotalText = FormatNumber(grandPlan);
+        PlanTotalText = FormatPlan(grandPlan);
         ActualTotalText = FormatNumber(actual);
         double percent = grandPlan > 0 ? actual * 100.0 / grandPlan : 0;
         AchievementPercent = percent;
@@ -205,7 +205,7 @@ public partial class UCHomeViewModel
         ShiftSummaryTotal = CreateSummary("Tổng", string.Empty, totalPlan, totalActual);
     }
 
-    private static ShiftSummaryRow CreateSummary(string name, string timeRange, int plan, int actual, bool notStarted = false)
+    private ShiftSummaryRow CreateSummary(string name, string timeRange, int plan, int actual, bool notStarted = false)
     {
         double percent = plan > 0 ? actual * 100.0 / plan : 0;
         bool hasValue = plan > 0 && !notStarted; // ca chưa bắt đầu: không tô màu đỏ 0%
@@ -214,7 +214,7 @@ public partial class UCHomeViewModel
         {
             Name = name,
             TimeRange = timeRange,
-            PlanText = FormatNumber(plan),
+            PlanText = FormatPlan(plan),
             ActualText = FormatNumber(actual),
             RatioText = hasValue ? FormatPercent(percent) : "--",
             RatioBackground = hasValue ? colors.Background : Brushes.Transparent,

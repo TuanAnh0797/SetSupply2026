@@ -70,7 +70,49 @@ public class ProductionPlanService
     }
 
     /// <summary>
-    /// Xóa kế hoạch riêng của ngày => quay về kế hoạch mặc định.
+    /// Xóa kế hoạch của ngày => ngày đó coi như chưa có kế hoạch.
     /// </summary>
     public async Task DeletePlansAsync(DateTime date) => await SavePlansAsync(date, Array.Empty<ProductionPlan>());
+
+    /// <summary>
+    /// Kế hoạch trong khoảng ngày [from, to] (dùng cho Export).
+    /// </summary>
+    public async Task<List<ProductionPlan>> GetPlansInRangeAsync(DateTime from, DateTime to)
+    {
+        using var scope = _scopeFactory.CreateScope();
+        var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+        var start = from.Date;
+        var end = to.Date.AddDays(1);
+        return await db.ProductionPlans.AsNoTracking()
+            .Where(p => p.PlanDate >= start && p.PlanDate < end)
+            .OrderBy(p => p.PlanDate).ThenBy(p => p.GroupName).ThenBy(p => p.ShiftNumber)
+            .ToListAsync();
+    }
+
+    /// <summary>
+    /// Ghi đè kế hoạch của nhiều ngày trong 1 lần (dùng cho Import). Ngày không có trong danh sách giữ nguyên.
+    /// </summary>
+    public async Task SaveDaysAsync(IReadOnlyDictionary<DateTime, List<ProductionPlan>> plansByDate)
+    {
+        using var scope = _scopeFactory.CreateScope();
+        var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+        using var transaction = await db.Database.BeginTransactionAsync();
+
+        foreach (var (date, plans) in plansByDate)
+        {
+            var day = date.Date;
+            var next = day.AddDays(1);
+            db.ProductionPlans.RemoveRange(await db.ProductionPlans.Where(p => p.PlanDate >= day && p.PlanDate < next).ToListAsync());
+            db.ProductionPlans.AddRange(plans.Select(p => new ProductionPlan
+            {
+                PlanDate = day,
+                GroupName = p.GroupName,
+                ShiftNumber = p.ShiftNumber,
+                Quantity = p.Quantity
+            }));
+        }
+
+        await db.SaveChangesAsync();
+        await transaction.CommitAsync();
+    }
 }

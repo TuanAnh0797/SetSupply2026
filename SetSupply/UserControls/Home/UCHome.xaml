@@ -298,17 +298,32 @@
         <!-- ===== THANH LỌC ===== -->
         <DockPanel Grid.Row="0" Margin="0,0,0,10" LastChildFill="False">
             <StackPanel DockPanel.Dock="Left" Orientation="Horizontal">
-                <TextBlock Text="Vị trí" Style="{StaticResource FilterLabel}"/>
-                <ComboBox Width="360" Style="{StaticResource FilterCombo}" Margin="0,0,26,0"
-                          ItemsSource="{Binding Locations}" SelectedItem="{Binding SelectedLocation}"/>
-
                 <TextBlock Text="Nhóm model" Style="{StaticResource FilterLabel}"/>
-                <ComboBox Width="180" Style="{StaticResource FilterCombo}" Margin="0,0,26,0"
+                <ComboBox Width="200" Style="{StaticResource FilterCombo}" Margin="0,0,26,0"
                           ItemsSource="{Binding GroupFilterOptions}" SelectedItem="{Binding SelectedGroupFilter}"/>
 
                 <TextBlock Text="Model" Style="{StaticResource FilterLabel}"/>
-                <ComboBox Width="250" Style="{StaticResource FilterCombo}"
+                <ComboBox Width="250" Style="{StaticResource FilterCombo}" Margin="0,0,26,0"
                           ItemsSource="{Binding ModelFilterOptions}" SelectedItem="{Binding SelectedModelFilter}"/>
+
+                <!-- Codeback vừa đọc từ PLC -->
+                <Border Height="38" CornerRadius="4" Background="White" BorderThickness="1" Padding="10,0"
+                        BorderBrush="{Binding LastCodeStatusBrush}" VerticalAlignment="Center"
+                        ToolTip="Mã (Codeback) vừa đọc từ PLC">
+                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                        <materialDesign:PackIcon Kind="Barcode" Width="24" Height="24" Foreground="{StaticResource LabelBrush}"
+                                                 VerticalAlignment="Center"/>
+                        <TextBlock Text="Codeback" FontSize="15" FontWeight="SemiBold" Foreground="{StaticResource LabelBrush}"
+                                   VerticalAlignment="Center" Margin="8,0,12,0"/>
+                        <TextBlock Text="{Binding LastCodeText}" FontFamily="Consolas" FontSize="19" FontWeight="Bold"
+                                   Foreground="{StaticResource TextDarkBrush}" VerticalAlignment="Center" MinWidth="230"/>
+                        <TextBlock Text="{Binding LastCodeTimeText}" FontSize="14" Foreground="#5B6B82"
+                                   VerticalAlignment="Center" Margin="10,0,10,0"/>
+                        <Border CornerRadius="3" Background="{Binding LastCodeStatusBrush}" Padding="8,2" VerticalAlignment="Center">
+                            <TextBlock Text="{Binding LastCodeStatusText}" FontSize="13" FontWeight="SemiBold" Foreground="White"/>
+                        </Border>
+                    </StackPanel>
+                </Border>
             </StackPanel>
 
             <StackPanel DockPanel.Dock="Right" Orientation="Horizontal" VerticalAlignment="Center">

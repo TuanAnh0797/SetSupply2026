@@ -28,6 +28,13 @@ BlurRadius="10" Opacity="0.5"/>
                         <Setter Property="BorderBrush" Value="Gray"/>
                     </Style>
                 </StackPanel.Resources>
+                <Button Command="{Binding ShowGeneralSettingCommand}">
+                    <StackPanel Orientation="Horizontal">
+                        <materialDesign:PackIcon Kind="Tune" Width="20" Height="20" VerticalAlignment="Center" Foreground="#1D4F96"/>
+                        <Label>General</Label>
+                    </StackPanel>
+                </Button>
+
                 <Button Command="{Binding ShowPLCSettingCommand}">
                     <StackPanel Orientation="Horizontal">
                         <Image Source="pack://application:,,,/Resources/Image/plc.png" Width="20" Height="20"/>
@@ -45,7 +52,7 @@ BlurRadius="10" Opacity="0.5"/>
                 <Button Command="{Binding ShowModelGroupSettingCommand}">
                     <StackPanel Orientation="Horizontal">
                         <materialDesign:PackIcon Kind="FridgeOutline" Width="20" Height="20" VerticalAlignment="Center" Foreground="#1D4F96"/>
-                        <Label>Model Group / Plan</Label>
+                        <Label>Model Group</Label>
                     </StackPanel>
                 </Button>
 

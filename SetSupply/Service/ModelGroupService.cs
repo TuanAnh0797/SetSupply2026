@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 namespace SetSupply.Service;
 
 /// <summary>
-/// Quản lý nhóm model + kế hoạch sản lượng.
+/// Quản lý nhóm model (gom các model cùng nhóm).
 /// Dùng DbContext riêng cho mỗi lần gọi (tránh xung đột với DbContext singleton dùng chung).
 /// </summary>
 public class ModelGroupService
@@ -46,9 +46,6 @@ public class ModelGroupService
         {
             Name = g.Name.Trim(),
             Prefixes = g.Prefixes?.Trim() ?? string.Empty,
-            PlanShift1 = g.PlanShift1,
-            PlanShift2 = g.PlanShift2,
-            PlanShift3 = g.PlanShift3,
             SortOrder = g.SortOrder
         }));
         await db.SaveChangesAsync();

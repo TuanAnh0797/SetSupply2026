@@ -27,6 +27,7 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
@@ -51,16 +52,10 @@
                     <TextBlock Text="Copy từ ngày trước"/>
                 </StackPanel>
             </Button>
-            <Button Style="{StaticResource ToolButton}" Command="{Binding LoadDefaultCommand}" Background="#0288D1" BorderBrush="#0288D1">
-                <StackPanel Orientation="Horizontal">
-                    <materialDesign:PackIcon Kind="Restore" VerticalAlignment="Center" Margin="0,0,6,0"/>
-                    <TextBlock Text="Điền kế hoạch mặc định"/>
-                </StackPanel>
-            </Button>
             <Button Style="{StaticResource ToolButton}" Command="{Binding DeleteCommand}" Background="#E53935" BorderBrush="#E53935">
                 <StackPanel Orientation="Horizontal">
                     <materialDesign:PackIcon Kind="Delete" VerticalAlignment="Center" Margin="0,0,6,0"/>
-                    <TextBlock Text="Xóa KH riêng"/>
+                    <TextBlock Text="Xóa kế hoạch ngày"/>
                 </StackPanel>
             </Button>
             <Button Style="{StaticResource ToolButton}" Command="{Binding LoadCommand}" Background="#607D8B" BorderBrush="#607D8B">
@@ -71,14 +66,41 @@
             </Button>
         </StackPanel>
 
-        <StackPanel Grid.Row="2" Margin="0,0,0,10">
+        <!-- Import / Export -->
+        <Border Grid.Row="2" Background="#F4F7FC" BorderBrush="#C9D6E8" BorderThickness="1" CornerRadius="4" Padding="10,8" Margin="0,0,0,10">
+            <StackPanel Orientation="Horizontal">
+                <Button Style="{StaticResource ToolButton}" Command="{Binding ImportCommand}" Background="#00897B" BorderBrush="#00897B">
+                    <StackPanel Orientation="Horizontal">
+                        <materialDesign:PackIcon Kind="FileImport" VerticalAlignment="Center" Margin="0,0,6,0"/>
+                        <TextBlock Text="Import (nhiều ngày)"/>
+                    </StackPanel>
+                </Button>
+                <Rectangle Width="1" Fill="#C9D6E8" Margin="6,4,16,4"/>
+                <TextBlock Text="Export từ" FontSize="14" VerticalAlignment="Center" Margin="0,0,8,0"/>
+                <DatePicker SelectedDate="{Binding ExportFrom}" Width="130" FontSize="14" VerticalAlignment="Center"
+                            materialDesign:CalendarAssist.HeaderBackground="#1D4F96"/>
+                <TextBlock Text="đến" FontSize="14" VerticalAlignment="Center" Margin="10,0,8,0"/>
+                <DatePicker SelectedDate="{Binding ExportTo}" Width="130" FontSize="14" VerticalAlignment="Center" Margin="0,0,14,0"
+                            materialDesign:CalendarAssist.HeaderBackground="#1D4F96"/>
+                <Button Style="{StaticResource ToolButton}" Command="{Binding ExportCommand}" Background="#00897B" BorderBrush="#00897B">
+                    <StackPanel Orientation="Horizontal">
+                        <materialDesign:PackIcon Kind="FileExport" VerticalAlignment="Center" Margin="0,0,6,0"/>
+                        <TextBlock Text="Export"/>
+                    </StackPanel>
+                </Button>
+                <TextBlock Text="File Excel/CSV, cột: Ngày | Nhóm model | Kế hoạch Ca 1 | Kế hoạch Ca 2 | Kế hoạch Ca 3. Export ra để làm file mẫu."
+                           FontSize="13" Foreground="#5B6B82" VerticalAlignment="Center" Margin="6,0,0,0"/>
+            </StackPanel>
+        </Border>
+
+        <StackPanel Grid.Row="3" Margin="0,0,0,10">
             <TextBlock Text="{Binding StatusText}" FontSize="14" FontWeight="SemiBold" Foreground="#1D4F96" TextWrapping="Wrap"/>
             <TextBlock Text="{Binding ShiftInfoText}" FontSize="13" Foreground="#5B6B82" Margin="0,4,0,0"/>
             <TextBlock FontSize="13" Foreground="#5B6B82" TextWrapping="Wrap" Margin="0,4,0,0"
-                       Text="• Danh sách nhóm lấy từ trang Model Group / Plan. Ngày không có kế hoạch riêng sẽ dùng kế hoạch mặc định của nhóm. Màn hình Home chọn &quot;Cả ngày&quot; chỉ cộng các ca đang dùng."/>
+                       Text="• Danh sách nhóm lấy từ trang Model Group. Ngày chưa có kế hoạch: Home vẫn đếm sản lượng thực tế, cột kế hoạch hiện &quot;-&quot;. Chọn &quot;Cả ngày&quot; ở Home chỉ cộng kế hoạch các ca đang dùng."/>
         </StackPanel>
 
-        <DataGrid Grid.Row="3" ItemsSource="{Binding Rows}"
+        <DataGrid Grid.Row="4" ItemsSource="{Binding Rows}"
                   AutoGenerateColumns="False" CanUserAddRows="False" CanUserDeleteRows="False"
                   CanUserSortColumns="False" SelectionMode="Single" HeadersVisibility="Column"
                   GridLinesVisibility="All" BorderBrush="#C9D6E8" BorderThickness="1" FontSize="15"
@@ -93,6 +115,6 @@
             </DataGrid.Columns>
         </DataGrid>
 
-        <TextBlock Grid.Row="4" Text="{Binding TotalText}" FontSize="15" FontWeight="Bold" Foreground="#15305A" Margin="0,10,0,0"/>
+        <TextBlock Grid.Row="5" Text="{Binding TotalText}" FontSize="15" FontWeight="Bold" Foreground="#15305A" Margin="0,10,0,0"/>
     </Grid>
 </UserControl>

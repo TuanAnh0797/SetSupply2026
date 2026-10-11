@@ -60,14 +60,13 @@ public partial class UCHomeViewModel : ObservableObject
     private List<(string Model, DateTime Time)> _dayRecords = new();
     private List<(ShiftScopeOption Option, DateTime Start, DateTime End)> _shiftRanges = new();
     private List<ModelGroup> _groups = new();
-    // Kế hoạch riêng của ngày đang xem: (tên nhóm, ca) -> số lượng. Rỗng => dùng kế hoạch mặc định của nhóm
+    // Kế hoạch (Daily Plan) của ngày đang xem: (tên nhóm, ca) -> số lượng. Rỗng => ngày chưa có kế hoạch
     private Dictionary<(string Group, int Shift), int> _dailyPlans = new();
     private List<DateTime> _hourSlots = new();
     private bool _isFollowingToday = true;
     private bool _suppressReload;
 
     public ObservableCollection<ShiftScopeOption> ScopeOptions { get; } = new();
-    public ObservableCollection<string> Locations { get; } = new() { "CABI - SetSupply" };
     public ObservableCollection<string> GroupFilterOptions { get; } = new() { AllOption };
     public ObservableCollection<string> ModelFilterOptions { get; } = new() { AllOption };
     public ObservableCollection<string> HourHeaders { get; } = new();
@@ -83,9 +82,6 @@ public partial class UCHomeViewModel : ObservableObject
     private bool isDatePickerOpen;
 
     [ObservableProperty]
-    private string selectedLocation = "CABI - SetSupply";
-
-    [ObservableProperty]
     private string selectedGroupFilter = AllOption;
 
     [ObservableProperty]
@@ -99,6 +95,19 @@ public partial class UCHomeViewModel : ObservableObject
 
     [ObservableProperty]
     private bool isPlcConnected;
+
+    // ===== Ô Codeback (mã vừa đọc từ PLC) =====
+    [ObservableProperty]
+    private string lastCodeText = "--";
+
+    [ObservableProperty]
+    private string lastCodeTimeText = string.Empty;
+
+    [ObservableProperty]
+    private string lastCodeStatusText = "Chưa có dữ liệu";
+
+    [ObservableProperty]
+    private Brush lastCodeStatusBrush = Brushes.Gray;
 
     [ObservableProperty]
     private double tableMinWidth;
@@ -122,6 +131,8 @@ public partial class UCHomeViewModel : ObservableObject
         _plcService.DataReceived += PlcService_DataReceived;
         _plcService.ConnectionChanged += connected =>
             Application.Current?.Dispatcher.InvokeAsync(() => IsPlcConnected = connected);
+        _plcService.CodeRead += result =>
+            Application.Current?.Dispatcher.InvokeAsync(() => ShowCodeRead(result));
 
         // Mỗi phút: làm mới giờ hiện tại / tự chuyển sang ngày sản xuất mới
         _timer = new DispatcherTimer { Interval = TimeSpan.FromMinutes(1) };
@@ -138,6 +149,7 @@ public partial class UCHomeViewModel : ObservableObject
     public async Task ActivateAsync()
     {
         ModelImageProvider.ClearCache();
+        await LoadLastCodeAsync();
         await LoadAsync();
     }
 
@@ -148,6 +160,50 @@ public partial class UCHomeViewModel : ObservableObject
     {
         if (_isFollowingToday)
             Application.Current?.Dispatcher.InvokeAsync(LoadAsync);
+    }
+
+    // ===== CODEBACK =====
+
+    private void ShowCodeRead(PlcReadResult result)
+    {
+        LastCodeText = result.Code.Length > 0 ? result.Code : "(trống)";
+        LastCodeTimeText = result.Time.ToString("HH:mm:ss");
+        (LastCodeStatusText, var color) = result.Status switch
+        {
+            PlcReadStatus.Saved => ("Đã lưu", "#1E9E45"),
+            PlcReadStatus.Duplicate => ("Trùng", "#E08A00"),
+            PlcReadStatus.Invalid => ("Sai mã", "#E53935"),
+            _ => ("Lỗi lưu", "#E53935")
+        };
+        LastCodeStatusBrush = CreateBrush(color);
+    }
+
+    /// <summary>
+    /// Chưa đọc được mã nào từ khi mở chương trình => hiện bản ghi mới nhất trong database.
+    /// </summary>
+    private async Task LoadLastCodeAsync()
+    {
+        if (_plcService.LastRead != null)
+        {
+            ShowCodeRead(_plcService.LastRead);
+            return;
+        }
+
+        try
+        {
+            var latest = await _productionService.GetLatestRecordAsync();
+            if (latest == null) return;
+            LastCodeText = latest.Codeback;
+            LastCodeTimeText = latest.DateTimeInsert.Date == DateTime.Today
+                ? latest.DateTimeInsert.ToString("HH:mm:ss")
+                : latest.DateTimeInsert.ToString("dd/MM HH:mm:ss");
+            LastCodeStatusText = "Gần nhất";
+            LastCodeStatusBrush = Brushes.Gray;
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"Load last code error: {ex.Message}");
+        }
     }
 
     // ===== COMMANDS =====
@@ -226,7 +282,7 @@ public partial class UCHomeViewModel : ObservableObject
             _dailyPlans = (await _planService.GetPlansAsync(SelectedDate))
                 .GroupBy(p => (p.GroupName, p.ShiftNumber))
                 .ToDictionary(g => (g.Key.GroupName, g.Key.ShiftNumber), g => g.Sum(p => p.Quantity));
-            PlanSourceText = _dailyPlans.Count > 0 ? "KH theo ngày" : "KH mặc định";
+            PlanSourceText = HasPlan ? "KH theo ngày" : "Chưa có kế hoạch";
 
             // Luôn tải cả ngày sản xuất (bảng theo ca ở dưới cần số liệu mọi ca), bảng chính lọc theo ca đang chọn
             var (dayStart, dayEnd) = await _productionService.GetProductionRangeAsync(SelectedDate, null);
@@ -423,7 +479,7 @@ public partial class UCHomeViewModel : ObservableObject
             rows.Add(new ModelGroupRow(OnGroupToggled)
             {
                 Name = group.Name,
-                PlanText = FormatNumber(plan),
+                PlanText = FormatPlan(plan),
                 RowBrush = rowBrush,
                 TintBrush = tintBrush,
                 Hours = FormatHours(groupHours, isFuture),
@@ -439,7 +495,7 @@ public partial class UCHomeViewModel : ObservableObject
 
         Totals = new TotalRow
         {
-            PlanText = FormatNumber(grandPlan),
+            PlanText = FormatPlan(grandPlan),
             Hours = FormatHours(grandHours, isFuture),
             TotalText = FormatNumber(grandHours.Sum())
         };
@@ -448,14 +504,19 @@ public partial class UCHomeViewModel : ObservableObject
     }
 
     /// <summary>
-    /// Kế hoạch của nhóm trong 1 ca: ưu tiên kế hoạch riêng của ngày, không có thì lấy mặc định.
+    /// Kế hoạch của nhóm trong 1 ca (Daily Plan). Không có kế hoạch => 0; số thực tế vẫn đếm bình thường.
     /// </summary>
     private int GetPlan(ModelGroup group, int shiftNumber)
     {
-        return _dailyPlans.TryGetValue((group.Name, shiftNumber), out var quantity)
-            ? quantity
-            : group.GetPlan(shiftNumber);
+        return _dailyPlans.TryGetValue((group.Name, shiftNumber), out var quantity) ? quantity : 0;
     }
+
+    private bool HasPlan => _dailyPlans.Count > 0;
+
+    /// <summary>
+    /// Ngày chưa có kế hoạch: hiện "-" thay vì 0.
+    /// </summary>
+    private string FormatPlan(int plan) => HasPlan ? FormatNumber(plan) : "-";
 
     private void OnGroupToggled(ModelGroupRow row)
     {
