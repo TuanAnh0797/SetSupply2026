@@ -106,6 +106,14 @@ public partial class UCHomeViewModel : ObservableObject
     [ObservableProperty]
     private bool hasTestData;
 
+    /// <summary>
+    /// false (mặc định): chỉ hiện nhóm có sản lượng thực tế trong ngày / ca đang xem.
+    /// true: hiện thêm nhóm CÓ KẾ HOẠCH (trong ngày / ca đang xem) nhưng chưa có sản lượng.
+    /// Ngày chưa import kế hoạch => vẫn chỉ hiện nhóm có sản lượng thực tế.
+    /// </summary>
+    [ObservableProperty]
+    private bool showEmptyGroups;
+
     [ObservableProperty]
     private string lastCodeText = "--";
 
@@ -257,6 +265,13 @@ public partial class UCHomeViewModel : ObservableObject
         RebuildTable();
     }
 
+    partial void OnShowEmptyGroupsChanged(bool value)
+    {
+        RebuildGroupFilterOptions();
+        RebuildModelFilterOptions();
+        RebuildTable();
+    }
+
     partial void OnSelectedModelFilterChanged(string value)
     {
         if (_suppressReload) return;
@@ -377,9 +392,47 @@ public partial class UCHomeViewModel : ObservableObject
 
     private string GroupOf(string model) => ModelGroupService.ResolveGroup(model, _mappings);
 
+    /// <summary>
+    /// Nhóm có sản lượng thực tế trong ngày / ca đang xem.
+    /// </summary>
+    /// <summary>
+    /// Kế hoạch của nhóm theo phạm vi đang xem (cả ngày = cộng các ca đang dùng).
+    /// </summary>
+    private int PlanInScope(string group)
+    {
+        int? shiftNumber = SelectedScope?.ShiftNumber;
+        return shiftNumber.HasValue
+            ? GetPlan(group, shiftNumber.Value)
+            : ScopeOptions.Where(o => o.ShiftNumber.HasValue).Sum(o => GetPlan(group, o.ShiftNumber!.Value));
+    }
+
+    /// <summary>
+    /// Nhóm được hiện: có sản lượng thực tế, hoặc (khi tích ô) có kế hoạch trong phạm vi đang xem.
+    /// </summary>
+    private bool IsGroupVisible(string group, HashSet<string> withData) =>
+        withData.Contains(group) || (ShowEmptyGroups && PlanInScope(group) > 0);
+
+    /// <summary>
+    /// Danh sách nhóm theo thứ tự hiển thị: nhóm trong Model Group + nhóm chỉ có trong kế hoạch (nếu có), "Khác" luôn cuối.
+    /// </summary>
+    private List<string> GetAllGroupNames()
+    {
+        var names = _groupNames.Where(g => !ModelGroupService.IsOther(g)).ToList();
+        var known = new HashSet<string>(names, StringComparer.OrdinalIgnoreCase);
+        foreach (var planGroup in _dailyPlans.Keys.Select(k => k.Group).Distinct(StringComparer.OrdinalIgnoreCase))
+            if (!ModelGroupService.IsOther(planGroup) && known.Add(planGroup))
+                names.Add(planGroup);
+        names.Add(ModelGroupService.OtherGroupName);
+        return names;
+    }
+
+    private HashSet<string> GroupsWithData() =>
+        _records.Select(r => GroupOf(r.Model)).ToHashSet(StringComparer.OrdinalIgnoreCase);
+
     private void RebuildGroupFilterOptions()
     {
-        var names = _groupNames.ToList();
+        var withData = GroupsWithData();
+        var names = GetAllGroupNames().Where(g => IsGroupVisible(g, withData)).ToList();
         if (names.SequenceEqual(GroupFilterOptions.Skip(1))) return;
 
         var selected = SelectedGroupFilter;
@@ -412,7 +465,7 @@ public partial class UCHomeViewModel : ObservableObject
 
     private void RebuildTable()
     {
-        var displayGroups = _groupNames;
+        var displayGroups = GetAllGroupNames();
         int hourCount = _hourSlots.Count;
         var now = DateTime.Now;
         bool[] isFuture = _hourSlots.Select(s => s > now).ToArray();
@@ -454,10 +507,11 @@ public partial class UCHomeViewModel : ObservableObject
                 ? GetPlan(group, shiftNumber.Value)
                 : activeShiftNumbers.Sum(n => GetPlan(group, n));
 
-            // Nhóm "Khác": chỉ hiện khi có dữ liệu hoặc có kế hoạch
-            if (ModelGroupService.IsOther(group) && models.Count == 0 && plan == 0) continue;
+            // Mặc định chỉ hiện nhóm có sản lượng thực tế. Nhóm chưa có sản lượng: chỉ hiện khi tích ô VÀ nhóm có kế hoạch trong phạm vi đang xem
+            if (models.Count == 0 && !(ShowEmptyGroups && plan > 0)) continue;
 
-            var (rowColor, tintColor, barColor) = GroupPalette[gi % GroupPalette.Length];
+            // Màu theo thứ tự các nhóm đang hiện
+            var (rowColor, tintColor, barColor) = GroupPalette[rows.Count % GroupPalette.Length];
             var rowBrush = CreateBrush(rowColor);
             var tintBrush = CreateBrush(tintColor);
 

@@ -40,6 +40,7 @@
 Chức năng:
 - Ngày sản xuất: bắt đầu từ giờ bắt đầu sớm nhất của các ca đang dùng (VD 06:00 → 06:00 hôm sau). `ProductionDataService.GetProductionRangeAsync / GetProductionDateAsync`.
 - "Cả ngày" = các cột giờ của cả ngày sản xuất; "Ca N" = cột giờ của ca đó. Nút ca sinh tự động theo ca `IsUse = true`.
+- **Chỉ hiện nhóm có sản lượng thực tế** trong ngày/ca đang xem (mặc định). Ô tích **"Hiển thị theo kế hoạch"** (`UCHomeViewModel.ShowEmptyGroups`): hiện thêm nhóm CÓ KẾ HOẠCH (>0 trong ngày/ca đang xem) nhưng chưa có sản lượng; ngày chưa import plan thì vẫn chỉ hiện nhóm có sản lượng. Nhóm chỉ có trong plan (không có trong Model Group) cũng được hiện. Lọc "Nhóm model" theo cùng quy tắc. Kế hoạch tổng / biểu đồ / bảng ca chỉ cộng các nhóm đang hiện. Màu nhóm theo thứ tự các nhóm đang hiện.
 - Bảng: dòng nhóm (màu theo thứ tự nhóm, nút +/− mở rộng/thu gọn, trạng thái được nhớ trong phiên), dòng model con (thumbnail + số theo giờ), dòng **Tổng** cố định ở cuối. Giờ chưa tới để trống.
 - Cột "Sản lượng (Kế hoạch)": lấy từ Daily Plan. Cả ngày = tổng kế hoạch các ca đang dùng; chọn ca = kế hoạch ca đó. Ngày chưa có kế hoạch → hiện "-", tỷ lệ "--"; **số thực tế luôn đếm từ ProductionData, không phụ thuộc kế hoạch**.
 - Realtime: khi PLC gửi dữ liệu và đang xem ngày sản xuất hiện tại → tải lại; timer 1 phút tự cập nhật / tự sang ngày mới. Chọn ngày khác = xem lịch sử (không tự nhảy về hôm nay; bấm "Hôm nay" trong popup lịch để quay lại).
