@@ -38,6 +38,17 @@ public partial class ModelGroupRow : ObservableObject
     public IReadOnlyList<ModelRow> Children { get; init; } = Array.Empty<ModelRow>();
     public bool HasChildren => Children.Count > 0;
 
+    /// <summary>
+    /// Nhóm chỉ có 1 model: hiện model ngay trên dòng nhóm (không có dòng con) để tiết kiệm diện tích.
+    /// </summary>
+    public ModelRow? SingleModel { get; init; }
+    public bool HasSingleModel => SingleModel != null;
+
+    /// <summary>
+    /// Nhóm nhiều model: ô Model của dòng nhóm hiện "N model".
+    /// </summary>
+    public string ModelCountText => Children.Count > 1 ? $"{Children.Count} model" : string.Empty;
+
     [ObservableProperty]
     private bool isExpanded = true;
 
@@ -54,7 +65,11 @@ public partial class ModelGroupRow : ObservableObject
 /// </summary>
 public class ModelRow
 {
+    /// <summary>Số thứ tự (chỉ dùng ở chế độ danh sách model).</summary>
+    public int Stt { get; init; }
     public string ModelName { get; init; } = string.Empty;
+    /// <summary>Nền dòng ở chế độ danh sách model (kẻ sọc).</summary>
+    public Brush RowBackground { get; init; } = Brushes.White;
     public ImageSource? Image { get; init; }
     public bool HasImage => Image != null;
     public Brush TintBrush { get; init; } = Brushes.White;
@@ -69,7 +84,23 @@ public class TotalRow
 {
     public string PlanText { get; init; } = string.Empty;
     public IReadOnlyList<string> Hours { get; init; } = Array.Empty<string>();
+    /// <summary>Ô giờ của dòng Tổng: màu chữ so với kế hoạch giờ đó (giờ đã xong).</summary>
+    public IReadOnlyList<HourValueCell> HourCells { get; init; } = Array.Empty<HourValueCell>();
     public string TotalText { get; init; } = string.Empty;
+
+    /// <summary>Dòng "Kế hoạch" (chỉ hiện khi ngày đang xem có kế hoạch): kế hoạch từng giờ + tổng kế hoạch ca / ngày.</summary>
+    public bool HasPlan { get; init; }
+    public IReadOnlyList<string> PlanHours { get; init; } = Array.Empty<string>();
+    public string PlanTotalText { get; init; } = string.Empty;
+}
+
+/// <summary>
+/// 1 ô số theo giờ có màu chữ riêng.
+/// </summary>
+public class HourValueCell
+{
+    public string Text { get; init; } = string.Empty;
+    public Brush Foreground { get; init; } = Brushes.White;
 }
 
 /// <summary>

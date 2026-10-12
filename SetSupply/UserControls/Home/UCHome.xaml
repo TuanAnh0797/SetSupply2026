@@ -19,6 +19,7 @@
         <GridLength x:Key="PlanColW">120</GridLength>
         <GridLength x:Key="ModelColW">250</GridLength>
         <GridLength x:Key="TotalColW">120</GridLength>
+        <GridLength x:Key="SttColW">70</GridLength>
 
         <SolidColorBrush x:Key="NavyBrush" Color="#1D4F96"/>
         <SolidColorBrush x:Key="NavyDarkBrush" Color="#143F7E"/>
@@ -68,9 +69,25 @@
                 <TextBlock Text="{Binding}" Style="{StaticResource CellText}"/>
             </Border>
         </DataTemplate>
-        <DataTemplate x:Key="HourCellFooter">
+        <DataTemplate x:Key="HourCellFooter" DataType="{x:Type home:HourValueCell}">
             <Border Style="{StaticResource HeaderCellBorder}">
-                <TextBlock Text="{Binding}" Style="{StaticResource HeaderText}" FontSize="17"/>
+                <TextBlock Text="{Binding Text}" Style="{StaticResource HeaderText}" FontSize="17" Foreground="{Binding Foreground}"/>
+            </Border>
+        </DataTemplate>
+
+        <!-- Dòng kế hoạch theo giờ (phía trên dòng Tổng) -->
+        <SolidColorBrush x:Key="PlanRowBrush" Color="#E3EDFA"/>
+        <Style x:Key="PlanCellBorder" TargetType="Border">
+            <Setter Property="BorderBrush" Value="#C5D6EC"/>
+            <Setter Property="BorderThickness" Value="0,0,1,0"/>
+        </Style>
+        <Style x:Key="PlanText" TargetType="TextBlock" BasedOn="{StaticResource CellText}">
+            <Setter Property="Foreground" Value="#1D4F96"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+        </Style>
+        <DataTemplate x:Key="HourCellPlan">
+            <Border Style="{StaticResource PlanCellBorder}">
+                <TextBlock Text="{Binding}" Style="{StaticResource PlanText}"/>
             </Border>
         </DataTemplate>
 
@@ -125,10 +142,32 @@
             <Setter Property="Margin" Value="0,0,12,0"/>
         </Style>
 
+        <!-- Ô Model: thumbnail + tên model (dùng cho dòng model con và dòng nhóm chỉ có 1 model) -->
+        <DataTemplate x:Key="ModelCellContent" DataType="{x:Type home:ModelRow}">
+            <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="22,0,0,0">
+                <Grid Width="22" Height="28" Margin="0,0,14,0">
+                    <Image Source="{Binding Image}" Stretch="Uniform" RenderOptions.BitmapScalingMode="HighQuality"
+                           Visibility="{Binding HasImage, Converter={StaticResource BoolToVis}}"/>
+                    <materialDesign:PackIcon Kind="FridgeOutline" Width="22" Height="26" Foreground="#7A8BA6">
+                        <materialDesign:PackIcon.Style>
+                            <Style TargetType="materialDesign:PackIcon">
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding HasImage}" Value="True">
+                                        <Setter Property="Visibility" Value="Collapsed"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </materialDesign:PackIcon.Style>
+                    </materialDesign:PackIcon>
+                </Grid>
+                <TextBlock Text="{Binding ModelName}" Style="{StaticResource CellText}" FontSize="15"/>
+            </StackPanel>
+        </DataTemplate>
+
         <!-- ===== Dòng model (chi tiết) ===== -->
         <DataTemplate x:Key="ModelRowTemplate" DataType="{x:Type home:ModelRow}">
             <Border BorderBrush="{StaticResource GridLineBrush}" BorderThickness="0,0,0,1" Background="White">
-                <Grid Height="36">
+                <Grid Height="32">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="{StaticResource GroupColW}"/>
                         <ColumnDefinition Width="{StaticResource PlanColW}"/>
@@ -139,24 +178,7 @@
                     <Border Grid.Column="0" Style="{StaticResource CellBorder}" Background="{Binding TintBrush}"/>
                     <Border Grid.Column="1" Style="{StaticResource CellBorder}" Background="{Binding TintBrush}"/>
                     <Border Grid.Column="2" Style="{StaticResource CellBorder}">
-                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="22,0,0,0">
-                            <Grid Width="22" Height="30" Margin="0,0,14,0">
-                                <Image Source="{Binding Image}" Stretch="Uniform" RenderOptions.BitmapScalingMode="HighQuality"
-                                       Visibility="{Binding HasImage, Converter={StaticResource BoolToVis}}"/>
-                                <materialDesign:PackIcon Kind="FridgeOutline" Width="22" Height="28" Foreground="#7A8BA6">
-                                    <materialDesign:PackIcon.Style>
-                                        <Style TargetType="materialDesign:PackIcon">
-                                            <Style.Triggers>
-                                                <DataTrigger Binding="{Binding HasImage}" Value="True">
-                                                    <Setter Property="Visibility" Value="Collapsed"/>
-                                                </DataTrigger>
-                                            </Style.Triggers>
-                                        </Style>
-                                    </materialDesign:PackIcon.Style>
-                                </materialDesign:PackIcon>
-                            </Grid>
-                            <TextBlock Text="{Binding ModelName}" Style="{StaticResource CellText}" FontSize="15"/>
-                        </StackPanel>
+                        <ContentPresenter Content="{Binding}" ContentTemplate="{StaticResource ModelCellContent}"/>
                     </Border>
                     <ItemsControl Grid.Column="3" ItemsSource="{Binding Hours}"
                                   ItemsPanel="{StaticResource HourPanel}" ItemTemplate="{StaticResource HourCellModel}"/>
@@ -165,11 +187,13 @@
             </Border>
         </DataTemplate>
 
-        <!-- ===== Dòng nhóm + các dòng model con ===== -->
+        <!-- ===== Dòng nhóm + các dòng model con =====
+             Nhóm 1 model: model hiện ngay trên dòng nhóm (không có dòng con).
+             Nhóm nhiều model: ô Model hiện "N model", bấm +/- để xem / ẩn từng model. -->
         <DataTemplate x:Key="GroupRowTemplate" DataType="{x:Type home:ModelGroupRow}">
             <StackPanel>
                 <Border BorderBrush="{StaticResource GridLineBrush}" BorderThickness="0,0,0,1" Background="{Binding RowBrush}">
-                    <Grid Height="40">
+                    <Grid Height="36">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="{StaticResource GroupColW}"/>
                             <ColumnDefinition Width="{StaticResource PlanColW}"/>
@@ -187,7 +211,16 @@
                         <Border Grid.Column="1" Style="{StaticResource CellBorder}">
                             <TextBlock Text="{Binding PlanText}" Style="{StaticResource CellText}" FontWeight="Bold" FontSize="17"/>
                         </Border>
-                        <Border Grid.Column="2" Style="{StaticResource CellBorder}"/>
+                        <Border Grid.Column="2" Style="{StaticResource CellBorder}">
+                            <Grid>
+                                <!-- ContentControl (không phải ContentPresenter) để binding Visibility vẫn theo dòng nhóm -->
+                                <ContentControl Content="{Binding SingleModel}" ContentTemplate="{StaticResource ModelCellContent}"
+                                                Focusable="False" IsTabStop="False"
+                                                Visibility="{Binding HasSingleModel, Converter={StaticResource BoolToVis}}"/>
+                                <TextBlock Text="{Binding ModelCountText}" Style="{StaticResource CellText}"
+                                           HorizontalAlignment="Left" Margin="22,0,0,0" FontSize="14" FontStyle="Italic" Foreground="#6B7A90"/>
+                            </Grid>
+                        </Border>
                         <ItemsControl Grid.Column="3" ItemsSource="{Binding Hours}"
                                       ItemsPanel="{StaticResource HourPanel}" ItemTemplate="{StaticResource HourCellGroup}"/>
                         <TextBlock Grid.Column="4" Text="{Binding TotalText}" Style="{StaticResource CellText}"
@@ -198,6 +231,61 @@
                               Visibility="{Binding IsExpanded, Converter={StaticResource BoolToVis}}"/>
             </StackPanel>
         </DataTemplate>
+
+        <!-- ===== Chế độ danh sách model: STT | Model | giờ | Tổng ===== -->
+        <DataTemplate x:Key="FlatRowTemplate" DataType="{x:Type home:ModelRow}">
+            <Border BorderBrush="{StaticResource GridLineBrush}" BorderThickness="0,0,0,1" Background="{Binding RowBackground}">
+                <Grid Height="34">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="{StaticResource SttColW}"/>
+                        <ColumnDefinition Width="{StaticResource ModelColW}"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="{StaticResource TotalColW}"/>
+                    </Grid.ColumnDefinitions>
+                    <!-- Vạch màu bên trái = màu nhóm của model -->
+                    <Border Grid.Column="0" Style="{StaticResource CellBorder}">
+                        <Grid>
+                            <Border Width="5" HorizontalAlignment="Left" Background="{Binding TintBrush}"/>
+                            <TextBlock Text="{Binding Stt}" Style="{StaticResource CellText}" Foreground="#5B6B82"/>
+                        </Grid>
+                    </Border>
+                    <Border Grid.Column="1" Style="{StaticResource CellBorder}">
+                        <ContentControl Content="{Binding}" ContentTemplate="{StaticResource ModelCellContent}"
+                                        Focusable="False" IsTabStop="False"/>
+                    </Border>
+                    <ItemsControl Grid.Column="2" ItemsSource="{Binding Hours}"
+                                  ItemsPanel="{StaticResource HourPanel}" ItemTemplate="{StaticResource HourCellModel}"/>
+                    <Border Grid.Column="3" Background="#EAF3FC">
+                        <TextBlock Text="{Binding TotalText}" Style="{StaticResource CellText}" FontWeight="Bold" FontSize="16"/>
+                    </Border>
+                </Grid>
+            </Border>
+        </DataTemplate>
+
+        <!-- Nút chọn chế độ bảng (Theo nhóm / Theo model) -->
+        <Style x:Key="ModeRadio" TargetType="RadioButton">
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Focusable" Value="False"/>
+            <Setter Property="Foreground" Value="{StaticResource LabelBrush}"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="RadioButton">
+                        <Border x:Name="Bd" Background="Transparent" CornerRadius="3" Padding="10,0" Height="32">
+                            <ContentPresenter VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="Bd" Property="Background" Value="#E3ECF8"/>
+                            </Trigger>
+                            <Trigger Property="IsChecked" Value="True">
+                                <Setter TargetName="Bd" Property="Background" Value="#1D4F96"/>
+                                <Setter Property="Foreground" Value="White"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
 
         <!-- ===== Panel phía dưới ===== -->
         <GridLength x:Key="BarLabelW">90</GridLength>
@@ -298,6 +386,31 @@
         <!-- ===== THANH LỌC ===== -->
         <DockPanel Grid.Row="0" Margin="0,0,0,10" LastChildFill="False">
             <StackPanel DockPanel.Dock="Left" Orientation="Horizontal">
+                <!-- Chế độ bảng sản lượng (biểu đồ phía dưới không đổi) -->
+                <Border Height="38" CornerRadius="4" Background="White" BorderBrush="#C3D1E5" BorderThickness="1"
+                        Padding="2" Margin="0,0,22,0" VerticalAlignment="Center">
+                    <StackPanel Orientation="Horizontal">
+                        <RadioButton Style="{StaticResource ModeRadio}" IsChecked="{Binding IsGroupMode}"
+                                     ToolTip="Bảng theo nhóm model (mở rộng / thu gọn từng nhóm)">
+                            <StackPanel Orientation="Horizontal">
+                                <materialDesign:PackIcon Kind="FileTreeOutline" Width="18" Height="18" VerticalAlignment="Center"
+                                                         Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=RadioButton}}"/>
+                                <TextBlock Text="Theo nhóm" FontSize="15" FontWeight="SemiBold" Margin="6,0,0,0" VerticalAlignment="Center"
+                                           Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=RadioButton}}"/>
+                            </StackPanel>
+                        </RadioButton>
+                        <RadioButton Style="{StaticResource ModeRadio}" IsChecked="{Binding IsModelListMode}"
+                                     ToolTip="Danh sách từng model có STT (không chia nhóm)">
+                            <StackPanel Orientation="Horizontal">
+                                <materialDesign:PackIcon Kind="FormatListNumbered" Width="18" Height="18" VerticalAlignment="Center"
+                                                         Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=RadioButton}}"/>
+                                <TextBlock Text="Theo model" FontSize="15" FontWeight="SemiBold" Margin="6,0,0,0" VerticalAlignment="Center"
+                                           Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=RadioButton}}"/>
+                            </StackPanel>
+                        </RadioButton>
+                    </StackPanel>
+                </Border>
+
                 <TextBlock Text="Nhóm model" Style="{StaticResource FilterLabel}"/>
                 <ComboBox Width="200" Style="{StaticResource FilterCombo}" Margin="0,0,26,0"
                           ItemsSource="{Binding GroupFilterOptions}" SelectedItem="{Binding SelectedGroupFilter}"/>
@@ -327,6 +440,7 @@
 
                 <!-- Mặc định chỉ hiện nhóm có sản lượng thực tế -->
                 <CheckBox IsChecked="{Binding ShowEmptyGroups}" Content="Hiển thị theo kế hoạch" FontSize="14"
+                          Visibility="{Binding IsGroupMode, Converter={StaticResource BoolToVis}}"
                           Foreground="{StaticResource TextDarkBrush}" VerticalAlignment="Center" Margin="20,0,0,0"
                           ToolTip="Tích: hiện thêm nhóm có kế hoạch (ngày / ca đang xem) nhưng chưa có sản lượng. Ngày chưa import kế hoạch: chỉ hiện nhóm có sản lượng thực tế. Kế hoạch tổng chỉ cộng các nhóm đang hiện."/>
             </StackPanel>
@@ -390,7 +504,8 @@
                                 <GradientStop Color="#1B4A8E" Offset="1"/>
                             </LinearGradientBrush>
                         </Border.Background>
-                        <Grid x:Name="HeaderGrid" Height="54">
+                        <Grid>
+                        <Grid x:Name="HeaderGrid" Height="54" Visibility="{Binding IsGroupMode, Converter={StaticResource BoolToVis}}">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="{StaticResource GroupColW}"/>
                                 <ColumnDefinition Width="{StaticResource PlanColW}"/>
@@ -399,7 +514,39 @@
                                 <ColumnDefinition Width="{StaticResource TotalColW}"/>
                             </Grid.ColumnDefinitions>
                             <Border Grid.Column="0" Style="{StaticResource HeaderCellBorder}">
-                                <TextBlock Text="Nhóm model" Style="{StaticResource HeaderText}"/>
+                                <Grid>
+                                    <TextBlock Text="Nhóm model" Style="{StaticResource HeaderText}" Margin="26,0,0,0"/>
+                                    <!-- Mở rộng / thu gọn tất cả nhóm -->
+                                    <Button HorizontalAlignment="Left" Margin="10,0,0,0" Width="26" Height="26"
+                                            Cursor="Hand" Focusable="False" Command="{Binding ToggleAllGroupsCommand}">
+                                        <Button.Template>
+                                            <ControlTemplate TargetType="Button">
+                                                <Border x:Name="Bd" Background="#33FFFFFF" CornerRadius="4">
+                                                    <materialDesign:PackIcon x:Name="Icon" Kind="UnfoldLessHorizontal" Width="20" Height="20"
+                                                                             Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                                </Border>
+                                                <ControlTemplate.Triggers>
+                                                    <DataTrigger Binding="{Binding AllGroupsExpanded}" Value="False">
+                                                        <Setter TargetName="Icon" Property="Kind" Value="UnfoldMoreHorizontal"/>
+                                                    </DataTrigger>
+                                                    <Trigger Property="IsMouseOver" Value="True">
+                                                        <Setter TargetName="Bd" Property="Background" Value="#66FFFFFF"/>
+                                                    </Trigger>
+                                                </ControlTemplate.Triggers>
+                                            </ControlTemplate>
+                                        </Button.Template>
+                                        <Button.Style>
+                                            <Style TargetType="Button">
+                                                <Setter Property="ToolTip" Value="Thu gọn tất cả nhóm"/>
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding AllGroupsExpanded}" Value="False">
+                                                        <Setter Property="ToolTip" Value="Mở rộng tất cả nhóm"/>
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </Button.Style>
+                                    </Button>
+                                </Grid>
                             </Border>
                             <Border Grid.Column="1" Style="{StaticResource HeaderCellBorder}">
                                 <TextBlock Style="{StaticResource HeaderText}" FontSize="15" LineHeight="18">
@@ -413,12 +560,35 @@
                                           ItemsPanel="{StaticResource HourPanel}" ItemTemplate="{StaticResource HourCellHeader}"/>
                             <TextBlock Grid.Column="4" Text="Tổng" Style="{StaticResource HeaderText}" FontSize="17"/>
                         </Grid>
+                        <Grid x:Name="FlatHeaderGrid" Height="54" Visibility="{Binding IsModelListMode, Converter={StaticResource BoolToVis}}">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="{StaticResource SttColW}"/>
+                                <ColumnDefinition Width="{StaticResource ModelColW}"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="{StaticResource TotalColW}"/>
+                            </Grid.ColumnDefinitions>
+                            <Border Grid.Column="0" Style="{StaticResource HeaderCellBorder}">
+                                <TextBlock Text="STT" Style="{StaticResource HeaderText}"/>
+                            </Border>
+                            <Border Grid.Column="1" Style="{StaticResource HeaderCellBorder}">
+                                <TextBlock Text="Model" Style="{StaticResource HeaderText}"/>
+                            </Border>
+                            <ItemsControl Grid.Column="2" ItemsSource="{Binding HourHeaders}"
+                                          ItemsPanel="{StaticResource HourPanel}" ItemTemplate="{StaticResource HourCellHeader}"/>
+                            <TextBlock Grid.Column="3" Text="Tổng" Style="{StaticResource HeaderText}" FontSize="17"/>
+                        </Grid>
+                        </Grid>
                     </Border>
 
                     <!-- Nội dung -->
                     <ScrollViewer x:Name="BodyScroll" Grid.Row="1"
                                   VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
-                        <ItemsControl ItemsSource="{Binding Groups}" ItemTemplate="{StaticResource GroupRowTemplate}"/>
+                        <Grid>
+                            <ItemsControl ItemsSource="{Binding Groups}" ItemTemplate="{StaticResource GroupRowTemplate}"
+                                          Visibility="{Binding IsGroupMode, Converter={StaticResource BoolToVis}}"/>
+                            <ItemsControl ItemsSource="{Binding FlatRows}" ItemTemplate="{StaticResource FlatRowTemplate}"
+                                          Visibility="{Binding IsModelListMode, Converter={StaticResource BoolToVis}}"/>
+                        </Grid>
                     </ScrollViewer>
 
                     <TextBlock Grid.Row="1" Text="Chưa có dữ liệu" FontSize="18" Foreground="#8A99B0"
@@ -427,7 +597,7 @@
                             <Style TargetType="TextBlock">
                                 <Setter Property="Visibility" Value="Collapsed"/>
                                 <Style.Triggers>
-                                    <DataTrigger Binding="{Binding Groups.Count}" Value="0">
+                                    <DataTrigger Binding="{Binding IsTableEmpty}" Value="True">
                                         <Setter Property="Visibility" Value="Visible"/>
                                     </DataTrigger>
                                 </Style.Triggers>
@@ -435,27 +605,86 @@
                         </TextBlock.Style>
                     </TextBlock>
 
-                    <!-- Dòng tổng -->
+                    <!-- Dòng kế hoạch (khi có import plan) + dòng tổng -->
                     <Border Grid.Row="2" Background="{StaticResource NavyDarkBrush}" CornerRadius="0,0,5,5">
-                        <Grid x:Name="FooterGrid" Height="46" DataContext="{Binding Totals}">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="{StaticResource GroupColW}"/>
-                                <ColumnDefinition Width="{StaticResource PlanColW}"/>
-                                <ColumnDefinition Width="{StaticResource ModelColW}"/>
-                                <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="{StaticResource TotalColW}"/>
-                            </Grid.ColumnDefinitions>
-                            <Border Grid.Column="0" Style="{StaticResource HeaderCellBorder}">
-                                <TextBlock Text="Tổng" Style="{StaticResource HeaderText}" FontSize="19" FontWeight="Bold"/>
-                            </Border>
-                            <Border Grid.Column="1" Style="{StaticResource HeaderCellBorder}">
-                                <TextBlock Text="{Binding PlanText}" Style="{StaticResource HeaderText}" FontSize="18" FontWeight="Bold"/>
-                            </Border>
-                            <Border Grid.Column="2" Style="{StaticResource HeaderCellBorder}"/>
-                            <ItemsControl Grid.Column="3" ItemsSource="{Binding Hours}"
-                                          ItemsPanel="{StaticResource HourPanel}" ItemTemplate="{StaticResource HourCellFooter}"/>
-                            <TextBlock Grid.Column="4" Text="{Binding TotalText}" Style="{StaticResource HeaderText}"
-                                       FontSize="18" FontWeight="Bold"/>
+                        <Grid DataContext="{Binding Totals}">
+                            <!-- Chế độ theo nhóm -->
+                            <StackPanel Visibility="{Binding DataContext.IsGroupMode, RelativeSource={RelativeSource AncestorType=UserControl}, Converter={StaticResource BoolToVis}}">
+                                <Border Background="{StaticResource PlanRowBrush}" BorderBrush="#B9CDE8" BorderThickness="0,1,0,0"
+                                        Visibility="{Binding HasPlan, Converter={StaticResource BoolToVis}}">
+                                    <Grid x:Name="PlanRowGrid" Height="34">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="{StaticResource GroupColW}"/>
+                                            <ColumnDefinition Width="{StaticResource PlanColW}"/>
+                                            <ColumnDefinition Width="{StaticResource ModelColW}"/>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="{StaticResource TotalColW}"/>
+                                        </Grid.ColumnDefinitions>
+                                        <Border Grid.Column="0" Grid.ColumnSpan="3" Style="{StaticResource PlanCellBorder}">
+                                            <TextBlock Text="Kế hoạch theo giờ" Style="{StaticResource PlanText}" FontSize="16"/>
+                                        </Border>
+                                        <ItemsControl Grid.Column="3" ItemsSource="{Binding PlanHours}"
+                                                      ItemsPanel="{StaticResource HourPanel}" ItemTemplate="{StaticResource HourCellPlan}"/>
+                                        <TextBlock Grid.Column="4" Text="{Binding PlanTotalText}" Style="{StaticResource PlanText}" FontSize="17"/>
+                                    </Grid>
+                                </Border>
+                                <Grid x:Name="FooterGrid" Height="46">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="{StaticResource GroupColW}"/>
+                                        <ColumnDefinition Width="{StaticResource PlanColW}"/>
+                                        <ColumnDefinition Width="{StaticResource ModelColW}"/>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="{StaticResource TotalColW}"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Border Grid.Column="0" Style="{StaticResource HeaderCellBorder}">
+                                        <TextBlock Text="Tổng" Style="{StaticResource HeaderText}" FontSize="19" FontWeight="Bold"/>
+                                    </Border>
+                                    <Border Grid.Column="1" Style="{StaticResource HeaderCellBorder}">
+                                        <TextBlock Text="{Binding PlanText}" Style="{StaticResource HeaderText}" FontSize="18" FontWeight="Bold"/>
+                                    </Border>
+                                    <Border Grid.Column="2" Style="{StaticResource HeaderCellBorder}"/>
+                                    <ItemsControl Grid.Column="3" ItemsSource="{Binding HourCells}"
+                                                  ItemsPanel="{StaticResource HourPanel}" ItemTemplate="{StaticResource HourCellFooter}"/>
+                                    <TextBlock Grid.Column="4" Text="{Binding TotalText}" Style="{StaticResource HeaderText}"
+                                               FontSize="18" FontWeight="Bold"/>
+                                </Grid>
+                            </StackPanel>
+
+                            <!-- Chế độ theo model -->
+                            <StackPanel Visibility="{Binding DataContext.IsModelListMode, RelativeSource={RelativeSource AncestorType=UserControl}, Converter={StaticResource BoolToVis}}">
+                                <Border Background="{StaticResource PlanRowBrush}" BorderBrush="#B9CDE8" BorderThickness="0,1,0,0"
+                                        Visibility="{Binding HasPlan, Converter={StaticResource BoolToVis}}">
+                                    <Grid x:Name="FlatPlanRowGrid" Height="34">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="{StaticResource SttColW}"/>
+                                            <ColumnDefinition Width="{StaticResource ModelColW}"/>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="{StaticResource TotalColW}"/>
+                                        </Grid.ColumnDefinitions>
+                                        <Border Grid.Column="0" Grid.ColumnSpan="2" Style="{StaticResource PlanCellBorder}">
+                                            <TextBlock Text="Kế hoạch theo giờ" Style="{StaticResource PlanText}" FontSize="16"/>
+                                        </Border>
+                                        <ItemsControl Grid.Column="2" ItemsSource="{Binding PlanHours}"
+                                                      ItemsPanel="{StaticResource HourPanel}" ItemTemplate="{StaticResource HourCellPlan}"/>
+                                        <TextBlock Grid.Column="3" Text="{Binding PlanTotalText}" Style="{StaticResource PlanText}" FontSize="17"/>
+                                    </Grid>
+                                </Border>
+                                <Grid x:Name="FlatFooterGrid" Height="46">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="{StaticResource SttColW}"/>
+                                        <ColumnDefinition Width="{StaticResource ModelColW}"/>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="{StaticResource TotalColW}"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Border Grid.Column="0" Grid.ColumnSpan="2" Style="{StaticResource HeaderCellBorder}">
+                                        <TextBlock Text="Tổng" Style="{StaticResource HeaderText}" FontSize="19" FontWeight="Bold"/>
+                                    </Border>
+                                    <ItemsControl Grid.Column="2" ItemsSource="{Binding HourCells}"
+                                                  ItemsPanel="{StaticResource HourPanel}" ItemTemplate="{StaticResource HourCellFooter}"/>
+                                    <TextBlock Grid.Column="3" Text="{Binding TotalText}" Style="{StaticResource HeaderText}"
+                                               FontSize="18" FontWeight="Bold"/>
+                                </Grid>
+                            </StackPanel>
                         </Grid>
                     </Border>
                 </Grid>

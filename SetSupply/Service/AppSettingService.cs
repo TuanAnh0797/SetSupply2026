@@ -23,6 +23,9 @@ public class AppSettingService
     /// <summary>Tên sheet cần đọc trong file kế hoạch; rỗng = tự dò.</summary>
     public const string PlanSheetNameKey = "PlanImport.SheetName";
 
+    /// <summary>Chế độ bảng Home: "group" (theo nhóm model, mặc định) hoặc "model" (danh sách model + STT).</summary>
+    public const string HomeViewModeKey = "Home.ViewMode";
+
     private readonly IServiceScopeFactory _scopeFactory;
 
     /// <summary>Phát khi 1 cài đặt được lưu. Tham số: key, value.</summary>

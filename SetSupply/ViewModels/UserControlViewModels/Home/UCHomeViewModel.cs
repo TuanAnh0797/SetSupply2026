@@ -30,6 +30,7 @@ public partial class UCHomeViewModel : ObservableObject
     public const double PlanColumnWidth = 120;
     public const double ModelColumnWidth = 250;
     public const double TotalColumnWidth = 120;
+    public const double SttColumnWidth = 70;
     public const double MinHourColumnWidth = 46;
 
     // Màu theo thứ tự nhóm: (màu dòng nhóm, màu nhạt cho dòng model, màu cột biểu đồ)
@@ -45,11 +46,21 @@ public partial class UCHomeViewModel : ObservableObject
     };
 
     private static readonly CultureInfo NumberCulture = CultureInfo.InvariantCulture;
+    private static readonly Brush ZebraBrush = CreateFrozenBrush("#F5F8FD");
+
+    private static Brush CreateFrozenBrush(string color)
+    {
+        var brush = new SolidColorBrush((Color)ColorConverter.ConvertFromString(color));
+        brush.Freeze();
+        return brush;
+    }
 
     private readonly ProductionDataService _productionService;
     private readonly ModelGroupService _modelGroupService;
     private readonly ProductionPlanService _planService;
     private readonly PLCService _plcService;
+    private readonly AppSettingService _appSettings;
+    private bool _viewModeLoaded;
 
     private readonly SemaphoreSlim _loadLock = new(1, 1);
     private readonly HashSet<string> _collapsedGroups = new(StringComparer.OrdinalIgnoreCase);
@@ -73,6 +84,25 @@ public partial class UCHomeViewModel : ObservableObject
     public ObservableCollection<string> ModelFilterOptions { get; } = new() { AllOption };
     public ObservableCollection<string> HourHeaders { get; } = new();
     public ObservableCollection<ModelGroupRow> Groups { get; } = new();
+    /// <summary>Chế độ danh sách model: STT | Model | giờ | Tổng (không chia nhóm).</summary>
+    public ObservableCollection<ModelRow> FlatRows { get; } = new();
+
+    /// <summary>
+    /// false: bảng theo nhóm model (mặc định). true: danh sách model phẳng có STT.
+    /// Chỉ đổi bảng sản lượng; các panel phía dưới giữ nguyên. Lưu vào AppSettings "Home.ViewMode".
+    /// </summary>
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(IsGroupMode))]
+    private bool isModelListMode;
+
+    public bool IsGroupMode
+    {
+        get => !IsModelListMode;
+        set => IsModelListMode = !value;
+    }
+
+    [ObservableProperty]
+    private bool isTableEmpty = true;
 
     [ObservableProperty]
     private ShiftScopeOption? selectedScope;
@@ -134,8 +164,10 @@ public partial class UCHomeViewModel : ObservableObject
     public string ConnectionText => IsPlcConnected ? "Đang kết nối" : "Mất kết nối";
 
     public UCHomeViewModel(ProductionDataService productionService, ModelGroupService modelGroupService,
-                           ProductionPlanService planService, PLCService plcService, PlanImportService planImportService)
+                           ProductionPlanService planService, PLCService plcService, PlanImportService planImportService,
+                           AppSettingService appSettings)
     {
+        _appSettings = appSettings;
         _productionService = productionService;
         _modelGroupService = modelGroupService;
         _planService = planService;
@@ -170,6 +202,13 @@ public partial class UCHomeViewModel : ObservableObject
     public async Task ActivateAsync()
     {
         ModelImageProvider.ClearCache();
+        if (!_viewModeLoaded)
+        {
+            _viewModeLoaded = true;
+            _suppressViewModeSave = true;
+            IsModelListMode = _appSettings.Get(AppSettingService.HomeViewModeKey, "group") == "model";
+            _suppressViewModeSave = false;
+        }
         await LoadLastCodeAsync();
         await LoadAsync();
     }
@@ -346,8 +385,7 @@ public partial class UCHomeViewModel : ObservableObject
             foreach (var slot in _hourSlots)
                 HourHeaders.Add($"{slot.Hour}:00");
 
-            TableMinWidth = GroupColumnWidth + PlanColumnWidth + ModelColumnWidth + TotalColumnWidth
-                            + _hourSlots.Count * MinHourColumnWidth;
+            UpdateTableMinWidth();
 
             RebuildGroupFilterOptions();
             RebuildModelFilterOptions();
@@ -364,6 +402,39 @@ public partial class UCHomeViewModel : ObservableObject
             _loadLock.Release();
         }
     }
+
+    private bool _suppressViewModeSave;
+
+    partial void OnIsModelListModeChanged(bool value)
+    {
+        UpdateTableMinWidth();
+        UpdateTableEmpty();
+        if (_suppressViewModeSave) return;
+        _ = SaveViewModeAsync(value);
+    }
+
+    private async Task SaveViewModeAsync(bool modelList)
+    {
+        try
+        {
+            await _appSettings.SetAsync(AppSettingService.HomeViewModeKey, modelList ? "model" : "group");
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"Save Home view mode error: {ex.Message}");
+        }
+    }
+
+    private void UpdateTableMinWidth()
+    {
+        double fixedWidth = IsModelListMode
+            ? SttColumnWidth + ModelColumnWidth + TotalColumnWidth
+            : GroupColumnWidth + PlanColumnWidth + ModelColumnWidth + TotalColumnWidth;
+        TableMinWidth = fixedWidth + _hourSlots.Count * MinHourColumnWidth;
+    }
+
+    private void UpdateTableEmpty() =>
+        IsTableEmpty = IsModelListMode ? FlatRows.Count == 0 : Groups.Count == 0;
 
     private void RebuildScopeOptions(List<ShiftSetting> shifts)
     {
@@ -488,6 +559,7 @@ public partial class UCHomeViewModel : ObservableObject
         var activeShiftNumbers = ScopeOptions.Where(o => o.ShiftNumber.HasValue).Select(o => o.ShiftNumber!.Value).ToList();
 
         var rows = new List<ModelGroupRow>();
+        var flatSource = new List<ModelRow>();
         var shownGroups = new List<(string Group, int Total, string BarColor)>();
         var grandHours = new int[hourCount];
         int grandPlan = 0;
@@ -532,6 +604,7 @@ public partial class UCHomeViewModel : ObservableObject
                 });
             }
 
+            flatSource.AddRange(children);
             for (int h = 0; h < hourCount; h++) grandHours[h] += groupHours[h];
             grandPlan += plan;
             shownGroups.Add((group, groupHours.Sum(), barColor));
@@ -544,7 +617,9 @@ public partial class UCHomeViewModel : ObservableObject
                 TintBrush = tintBrush,
                 Hours = FormatHours(groupHours, isFuture),
                 TotalText = FormatNumber(groupHours.Sum()),
-                Children = children,
+                // 1 model: gộp vào dòng nhóm, không tốn thêm 1 dòng con
+                Children = children.Count > 1 ? children : Array.Empty<ModelRow>(),
+                SingleModel = children.Count == 1 ? children[0] : null,
                 IsExpanded = !_collapsedGroups.Contains(group)
             });
         }
@@ -553,11 +628,60 @@ public partial class UCHomeViewModel : ObservableObject
         foreach (var row in rows)
             Groups.Add(row);
 
+        // Chế độ danh sách model: thứ tự theo giờ sản xuất đầu tiên (giờ sớm hơn lên trước)
+        var firstSeen = new Dictionary<string, int>(StringComparer.Ordinal);
+        for (int i = 0; i < _records.Count; i++)
+        {
+            var (model, hourIndex) = _records[i];
+            int key = hourIndex * 1_000_000 + Math.Min(i, 999_999);
+            if (!firstSeen.TryGetValue(model, out var current) || key < current)
+                firstSeen[model] = key;
+        }
+        FlatRows.Clear();
+        // Vạch màu ở cột STT = màu cột biểu đồ của nhóm
+        var groupBarBrush = shownGroups
+            .GroupBy(g => g.Group, StringComparer.OrdinalIgnoreCase)
+            .ToDictionary(g => g.Key, g => CreateBrush(g.First().BarColor), StringComparer.OrdinalIgnoreCase);
+        int stt = 1;
+        foreach (var source in flatSource.OrderBy(m => firstSeen.TryGetValue(m.ModelName, out var k) ? k : int.MaxValue))
+        {
+            FlatRows.Add(new ModelRow
+            {
+                Stt = stt,
+                ModelName = source.ModelName,
+                Image = source.Image,
+                TintBrush = groupBarBrush.TryGetValue(GroupOf(source.ModelName), out var bar) ? bar : source.TintBrush,
+                RowBackground = stt % 2 == 0 ? ZebraBrush : Brushes.White,
+                Hours = source.Hours,
+                TotalText = source.TotalText
+            });
+            stt++;
+        }
+        UpdateTableEmpty();
+        UpdateAllExpanded();
+
+        // Kế hoạch theo giờ = kế hoạch ca chia đều cho các giờ của ca (theo số phút thuộc ca)
+        var planHours = DistributePlanByHour(shownGroups);
+        var actualTexts = FormatHours(grandHours, isFuture);
+        var hourCells = new List<HourValueCell>(hourCount);
+        for (int h = 0; h < hourCount; h++)
+        {
+            // Giờ đã kết thúc và có kế hoạch: xanh = đạt, đỏ = thiếu
+            Brush color = Brushes.White;
+            if (HasPlan && planHours[h] > 0 && _hourSlots[h].AddHours(1) <= now)
+                color = grandHours[h] >= planHours[h] ? FooterGoodBrush : FooterBadBrush;
+            hourCells.Add(new HourValueCell { Text = actualTexts[h], Foreground = color });
+        }
+
         Totals = new TotalRow
         {
             PlanText = FormatPlan(grandPlan),
-            Hours = FormatHours(grandHours, isFuture),
-            TotalText = FormatNumber(grandHours.Sum())
+            Hours = actualTexts,
+            HourCells = hourCells,
+            TotalText = FormatNumber(grandHours.Sum()),
+            HasPlan = HasPlan,
+            PlanHours = planHours.Select(p => p > 0 ? FormatNumber(p) : string.Empty).ToList(),
+            PlanTotalText = FormatPlan(grandPlan)
         };
 
         UpdateBottomPanels(displayGroups, shownGroups, grandHours, isFuture, grandPlan);
@@ -573,6 +697,50 @@ public partial class UCHomeViewModel : ObservableObject
 
     private bool HasPlan => _dailyPlans.Count > 0;
 
+    private static readonly Brush FooterGoodBrush = CreateFrozenBrush("#8EF0A4");
+    private static readonly Brush FooterBadBrush = CreateFrozenBrush("#FFAFA3");
+
+    /// <summary>
+    /// Kế hoạch từng cột giờ: kế hoạch mỗi ca (các nhóm đang hiện) chia cho các giờ của ca theo số phút nằm trong ca,
+    /// làm tròn sao cho tổng các giờ đúng bằng kế hoạch ca. Xem 1 ca => chỉ tính ca đó.
+    /// </summary>
+    private int[] DistributePlanByHour(List<(string Group, int Total, string BarColor)> shownGroups)
+    {
+        int n = _hourSlots.Count;
+        var result = new int[n];
+        if (!HasPlan || n == 0) return result;
+
+        int? selectedShift = SelectedScope?.ShiftNumber;
+        foreach (var (option, start, end) in _shiftRanges)
+        {
+            if (selectedShift.HasValue && option.ShiftNumber != selectedShift) continue;
+            int plan = shownGroups.Sum(g => GetPlan(g.Group, option.ShiftNumber!.Value));
+            if (plan <= 0) continue;
+
+            var minutes = new double[n];
+            for (int i = 0; i < n; i++)
+            {
+                var slotStart = _hourSlots[i];
+                var slotEnd = slotStart.AddHours(1);
+                var from = slotStart > start ? slotStart : start;
+                var to = slotEnd < end ? slotEnd : end;
+                minutes[i] = to > from ? (to - from).TotalMinutes : 0;
+            }
+            double totalMinutes = minutes.Sum();
+            if (totalMinutes <= 0) continue;
+
+            var exact = minutes.Select(m => plan * m / totalMinutes).ToArray();
+            var parts = exact.Select(x => (int)Math.Floor(x)).ToArray();
+            int rest = plan - parts.Sum();
+            foreach (int i in Enumerable.Range(0, n).Where(i => minutes[i] > 0)
+                         .OrderByDescending(i => exact[i] - parts[i]).ThenBy(i => i).Take(rest))
+                parts[i]++;
+
+            for (int i = 0; i < n; i++) result[i] += parts[i];
+        }
+        return result;
+    }
+
     /// <summary>
     /// Ngày chưa có kế hoạch: hiện "-" thay vì 0.
     /// </summary>
@@ -582,6 +750,32 @@ public partial class UCHomeViewModel : ObservableObject
     {
         if (row.IsExpanded) _collapsedGroups.Remove(row.Name);
         else _collapsedGroups.Add(row.Name);
+        UpdateAllExpanded();
+    }
+
+    /// <summary>
+    /// true = mọi nhóm nhiều model đang mở (nút trên tiêu đề cột hiện "thu gọn tất cả").
+    /// </summary>
+    [ObservableProperty]
+    private bool allGroupsExpanded = true;
+
+    private void UpdateAllExpanded() =>
+        AllGroupsExpanded = Groups.Where(g => g.HasChildren).All(g => g.IsExpanded);
+
+    /// <summary>
+    /// Mở rộng / thu gọn tất cả nhóm (chỉ còn dòng nhóm => xem được nhiều nhóm hơn).
+    /// </summary>
+    [RelayCommand]
+    private void ToggleAllGroups()
+    {
+        bool expand = !AllGroupsExpanded;
+        foreach (var row in Groups.Where(g => g.HasChildren))
+        {
+            row.IsExpanded = expand;
+            if (expand) _collapsedGroups.Remove(row.Name);
+            else _collapsedGroups.Add(row.Name);
+        }
+        AllGroupsExpanded = expand;
     }
 
     // ===== HELPERS =====

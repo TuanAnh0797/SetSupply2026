@@ -39,5 +39,9 @@ public partial class UCHome : UserControl
         var margin = new Thickness(0, 0, scrollBarWidth, 0);
         HeaderGrid.Margin = margin;
         FooterGrid.Margin = margin;
+        FlatHeaderGrid.Margin = margin;
+        FlatFooterGrid.Margin = margin;
+        PlanRowGrid.Margin = margin;
+        FlatPlanRowGrid.Margin = margin;
     }
 }
