@@ -38,9 +38,17 @@
 
         <x:Array x:Key="MinuteItems" Type="sys:Int32">
             <sys:Int32>0</sys:Int32>
+            <sys:Int32>5</sys:Int32>
+            <sys:Int32>10</sys:Int32>
             <sys:Int32>15</sys:Int32>
+            <sys:Int32>20</sys:Int32>
+            <sys:Int32>25</sys:Int32>
             <sys:Int32>30</sys:Int32>
+            <sys:Int32>35</sys:Int32>
+            <sys:Int32>40</sys:Int32>
             <sys:Int32>45</sys:Int32>
+            <sys:Int32>50</sys:Int32>
+            <sys:Int32>55</sys:Int32>
         </x:Array>
 
         <Style x:Key="FieldLabel" TargetType="TextBlock">
@@ -68,6 +76,32 @@
             <Setter Property="Margin" Value="4,0"/>
             <Setter Property="Foreground" Value="#78909C"/>
         </Style>
+        <Style x:Key="BreakBox" TargetType="TextBox" BasedOn="{StaticResource MaterialDesignOutlinedTextBox}">
+            <Setter Property="Height" Value="32"/>
+            <Setter Property="Padding" Value="6,2"/>
+            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+        </Style>
+
+        <!-- 1 dòng giờ nghỉ: bắt đầu - kết thúc, tên, nút xóa -->
+        <DataTemplate x:Key="BreakTemplate">
+            <StackPanel Orientation="Horizontal" Margin="0,0,0,5">
+                <TextBox Style="{StaticResource BreakBox}" Width="62" HorizontalContentAlignment="Center"
+                         Text="{Binding StartText, UpdateSourceTrigger=PropertyChanged}" ToolTip="Giờ bắt đầu nghỉ (HH:mm)"/>
+                <TextBlock Text="–" FontSize="14" FontWeight="Bold" Foreground="#78909C" VerticalAlignment="Center" Margin="6,0"/>
+                <TextBox Style="{StaticResource BreakBox}" Width="62" HorizontalContentAlignment="Center"
+                         Text="{Binding EndText, UpdateSourceTrigger=PropertyChanged}" ToolTip="Giờ kết thúc nghỉ (HH:mm)"/>
+                <TextBox Style="{StaticResource BreakBox}" Width="150" Margin="8,0,0,0"
+                         materialDesign:HintAssist.Hint="Tên (VD: Nghỉ trưa)"
+                         Text="{Binding Name, UpdateSourceTrigger=PropertyChanged}"/>
+                <Button Style="{StaticResource MaterialDesignIconButton}" Width="30" Height="30" Margin="4,0,0,0"
+                        Foreground="#E53935" ToolTip="Xóa giờ nghỉ này"
+                        Command="{Binding DataContext.RemoveBreakCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                        CommandParameter="{Binding}">
+                    <materialDesign:PackIcon Kind="CloseCircleOutline" Width="18" Height="18"/>
+                </Button>
+            </StackPanel>
+        </DataTemplate>
     </UserControl.Resources>
 
     <Grid Margin="5">
@@ -127,6 +161,27 @@
                                       Content="Sử dụng ca này"
                                       FontSize="12" FontWeight="SemiBold" Foreground="#00796B"/>
                         </StackPanel>
+
+                        <!-- Giờ nghỉ: kế hoạch theo giờ chỉ chia cho thời gian làm việc -->
+                        <Border BorderBrush="#E3E8EF" BorderThickness="0,1,0,0" Margin="0,8,0,0" Padding="0,8,0,0">
+                            <StackPanel>
+                                <StackPanel Orientation="Horizontal" Margin="0,0,0,6">
+                                    <TextBlock Text="Giờ nghỉ" Style="{StaticResource FieldLabel}"/>
+                                    <Button Command="{Binding AddBreakCommand}" CommandParameter="1"
+                                            Style="{StaticResource MaterialDesignOutlinedButton}" Height="28" Padding="10,0"
+                                            Foreground="#00796B" BorderBrush="#00796B">
+                                        <StackPanel Orientation="Horizontal">
+                                            <materialDesign:PackIcon Kind="Plus" Width="14" Height="14" VerticalAlignment="Center"/>
+                                            <TextBlock Text="Thêm giờ nghỉ" FontSize="12" Margin="4,0,0,0"/>
+                                        </StackPanel>
+                                    </Button>
+                                    <Border Background="#E0F2F1" CornerRadius="4" Padding="8,3" Margin="12,0,0,0" VerticalAlignment="Center">
+                                        <TextBlock Text="{Binding Shift1WorkText}" FontSize="12" FontWeight="SemiBold" Foreground="#00796B"/>
+                                    </Border>
+                                </StackPanel>
+                                <ItemsControl ItemsSource="{Binding Shift1Breaks}" ItemTemplate="{StaticResource BreakTemplate}" Margin="90,0,0,0"/>
+                            </StackPanel>
+                        </Border>
                     </StackPanel>
                 </materialDesign:Card>
 
@@ -172,6 +227,27 @@
                                       Content="Sử dụng ca này"
                                       FontSize="12" FontWeight="SemiBold" Foreground="#FF6F00"/>
                         </StackPanel>
+
+                        <!-- Giờ nghỉ: kế hoạch theo giờ chỉ chia cho thời gian làm việc -->
+                        <Border BorderBrush="#E3E8EF" BorderThickness="0,1,0,0" Margin="0,8,0,0" Padding="0,8,0,0">
+                            <StackPanel>
+                                <StackPanel Orientation="Horizontal" Margin="0,0,0,6">
+                                    <TextBlock Text="Giờ nghỉ" Style="{StaticResource FieldLabel}"/>
+                                    <Button Command="{Binding AddBreakCommand}" CommandParameter="2"
+                                            Style="{StaticResource MaterialDesignOutlinedButton}" Height="28" Padding="10,0"
+                                            Foreground="#FF6F00" BorderBrush="#FF6F00">
+                                        <StackPanel Orientation="Horizontal">
+                                            <materialDesign:PackIcon Kind="Plus" Width="14" Height="14" VerticalAlignment="Center"/>
+                                            <TextBlock Text="Thêm giờ nghỉ" FontSize="12" Margin="4,0,0,0"/>
+                                        </StackPanel>
+                                    </Button>
+                                    <Border Background="#FFF3E0" CornerRadius="4" Padding="8,3" Margin="12,0,0,0" VerticalAlignment="Center">
+                                        <TextBlock Text="{Binding Shift2WorkText}" FontSize="12" FontWeight="SemiBold" Foreground="#FF6F00"/>
+                                    </Border>
+                                </StackPanel>
+                                <ItemsControl ItemsSource="{Binding Shift2Breaks}" ItemTemplate="{StaticResource BreakTemplate}" Margin="90,0,0,0"/>
+                            </StackPanel>
+                        </Border>
                     </StackPanel>
                 </materialDesign:Card>
 
@@ -217,6 +293,27 @@
                                       Content="Sử dụng ca này"
                                       FontSize="12" FontWeight="SemiBold" Foreground="#303F9F"/>
                         </StackPanel>
+
+                        <!-- Giờ nghỉ: kế hoạch theo giờ chỉ chia cho thời gian làm việc -->
+                        <Border BorderBrush="#E3E8EF" BorderThickness="0,1,0,0" Margin="0,8,0,0" Padding="0,8,0,0">
+                            <StackPanel>
+                                <StackPanel Orientation="Horizontal" Margin="0,0,0,6">
+                                    <TextBlock Text="Giờ nghỉ" Style="{StaticResource FieldLabel}"/>
+                                    <Button Command="{Binding AddBreakCommand}" CommandParameter="3"
+                                            Style="{StaticResource MaterialDesignOutlinedButton}" Height="28" Padding="10,0"
+                                            Foreground="#303F9F" BorderBrush="#303F9F">
+                                        <StackPanel Orientation="Horizontal">
+                                            <materialDesign:PackIcon Kind="Plus" Width="14" Height="14" VerticalAlignment="Center"/>
+                                            <TextBlock Text="Thêm giờ nghỉ" FontSize="12" Margin="4,0,0,0"/>
+                                        </StackPanel>
+                                    </Button>
+                                    <Border Background="#E8EAF6" CornerRadius="4" Padding="8,3" Margin="12,0,0,0" VerticalAlignment="Center">
+                                        <TextBlock Text="{Binding Shift3WorkText}" FontSize="12" FontWeight="SemiBold" Foreground="#303F9F"/>
+                                    </Border>
+                                </StackPanel>
+                                <ItemsControl ItemsSource="{Binding Shift3Breaks}" ItemTemplate="{StaticResource BreakTemplate}" Margin="90,0,0,0"/>
+                            </StackPanel>
+                        </Border>
                     </StackPanel>
                 </materialDesign:Card>
             </StackPanel>

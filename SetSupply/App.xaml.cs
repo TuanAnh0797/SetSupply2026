@@ -91,6 +91,7 @@ namespace APP
             // Services
             services.AddSingleton<PLCService>();
             services.AddSingleton<ShiftSettingService>(); // THÊM DÒNG NÀY
+            services.AddSingleton<ShiftScheduleService>();
             services.AddSingleton<ProductionDataService>();
             services.AddSingleton<ModelGroupService>();
             services.AddSingleton<ProductionPlanService>();
@@ -291,6 +292,26 @@ namespace APP
                 Debug.WriteLine($"✓ Đã sửa cột Model cho {fixedRows} bản ghi ProductionData cũ.");
 
             await MigratePrefixGroupsAsync(dbContext);
+
+            // Giờ nghỉ trong ca + giờ ca / giờ nghỉ của từng ngày sản xuất (xem lại ngày cũ đúng cài đặt)
+            await dbContext.Database.ExecuteSqlRawAsync(@"
+                CREATE TABLE IF NOT EXISTS ""ShiftBreaks"" (
+                    ""Id"" INTEGER NOT NULL CONSTRAINT ""PK_ShiftBreaks"" PRIMARY KEY AUTOINCREMENT,
+                    ""ShiftNumber"" INTEGER NOT NULL,
+                    ""StartTime"" TEXT NOT NULL,
+                    ""EndTime"" TEXT NOT NULL,
+                    ""Name"" TEXT NOT NULL DEFAULT '',
+                    ""SortOrder"" INTEGER NOT NULL DEFAULT 0
+                );");
+            await dbContext.Database.ExecuteSqlRawAsync(@"
+                CREATE TABLE IF NOT EXISTS ""ShiftDaySnapshots"" (
+                    ""Id"" INTEGER NOT NULL CONSTRAINT ""PK_ShiftDaySnapshots"" PRIMARY KEY AUTOINCREMENT,
+                    ""ProductionDate"" TEXT NOT NULL,
+                    ""ShiftsJson"" TEXT NOT NULL,
+                    ""UpdatedAt"" TEXT NOT NULL
+                );");
+            await dbContext.Database.ExecuteSqlRawAsync(@"
+                CREATE INDEX IF NOT EXISTS ""IX_ShiftDaySnapshots_ProductionDate"" ON ""ShiftDaySnapshots"" (""ProductionDate"");");
 
             // Cột đánh dấu dữ liệu test (Cài đặt > Test Data)
             var productionColumns = (await QueryAsync(dbContext, "PRAGMA table_info(\"ProductionData\");"))

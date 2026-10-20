@@ -15,6 +15,9 @@ public class ShiftScopeOption
     public string Name { get; init; } = string.Empty;
     public string TimeRange { get; init; } = string.Empty;
     public bool HasTimeRange => !string.IsNullOrEmpty(TimeRange);
+    /// <summary>Giờ nghỉ của ca, VD "10:00-10:10, 12:00-12:45".</summary>
+    public string BreaksText { get; init; } = string.Empty;
+    public string ToolTipText => string.IsNullOrEmpty(BreaksText) ? TimeRange : $"{TimeRange}\nNghỉ: {BreaksText}";
 }
 
 /// <summary>

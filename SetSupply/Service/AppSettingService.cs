@@ -26,6 +26,9 @@ public class AppSettingService
     /// <summary>Chế độ bảng Home: "group" (theo nhóm model, mặc định) hoặc "model" (danh sách model + STT).</summary>
     public const string HomeViewModeKey = "Home.ViewMode";
 
+    /// <summary>Số phút mỗi khoảng của biểu đồ sản lượng trên Home (5/10/15/30/60 hoặc tùy chỉnh), mặc định 60.</summary>
+    public const string HomeChartIntervalKey = "Home.ChartInterval";
+
     private readonly IServiceScopeFactory _scopeFactory;
 
     /// <summary>Phát khi 1 cài đặt được lưu. Tham số: key, value.</summary>

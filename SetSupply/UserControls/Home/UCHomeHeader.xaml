@@ -124,7 +124,7 @@
             </ListBox.ItemsPanel>
             <ListBox.ItemTemplate>
                 <DataTemplate>
-                    <StackPanel VerticalAlignment="Center">
+                    <StackPanel VerticalAlignment="Center" ToolTip="{Binding ToolTipText}">
                         <TextBlock Text="{Binding Name}" FontSize="18" FontWeight="SemiBold" HorizontalAlignment="Center"/>
                         <TextBlock Text="{Binding TimeRange}" FontSize="14" HorizontalAlignment="Center"
                                    Visibility="{Binding HasTimeRange, Converter={StaticResource BoolToVis}}"/>

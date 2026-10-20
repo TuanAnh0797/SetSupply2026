@@ -15,13 +15,16 @@ public class ProductionDataService
     private readonly AppDbContext _db;
     private readonly ShiftSettingService _shiftService;
     private readonly IServiceScopeFactory _scopeFactory;
+    private readonly ShiftScheduleService _scheduleService;
     private List<ShiftSetting> _cachedShiftSettings;
 
-    public ProductionDataService(AppDbContext db, ShiftSettingService shiftService, IServiceScopeFactory scopeFactory)
+    public ProductionDataService(AppDbContext db, ShiftSettingService shiftService, IServiceScopeFactory scopeFactory,
+                                 ShiftScheduleService scheduleService)
     {
         _db = db;
         _shiftService = shiftService;
         _scopeFactory = scopeFactory;
+        _scheduleService = scheduleService;
     }
 
     private async Task<List<ShiftSetting>> GetShiftSettingsAsync()
@@ -111,35 +114,18 @@ public class ProductionDataService
     }
 
     /// <summary>
-    /// Các ca đang dùng của 1 ngày: ngày đã qua lấy theo ShiftSettingHistory (nếu có),
-    /// ca nào không có lịch sử thì dùng cài đặt hiện tại.
+    /// Các ca đang dùng của 1 ngày sản xuất theo đúng cài đặt của ngày đó (xem ShiftScheduleService).
     /// </summary>
     public async Task<List<ShiftSetting>> GetShiftsForDateAsync(DateTime date)
     {
-        using var scope = _scopeFactory.CreateScope();
-        var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-
-        var shifts = await db.ShiftSettings.AsNoTracking().OrderBy(s => s.ShiftNumber).ToListAsync();
-
-        if (date.Date < DateTime.Today)
+        var shifts = await _scheduleService.GetForDateAsync(date);
+        return shifts.Select(s => new ShiftSetting
         {
-            var day = date.Date;
-            var next = day.AddDays(1);
-            var history = await db.ShiftSettingHistory.AsNoTracking()
-                .Where(h => h.DateUsing >= day && h.DateUsing < next)
-                .ToListAsync();
-
-            foreach (var h in history.GroupBy(h => h.ShiftNumber).Select(g => g.OrderByDescending(x => x.InsertTime).First()))
-            {
-                var shift = shifts.FirstOrDefault(s => s.ShiftNumber == h.ShiftNumber);
-                if (shift == null) continue;
-                shift.StartTime = h.StartTime;
-                shift.EndTime = h.EndTime;
-                shift.IsUse = h.IsUse;
-            }
-        }
-
-        return shifts.Where(s => s.IsUse).ToList();
+            ShiftNumber = s.ShiftNumber,
+            StartTime = s.Start,
+            EndTime = s.End,
+            IsUse = s.IsUse
+        }).ToList();
     }
 
     /// <summary>

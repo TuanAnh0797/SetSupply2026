@@ -694,13 +694,13 @@
         <!-- ===== PANEL PHÍA DƯỚI ===== -->
         <Grid Grid.Row="2" Margin="0,12,0,0">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="1.25*"/>
+                <ColumnDefinition Width="1.85*"/>
                 <ColumnDefinition Width="12"/>
-                <ColumnDefinition Width="1.2*"/>
+                <ColumnDefinition Width="1*"/>
                 <ColumnDefinition Width="12"/>
                 <ColumnDefinition Width="1.35*"/>
                 <ColumnDefinition Width="12"/>
-                <ColumnDefinition Width="1*"/>
+                <ColumnDefinition Width="0.95*"/>
             </Grid.ColumnDefinitions>
 
             <!-- 1. Tổng quan ngày -->
@@ -709,58 +709,90 @@
                     <Border DockPanel.Dock="Top" Style="{StaticResource PanelHeader}">
                         <TextBlock Text="{Binding OverviewTitle}" Style="{StaticResource PanelTitle}"/>
                     </Border>
-                    <Grid Margin="9,14">
+                    <!-- Số liệu | vòng tròn tiến độ so với target hiện tại | biểu đồ cộng dồn thực tế - target -->
+                    <Grid Margin="8,8,8,6">
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="1.1*"/>
+                            <ColumnDefinition Width="1*"/>
+                            <ColumnDefinition Width="0.78*"/>
+                            <ColumnDefinition Width="1.45*"/>
                         </Grid.ColumnDefinitions>
+                        <Grid.Resources>
+                            <Style x:Key="KpiLabel" TargetType="TextBlock">
+                                <Setter Property="FontSize" Value="14"/>
+                                <Setter Property="Foreground" Value="#5B6B82"/>
+                                <Setter Property="VerticalAlignment" Value="Center"/>
+                            </Style>
+                            <Style x:Key="KpiValue" TargetType="TextBlock">
+                                <Setter Property="FontSize" Value="25"/>
+                                <Setter Property="FontWeight" Value="Bold"/>
+                                <Setter Property="Foreground" Value="{StaticResource TextDarkBrush}"/>
+                                <Setter Property="HorizontalAlignment" Value="Right"/>
+                                <Setter Property="VerticalAlignment" Value="Center"/>
+                            </Style>
+                        </Grid.Resources>
 
-                        <Border Grid.Column="0" Style="{StaticResource KpiTile}">
-                            <Grid VerticalAlignment="Center" HorizontalAlignment="Center">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="Auto"/>
-                                    <ColumnDefinition Width="Auto"/>
-                                </Grid.ColumnDefinitions>
-                                <Border Width="40" Height="40" CornerRadius="8" Background="#1F7BEA" VerticalAlignment="Top" Margin="0,6,10,0">
-                                    <materialDesign:PackIcon Kind="ClipboardTextOutline" Width="24" Height="24" Foreground="White"
-                                                             HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        <!-- Số liệu -->
+                        <Border Grid.Column="0" Style="{StaticResource KpiTile}" Margin="0,0,5,0" Padding="10,4">
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="*"/>
+                                    <RowDefinition Height="*"/>
+                                    <RowDefinition Height="*"/>
+                                </Grid.RowDefinitions>
+                                <Grid Grid.Row="0">
+                                    <StackPanel VerticalAlignment="Center">
+                                        <TextBlock Text="Kế hoạch" Style="{StaticResource KpiLabel}"/>
+                                        <TextBlock Text="{Binding PlanSourceText}" FontSize="11" Foreground="#1F7BEA"/>
+                                    </StackPanel>
+                                    <TextBlock Text="{Binding PlanTotalText}" Style="{StaticResource KpiValue}"/>
+                                </Grid>
+                                <Border Grid.Row="1" BorderBrush="#E1E8F2" BorderThickness="0,1,0,1">
+                                    <Grid>
+                                        <TextBlock Text="{Binding TargetNowLabel}" Style="{StaticResource KpiLabel}"/>
+                                        <TextBlock Text="{Binding TargetNowText}" Style="{StaticResource KpiValue}" Foreground="#5B6B82"/>
+                                    </Grid>
                                 </Border>
-                                <StackPanel Grid.Column="1">
-                                    <TextBlock Text="Kế hoạch" FontSize="16" Foreground="{StaticResource TextDarkBrush}"/>
-                                    <TextBlock Text="{Binding PlanTotalText}" FontSize="32" FontWeight="Bold" Foreground="{StaticResource TextDarkBrush}"/>
-                                    <TextBlock Text="tủ" FontSize="16" Foreground="#5B6B82"/>
-                                    <TextBlock Text="{Binding PlanSourceText}" FontSize="12" Foreground="#1F7BEA"/>
-                                </StackPanel>
+                                <Grid Grid.Row="2">
+                                    <StackPanel VerticalAlignment="Center">
+                                        <TextBlock Text="Thực tế" Style="{StaticResource KpiLabel}"/>
+                                        <TextBlock Text="{Binding AchievementText}" FontSize="11" Foreground="{Binding AchievementBrush}"/>
+                                    </StackPanel>
+                                    <TextBlock Text="{Binding ActualTotalText}" Style="{StaticResource KpiValue}" Foreground="#1E9E45"/>
+                                </Grid>
                             </Grid>
                         </Border>
 
-                        <Border Grid.Column="1" Style="{StaticResource KpiTile}">
-                            <Grid VerticalAlignment="Center" HorizontalAlignment="Center">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="Auto"/>
-                                    <ColumnDefinition Width="Auto"/>
-                                </Grid.ColumnDefinitions>
-                                <materialDesign:PackIcon Kind="CheckCircle" Width="44" Height="44" Foreground="#22B14C"
-                                                         VerticalAlignment="Top" Margin="0,4,8,0"/>
-                                <StackPanel Grid.Column="1">
-                                    <TextBlock Text="Thực tế" FontSize="16" Foreground="{StaticResource TextDarkBrush}"/>
-                                    <TextBlock Text="{Binding ActualTotalText}" FontSize="32" FontWeight="Bold" Foreground="{StaticResource TextDarkBrush}"/>
-                                    <TextBlock Text="tủ" FontSize="16" Foreground="#5B6B82"/>
-                                </StackPanel>
-                            </Grid>
-                        </Border>
-
-                        <Border Grid.Column="2" Style="{StaticResource KpiTile}">
-                            <Grid Margin="8">
-                                <componentUI:RingProgress Value="{Binding AchievementPercent}" FillBrush="{Binding AchievementBrush}"
-                                                          TrackBrush="#E3E9F2" StrokeThickness="14"/>
+                        <!-- Tiến độ so với target đến hiện tại -->
+                        <Border Grid.Column="1" Style="{StaticResource KpiTile}" Margin="0,0,5,0">
+                            <Grid Margin="6">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="*"/>
+                                    <RowDefinition Height="Auto"/>
+                                </Grid.RowDefinitions>
+                                <componentUI:RingProgress Value="{Binding ProgressPercent}" FillBrush="{Binding ProgressBrush}"
+                                                          TrackBrush="#E3E9F2" StrokeThickness="12"/>
                                 <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
-                                    <TextBlock Text="{Binding AchievementText}" FontSize="26" FontWeight="Bold"
+                                    <TextBlock Text="{Binding ProgressText}" FontSize="22" FontWeight="Bold"
                                                Foreground="{StaticResource TextDarkBrush}" HorizontalAlignment="Center"/>
-                                    <TextBlock Text="Tỷ lệ đạt" FontSize="14" Foreground="#5B6B82" HorizontalAlignment="Center"/>
+                                    <TextBlock Text="so với target" FontSize="12" Foreground="#5B6B82" HorizontalAlignment="Center"/>
                                 </StackPanel>
+                                <TextBlock Grid.Row="1" Text="{Binding DiffText}" FontSize="14" FontWeight="Bold" Foreground="{Binding DiffBrush}"
+                                           HorizontalAlignment="Center" Margin="0,4,0,0" TextTrimming="CharacterEllipsis"/>
                             </Grid>
+                        </Border>
+
+                        <!-- Thực tế cộng dồn so với target theo thời gian -->
+                        <Border Grid.Column="2" Style="{StaticResource KpiTile}" Margin="0" Background="White">
+                            <DockPanel>
+                                <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" Margin="8,4,0,0">
+                                    <Rectangle Width="16" Height="3" Fill="#22B14C" VerticalAlignment="Center"/>
+                                    <TextBlock Text="Thực tế cộng dồn" FontSize="12" Foreground="#5B6B82" Margin="4,0,10,0"/>
+                                    <Rectangle Width="16" Height="2" Stroke="#8A99B0" StrokeDashArray="3 2" VerticalAlignment="Center"/>
+                                    <TextBlock Text="Target" FontSize="12" Foreground="#5B6B82" Margin="4,0,0,0"/>
+                                </StackPanel>
+                                <lvc:CartesianChart Series="{Binding CumulativeSeries}" XAxes="{Binding CumulativeXAxes}" YAxes="{Binding CumulativeYAxes}"
+                                                    TooltipPosition="Top" AnimationsSpeed="00:00:00.2" Margin="0,0,6,2"/>
+                            </DockPanel>
                         </Border>
                     </Grid>
                 </DockPanel>
@@ -819,13 +851,37 @@
                 </DockPanel>
             </Border>
 
-            <!-- 3. Sản lượng theo giờ -->
+            <!-- 3. Sản lượng theo khoảng thời gian (5/10/15/30 phút, 1 giờ, tùy chỉnh) -->
             <Border Grid.Column="4" Style="{StaticResource PanelCard}">
                 <DockPanel>
-                    <Border DockPanel.Dock="Top" Style="{StaticResource PanelHeader}">
-                        <TextBlock Text="Sản lượng theo giờ (Tổng)" Style="{StaticResource PanelTitle}"/>
+                    <Border DockPanel.Dock="Top" Style="{StaticResource PanelHeader}" Padding="14,0,6,0">
+                        <DockPanel>
+                            <StackPanel DockPanel.Dock="Right" Orientation="Horizontal" VerticalAlignment="Center">
+                                <ComboBox ItemsSource="{Binding ChartIntervalOptions}" SelectedItem="{Binding SelectedChartInterval}" IsSynchronizedWithCurrentItem="False"
+                                          DisplayMemberPath="Label" Width="96" Height="28" FontSize="13" Padding="8,2"
+                                          Background="White" Foreground="{StaticResource TextDarkBrush}"
+                                          Style="{StaticResource MaterialDesignOutlinedComboBox}" BorderBrush="White"
+                                          ToolTip="Khoảng thời gian của biểu đồ"/>
+                                <TextBox Text="{Binding CustomIntervalText, UpdateSourceTrigger=PropertyChanged, Delay=600}"
+                                         Visibility="{Binding IsCustomInterval, Converter={StaticResource BoolToVis}}"
+                                         Width="48" Height="28" Margin="6,0,0,0" Padding="4,2" FontSize="13"
+                                         Background="White" Foreground="{StaticResource TextDarkBrush}"
+                                         HorizontalContentAlignment="Center" VerticalContentAlignment="Center"
+                                         Style="{StaticResource MaterialDesignOutlinedTextBox}" BorderBrush="White"
+                                         ToolTip="Số phút mỗi khoảng (1 - 720)"/>
+                                <TextBlock Text="phút" Foreground="White" FontSize="13" VerticalAlignment="Center" Margin="4,0,0,0"
+                                           Visibility="{Binding IsCustomInterval, Converter={StaticResource BoolToVis}}"/>
+                            </StackPanel>
+                            <TextBlock Text="{Binding HourlyChartTitle}" Style="{StaticResource PanelTitle}"/>
+                        </DockPanel>
                     </Border>
-                    <TextBlock DockPanel.Dock="Top" Text="Sản lượng (tủ)" FontSize="12" Foreground="#5B6B82" Margin="14,6,0,0"/>
+                    <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" Margin="14,6,0,0">
+                        <TextBlock Text="Sản lượng (tủ)" FontSize="12" Foreground="#5B6B82"/>
+                        <Rectangle Width="16" Height="3" Fill="#1F7BEA" VerticalAlignment="Center" Margin="14,0,4,0"/>
+                        <TextBlock Text="Thực tế" FontSize="12" Foreground="#5B6B82"/>
+                        <Rectangle Width="16" Height="2" Stroke="#F58A1F" StrokeDashArray="3 2" VerticalAlignment="Center" Margin="10,0,4,0"/>
+                        <TextBlock Text="Kế hoạch" FontSize="12" Foreground="#5B6B82"/>
+                    </StackPanel>
                     <lvc:CartesianChart Series="{Binding HourlySeries}" XAxes="{Binding HourlyXAxes}" YAxes="{Binding HourlyYAxes}"
                                         TooltipPosition="Top" AnimationsSpeed="00:00:00.2" Margin="4,0,10,4"/>
                 </DockPanel>

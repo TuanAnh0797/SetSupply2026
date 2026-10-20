@@ -9,15 +9,17 @@ namespace SetSupply.Service
     public class ShiftHistoryBackgroundService
     {
         private readonly ShiftSettingService _shiftService;
+        private readonly ShiftScheduleService _scheduleService;
         private Timer _timer;
         private bool _isRunning;
 
-        // Chạy mỗi 2 tiếng
-        private static readonly TimeSpan Interval = TimeSpan.FromHours(2);
+        // Chạy mỗi 30 phút
+        private static readonly TimeSpan Interval = TimeSpan.FromMinutes(30);
 
-        public ShiftHistoryBackgroundService(ShiftSettingService shiftService)
+        public ShiftHistoryBackgroundService(ShiftSettingService shiftService, ShiftScheduleService scheduleService)
         {
             _shiftService = shiftService;
+            _scheduleService = scheduleService;
         }
 
         public void Start()
@@ -45,6 +47,9 @@ namespace SetSupply.Service
         {
             try
             {
+                // Bản chụp giờ ca + giờ nghỉ cho ngày sản xuất hiện tại (nếu chưa có)
+                await _scheduleService.EnsureCurrentSnapshotAsync();
+
                 var today = DateTime.Today;
                 var result = await _shiftService.SaveCurrentSettingsToHistoryAsync(today);
 

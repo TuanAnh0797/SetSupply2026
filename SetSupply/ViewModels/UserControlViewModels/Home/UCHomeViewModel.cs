@@ -60,6 +60,7 @@ public partial class UCHomeViewModel : ObservableObject
     private readonly ProductionPlanService _planService;
     private readonly PLCService _plcService;
     private readonly AppSettingService _appSettings;
+    private readonly ShiftScheduleService _scheduleService;
     private bool _viewModeLoaded;
 
     private readonly SemaphoreSlim _loadLock = new(1, 1);
@@ -69,7 +70,10 @@ public partial class UCHomeViewModel : ObservableObject
     // Dữ liệu đã tải cho ngày/ca đang chọn (lọc nhóm/model thực hiện trên bộ nhớ)
     private List<(string Model, int HourIndex)> _records = new();
     private List<(string Model, DateTime Time)> _dayRecords = new();
-    private List<(ShiftScopeOption Option, DateTime Start, DateTime End)> _shiftRanges = new();
+    // Các ca đang dùng của ngày đang xem (giờ ca + giờ nghỉ theo đúng cài đặt của ngày đó)
+    private List<(ShiftScopeOption Option, DateTime Start, DateTime End, ShiftDefinition Def)> _shiftRanges = new();
+    // Khoảng thời gian của phạm vi đang xem (cả ngày / 1 ca)
+    private DateTime _scopeStart, _scopeEnd;
     // Gán model -> nhóm (Model Group) + thứ tự nhóm ("Khác" luôn cuối)
     private Dictionary<string, ModelMapping> _mappings = new(StringComparer.OrdinalIgnoreCase);
     private List<string> _groupNames = new() { ModelGroupService.OtherGroupName };
@@ -165,9 +169,10 @@ public partial class UCHomeViewModel : ObservableObject
 
     public UCHomeViewModel(ProductionDataService productionService, ModelGroupService modelGroupService,
                            ProductionPlanService planService, PLCService plcService, PlanImportService planImportService,
-                           AppSettingService appSettings)
+                           AppSettingService appSettings, ShiftScheduleService scheduleService)
     {
         _appSettings = appSettings;
+        _scheduleService = scheduleService;
         _productionService = productionService;
         _modelGroupService = modelGroupService;
         _planService = planService;
@@ -184,6 +189,8 @@ public partial class UCHomeViewModel : ObservableObject
         planImportService.PlanImported += _ => Application.Current?.Dispatcher.InvokeAsync(LoadAsync);
         // Thêm / xóa dữ liệu test hàng loạt => tải lại
         _productionService.DataChanged += () => Application.Current?.Dispatcher.InvokeAsync(LoadAsync);
+        // Lưu cài đặt ca / giờ nghỉ => tính lại kế hoạch theo giờ
+        _scheduleService.ScheduleChanged += () => Application.Current?.Dispatcher.InvokeAsync(LoadAsync);
         _plcService.CodeRead += result =>
             Application.Current?.Dispatcher.InvokeAsync(() => ShowCodeRead(result));
 
@@ -208,6 +215,7 @@ public partial class UCHomeViewModel : ObservableObject
             _suppressViewModeSave = true;
             IsModelListMode = _appSettings.Get(AppSettingService.HomeViewModeKey, "group") == "model";
             _suppressViewModeSave = false;
+            LoadChartInterval();
         }
         await LoadLastCodeAsync();
         await LoadAsync();
@@ -339,9 +347,17 @@ public partial class UCHomeViewModel : ObservableObject
                 else if (SelectedDate == currentProductionDate)
                     _isFollowingToday = true; // chọn lại đúng ngày hiện tại => tiếp tục cập nhật realtime
 
-                // Ngày cũ dùng giờ ca theo lịch sử cài đặt ca của ngày đó
-                var shifts = await _productionService.GetShiftsForDateAsync(SelectedDate);
+                // Giờ ca + giờ nghỉ theo đúng cài đặt của ngày đang xem (ngày cũ: bản chụp của ngày đó)
+                var shifts = await _scheduleService.GetForDateAsync(SelectedDate);
                 RebuildScopeOptions(shifts);
+
+                _shiftRanges = new List<(ShiftScopeOption Option, DateTime Start, DateTime End, ShiftDefinition Def)>();
+                foreach (var option in ScopeOptions.Where(o => o.ShiftNumber.HasValue))
+                {
+                    var def = shifts.First(d => d.ShiftNumber == option.ShiftNumber);
+                    var (shiftStart, shiftEnd) = def.GetRange(SelectedDate);
+                    _shiftRanges.Add((option, shiftStart, shiftEnd, def));
+                }
             }
             finally
             {
@@ -354,15 +370,15 @@ public partial class UCHomeViewModel : ObservableObject
             PlanSourceText = HasPlan ? "KH theo ngày" : "Chưa có kế hoạch";
 
             // Luôn tải cả ngày sản xuất (bảng theo ca ở dưới cần số liệu mọi ca), bảng chính lọc theo ca đang chọn
-            var (dayStart, dayEnd) = await _productionService.GetProductionRangeAsync(SelectedDate, null);
-            var (start, end) = await _productionService.GetProductionRangeAsync(SelectedDate, SelectedScope?.ShiftNumber);
-
-            _shiftRanges = new List<(ShiftScopeOption Option, DateTime Start, DateTime End)>();
-            foreach (var option in ScopeOptions.Where(o => o.ShiftNumber.HasValue))
-            {
-                var (s, e) = await _productionService.GetProductionRangeAsync(SelectedDate, option.ShiftNumber);
-                _shiftRanges.Add((option, s, e));
-            }
+            var (dayStart, dayEnd) = _shiftRanges.Count > 0
+                ? (_shiftRanges.Min(r => r.Start), _shiftRanges.Max(r => r.End))
+                : (SelectedDate.Date, SelectedDate.Date.AddDays(1));
+            var (start, end) = (dayStart, dayEnd);
+            foreach (var r in _shiftRanges)
+                if (r.Option.ShiftNumber == SelectedScope?.ShiftNumber)
+                    (start, end) = (r.Start, r.End);
+            _scopeStart = start;
+            _scopeEnd = end;
 
             var firstSlot = start.Date.AddHours(start.Hour);
             _hourSlots = new List<DateTime>();
@@ -436,19 +452,21 @@ public partial class UCHomeViewModel : ObservableObject
     private void UpdateTableEmpty() =>
         IsTableEmpty = IsModelListMode ? FlatRows.Count == 0 : Groups.Count == 0;
 
-    private void RebuildScopeOptions(List<ShiftSetting> shifts)
+    private void RebuildScopeOptions(List<ShiftDefinition> shifts)
     {
         var options = new List<ShiftScopeOption> { new() { Name = "Cả ngày" } };
         options.AddRange(shifts.Select(s => new ShiftScopeOption
         {
             ShiftNumber = s.ShiftNumber,
             Name = $"Ca {s.ShiftNumber}",
-            TimeRange = $"{s.StartTime:hh\\:mm} - {s.EndTime:hh\\:mm}"
+            TimeRange = s.TimeRangeText,
+            BreaksText = s.BreaksText
         }));
 
         bool same = options.Count == ScopeOptions.Count
                     && options.Zip(ScopeOptions).All(p => p.First.ShiftNumber == p.Second.ShiftNumber
-                                                          && p.First.TimeRange == p.Second.TimeRange);
+                                                          && p.First.TimeRange == p.Second.TimeRange
+                                                          && p.First.BreaksText == p.Second.BreaksText);
         if (same) return;
 
         int? selectedShift = SelectedScope?.ShiftNumber;
@@ -701,37 +719,38 @@ public partial class UCHomeViewModel : ObservableObject
     private static readonly Brush FooterBadBrush = CreateFrozenBrush("#FFAFA3");
 
     /// <summary>
-    /// Kế hoạch từng cột giờ: kế hoạch mỗi ca (các nhóm đang hiện) chia cho các giờ của ca theo số phút nằm trong ca,
-    /// làm tròn sao cho tổng các giờ đúng bằng kế hoạch ca. Xem 1 ca => chỉ tính ca đó.
+    /// Kế hoạch từng cột giờ (xem <see cref="DistributePlan"/>).
     /// </summary>
-    private int[] DistributePlanByHour(List<(string Group, int Total, string BarColor)> shownGroups)
+    private int[] DistributePlanByHour(List<(string Group, int Total, string BarColor)> shownGroups) =>
+        DistributePlan(_hourSlots.Select(t => (t, t.AddHours(1))).ToList(), shownGroups);
+
+    /// <summary>
+    /// Chia kế hoạch mỗi ca (các nhóm đang hiện) cho các khoảng thời gian theo SỐ PHÚT LÀM VIỆC
+    /// (thuộc ca, trừ giờ nghỉ) nằm trong từng khoảng; làm tròn kiểu "phần dư lớn nhất" để tổng = kế hoạch ca.
+    /// Xem 1 ca => chỉ tính ca đó.
+    /// </summary>
+    private int[] DistributePlan(IReadOnlyList<(DateTime Start, DateTime End)> slots,
+                                 List<(string Group, int Total, string BarColor)> shownGroups)
     {
-        int n = _hourSlots.Count;
+        int n = slots.Count;
         var result = new int[n];
         if (!HasPlan || n == 0) return result;
 
-        int? selectedShift = SelectedScope?.ShiftNumber;
-        foreach (var (option, start, end) in _shiftRanges)
+        foreach (var (option, _, _, def) in ShiftsInScope())
         {
-            if (selectedShift.HasValue && option.ShiftNumber != selectedShift) continue;
             int plan = shownGroups.Sum(g => GetPlan(g.Group, option.ShiftNumber!.Value));
             if (plan <= 0) continue;
 
-            var minutes = new double[n];
-            for (int i = 0; i < n; i++)
-            {
-                var slotStart = _hourSlots[i];
-                var slotEnd = slotStart.AddHours(1);
-                var from = slotStart > start ? slotStart : start;
-                var to = slotEnd < end ? slotEnd : end;
-                minutes[i] = to > from ? (to - from).TotalMinutes : 0;
-            }
-            double totalMinutes = minutes.Sum();
-            if (totalMinutes <= 0) continue;
+            var minutes = slots.Select(slot => def.WorkMinutes(SelectedDate, slot.Start, slot.End)).ToArray();
+            double slotMinutes = minutes.Sum();
+            double totalMinutes = def.TotalWorkMinutes(SelectedDate);
+            if (totalMinutes <= 0 || slotMinutes <= 0) continue;
 
-            var exact = minutes.Select(m => plan * m / totalMinutes).ToArray();
+            // Các khoảng có thể chỉ phủ 1 phần ca => chỉ phần kế hoạch thuộc các khoảng này
+            int planHere = (int)Math.Round(plan * Math.Min(1, slotMinutes / totalMinutes));
+            var exact = minutes.Select(m => planHere * m / slotMinutes).ToArray();
             var parts = exact.Select(x => (int)Math.Floor(x)).ToArray();
-            int rest = plan - parts.Sum();
+            int rest = planHere - parts.Sum();
             foreach (int i in Enumerable.Range(0, n).Where(i => minutes[i] > 0)
                          .OrderByDescending(i => exact[i] - parts[i]).ThenBy(i => i).Take(rest))
                 parts[i]++;
@@ -739,6 +758,30 @@ public partial class UCHomeViewModel : ObservableObject
             for (int i = 0; i < n; i++) result[i] += parts[i];
         }
         return result;
+    }
+
+    /// <summary>
+    /// Target cộng dồn tới thời điểm <paramref name="time"/>: kế hoạch mỗi ca x (phút làm việc đã qua / tổng phút làm việc của ca).
+    /// </summary>
+    private double TargetUntil(DateTime time, List<(string Group, int Total, string BarColor)> shownGroups)
+    {
+        double target = 0;
+        foreach (var (option, start, _, def) in ShiftsInScope())
+        {
+            int plan = shownGroups.Sum(g => GetPlan(g.Group, option.ShiftNumber!.Value));
+            if (plan <= 0 || time <= start) continue;
+            double total = def.TotalWorkMinutes(SelectedDate);
+            if (total <= 0) continue;
+            target += plan * Math.Min(1, def.WorkMinutes(SelectedDate, start, time) / total);
+        }
+        return target;
+    }
+
+    /// <summary>Các ca thuộc phạm vi đang xem (cả ngày = mọi ca đang dùng).</summary>
+    private IEnumerable<(ShiftScopeOption Option, DateTime Start, DateTime End, ShiftDefinition Def)> ShiftsInScope()
+    {
+        int? selectedShift = SelectedScope?.ShiftNumber;
+        return _shiftRanges.Where(r => !selectedShift.HasValue || r.Option.ShiftNumber == selectedShift);
     }
 
     /// <summary>

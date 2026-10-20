@@ -20,6 +20,9 @@ public class AppDbContext : DbContext
     // Shift Settings
     public DbSet<ShiftSetting> ShiftSettings => Set<ShiftSetting>();
     public DbSet<ShiftSettingHistory> ShiftSettingHistory => Set<ShiftSettingHistory>();
+    // Giờ nghỉ trong ca + giờ ca / giờ nghỉ đã dùng cho từng ngày sản xuất
+    public DbSet<ShiftBreak> ShiftBreaks => Set<ShiftBreak>();
+    public DbSet<ShiftDaySnapshot> ShiftDaySnapshots => Set<ShiftDaySnapshot>();
 
     // Production Data
     public DbSet<ProductionData> ProductionData => Set<ProductionData>();
@@ -60,6 +63,12 @@ public class AppDbContext : DbContext
         modelBuilder.Entity<ShiftSettingHistory>()
             .HasIndex(e => new { e.DateUsing, e.ShiftNumber })
             .HasDatabaseName("IX_ShiftSettingHistory_DateUsing_ShiftNumber");
+
+        modelBuilder.Entity<ShiftBreak>().HasKey(e => e.Id);
+        modelBuilder.Entity<ShiftDaySnapshot>().HasKey(e => e.Id);
+        modelBuilder.Entity<ShiftDaySnapshot>()
+            .HasIndex(e => e.ProductionDate)
+            .HasDatabaseName("IX_ShiftDaySnapshots_ProductionDate");
 
         // ===== CẤU HÌNH CHO PRODUCTIONDATA =====
         modelBuilder.Entity<ProductionData>().HasKey(e => e.Id);
