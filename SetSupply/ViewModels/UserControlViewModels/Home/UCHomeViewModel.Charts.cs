@@ -532,18 +532,39 @@ public partial class UCHomeViewModel
         };
     }
 
+    /// <summary>
+    /// Nhóm tính vào bảng theo ca: xét theo CẢ NGÀY (có sản lượng trong ngày, hoặc tích "Hiển thị theo kế hoạch"
+    /// và có kế hoạch trong ngày) + bộ lọc nhóm / model. Không phụ thuộc Cả ngày / Ca N đang chọn trên header,
+    /// nếu không chọn Ca 1 sẽ làm mất số của các nhóm chỉ chạy ở ca khác.
+    /// </summary>
+    private List<string> GetDayGroups(List<string> displayGroups)
+    {
+        var dayModels = _dayRecords.Select(r => r.Model).Distinct()
+            .Where(m => SelectedModelFilter == AllOption || m == SelectedModelFilter)
+            .ToList();
+        var withData = dayModels.Select(GroupOf).ToHashSet(StringComparer.OrdinalIgnoreCase);
+        var shiftNumbers = _shiftRanges.Select(r => r.Option.ShiftNumber!.Value).ToList();
+
+        return displayGroups
+            .Where(g => SelectedGroupFilter == AllOption || g == SelectedGroupFilter)
+            .Where(g => withData.Contains(g)
+                        || (SelectedModelFilter == AllOption && ShowEmptyGroups && shiftNumbers.Sum(n => GetPlan(g, n)) > 0))
+            .ToList();
+    }
+
     private void UpdateShiftSummaries(
         List<string> displayGroups,
         List<(string Group, int Total, string BarColor)> shownGroups)
     {
-        var passes = CreateModelFilter(shownGroups);
+        var dayGroups = GetDayGroups(displayGroups);
+        var passes = CreateModelFilter(dayGroups.Select(g => (g, 0, string.Empty)).ToList());
 
         ShiftSummaries.Clear();
         int totalPlan = 0, totalActual = 0;
 
         foreach (var (option, start, end, _) in _shiftRanges)
         {
-            int plan = shownGroups.Sum(g => GetPlan(g.Group, option.ShiftNumber!.Value));
+            int plan = dayGroups.Sum(g => GetPlan(g, option.ShiftNumber!.Value));
             int actual = _dayRecords.Count(r => r.Time >= start && r.Time < end && passes(r.Model));
             totalPlan += plan;
             totalActual += actual;
